@@ -3,10 +3,16 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import store from "./redux/store";
+import { Provider } from "react-redux";
+import { CookiesProvider } from "react-cookie";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App store={store} />
+    <CookiesProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </CookiesProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
