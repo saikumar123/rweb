@@ -7,7 +7,6 @@ export const LOGIN = (data) => {
   };
 };
 
-
 export const LOGIN_DATA = (data) => {
   return {
     type: "login_data",
@@ -75,7 +74,6 @@ export const logout_user = (data) => {
 };
 
 export const signup_user = (data) => {
-  console.log(data);
   return store.dispatch(SIGNUP(data));
 };
 
@@ -84,8 +82,8 @@ export const create_user = (data) => {
 };
 
 export const login_data = (data) => {
-  return store.dispatch(LOGIN_DATA(data))
-}
+  return store.dispatch(LOGIN_DATA(data));
+};
 
 export const fetch_user = () => {
   return store.dispatch(FETCH());

@@ -2,12 +2,12 @@ import axios from "axios";
 
 const UserService = {
   apiBaseUrl: {
-    url: "http://localhost:8080/",
-    // url: "http://104.42.113.67/",
+    // url: "http://localhost:8080/",
+    url: "http://104.42.113.67/api/",
   },
   account: function async(id) {
     return axios
-      .get(this.apiBaseUrl.url+"api/user/fetch-account/" + id)
+      .get(this.apiBaseUrl.url + "api/user/fetch-account/" + id)
       .then((resolve) => {
         return resolve;
       })
@@ -17,7 +17,9 @@ const UserService = {
   },
   user: function async(text) {
     return axios
-      .get(this.apiBaseUrl.url + "api/user/fetch-account-email-or-avatar/" + text)
+      .get(
+        this.apiBaseUrl.url + "api/user/fetch-account-email-or-avatar/" + text
+      )
       .then((resolve) => {
         return resolve;
       })
@@ -26,11 +28,9 @@ const UserService = {
       });
   },
   userByUsername: function async(text) {
-    console.log("text====",text)
     return axios
       .get(this.apiBaseUrl.url + "api/user/fetch-user/" + text)
       .then((resolve) => {
-        console.log("resolve = ",resolve)
         return resolve;
       })
       .catch((error) => {
@@ -39,23 +39,24 @@ const UserService = {
   },
   avatar: function async(text) {
     return axios
-    .get(this.apiBaseUrl.url,"api/user/fetch-account-by-avatar/"+text)
-    .then((resolve) => {
-      return resolve;
-    })
-    .catch((error) => {
-      console.log(error);
-    })
+      .get(this.apiBaseUrl.url, "api/user/fetch-account-by-avatar/" + text)
+      .then((resolve) => {
+        return resolve;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
   fetchAccount: function async(accountId) {
-    return axios.get(this.apiBaseUrl.url+"api/user/update-account/" + accountId)    
-    .then((resolve) => {
-      return resolve;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    return axios
+      .get(this.apiBaseUrl.url + "api/user/update-account/" + accountId)
+      .then((resolve) => {
+        return resolve;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
-}
+};
 
 export default UserService;

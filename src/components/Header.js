@@ -1,12 +1,11 @@
 import React from "react";
 
 const Header = (props) => {
-  console.log("props user- ",props.user)
   const [btnvalue, setBtnvalue] = React.useState("Connect");
   const handleConnect = (type) => {
     props.handleLoginWallet(type);
-    setBtnvalue('Connecting...')
-  }
+    setBtnvalue("Connecting...");
+  };
   return (
     <div className="header">
       <div className="nav-header">
@@ -24,20 +23,23 @@ const Header = (props) => {
       </div>
 
       <div className="navbar-custom-menu pull-right d-flex nav-right p-top">
-        {!props.isLogin &&
-          <button type="button" onClick={() => handleConnect('MetaMask')} className="btn button btn-button btn-circular">
+        {!props.isLogin && (
+          <button
+            type="button"
+            onClick={() => handleConnect("MetaMask")}
+            className="btn button btn-button btn-circular"
+          >
             {btnvalue}
           </button>
-        }
-        {props.isLogin &&
+        )}
+        {props.isLogin && (
           <button type="button" className="btn button btn-button btn-circular">
             {props.user.avatar}
-      </button>
-        }
-
+          </button>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default Header;

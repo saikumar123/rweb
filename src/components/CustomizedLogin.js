@@ -1,27 +1,7 @@
 import React, { useState } from "react";
-// import axios from "axios";
-//import { connect } from "react-redux";
-// import { create_user, signup_user,login_data } from "../redux/action";
 import Error from "./Error";
 import LoginService from "../services/LoginService";
-//import { useCookies } from 'react-cookie';
-
 import "../assets/css/login.css";
-
-// const mapDispatchToProps = (data) => {
-//   console.log("login:mapDispatchToProps", data);
-//   return {
-//     user_login: (data) => {
-//       create_user(data);
-//     },
-//     signup: (data) => {
-//       signup_user(data);
-//     },
-//     login_data: (data) => {
-//       login_data(data);
-//     }
-//   };
-// };
 
 function CustomizedLogin(props) {
   const [isLogin, setIsLogin] = useState(false);
@@ -29,63 +9,42 @@ function CustomizedLogin(props) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  // const [lgn_btn_class, setLoginBtnClass] = useState("login_btn");
   const [reg_btn_class, setRegBtnClass] = useState("register_btn");
   const [bottom_line_class, setBottomLineClass] = useState("login_bottom_line");
 
   const handleLogin = (e) => {
     e.preventDefault();
-    //this.setState({ isLoading: "true" });
-    //var apiBaseUrl = remote_backend_url;
-    // var apiBaseUrl = "http://localhost:3000/";
-    //var self = this;
     var payload = {
       username: username,
       email: email,
       password: password,
       accountId: props.accountId,
     };
-    console.log(isLogin);
-    console.log(payload);
     if (isLogin === true) {
-      console.log('if')
       LoginService.login(payload)
         .then(function (response) {
-          // self.setState({ isLoading: "false" });
-          console.log(response);
           if (response.status === 200) {
             if (
               response.data &&
               response.data.msg === "New user. Please Signup"
             ) {
-              console.log("New User");
               setErrorMessage("You are new here. Please Signup");
               setIsLogin(false);
               login_btn("register");
-              //self.setState({ isRegister: "true" });
               setEmail("");
               setPassword("");
-              //self.setState({ email: "" });
-              //self.setState({ password: "" });
             } else if (
               response.data &&
               response.data.msg === "Login Successful"
             ) {
-              
-              props.loginSuccessFull(response.data.payload)
-              console.log(response.data.payload.userId);
-              console.log("Login successfull");
+              props.loginSuccessFull(response.data.payload);
               setErrorMessage("");
               props.handleLoginClose();
-              // props.history.push("/upload");
             }
           } else if (response.data.code === 204) {
-            console.log("Username password do not match");
             alert("username password do not match");
           } else {
             setErrorMessage("username does not exist");
-            //   self.setState({ errorMessage: "username does not exist" });
-            console.log("Username does not exists");
             alert("Username does not exist");
           }
         })
@@ -93,25 +52,16 @@ function CustomizedLogin(props) {
           console.log(error);
         });
     } else {
-      console.log('else')
-      // axios
-      //   .post("api/api/auth/signup", payload)
       LoginService.signup(payload)
         .then(function (response) {
-          // self.setState({ isLoading: "false" });
-          console.log(response);
           if (response.status === 201) {
             if (
               response.data &&
               response.data.msg === "User is successfully added"
             ) {
-              console.log("user added success");
-              
-              props.loginSuccessFull(response.data.payload)
+              props.loginSuccessFull(response.data.payload);
               setIsLogin(true);
-
               props.handleLoginClose(response.data.payload);
-              //props.history.push("/upload");
             }
           } else if (response.status === 200) {
             setErrorMessage("This user account already exists. Try Login");
@@ -127,13 +77,11 @@ function CustomizedLogin(props) {
   const login_btn = (val) => {
     if (val === "login") {
       setIsLogin(true);
-      // setLoginBtnClass("login_btn");
       setRegBtnClass("register_btn");
       setBottomLineClass("login_bottom_line");
     } else {
       setIsLogin(false);
       setRegBtnClass("login_btn");
-      // setLoginBtnClass("register_btn");
       setBottomLineClass("reg_bottom_line");
     }
   };
@@ -194,7 +142,6 @@ function CustomizedLogin(props) {
           </div>
           <div className="card-body-bottom">
             <form id="login_form">
-              
               <input
                 type="text"
                 className="input-field"
@@ -226,7 +173,6 @@ function CustomizedLogin(props) {
                 className="input-field"
                 value={props.accountId}
                 disabled="disabled"
-                
               />
 
               <br />

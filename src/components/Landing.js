@@ -23,7 +23,7 @@ import {
   set_account,
   set_balance1,
   set_balance2,
-  set_balance3
+  set_balance3,
 } from "../redux/action";
 var bigInt = require("big-integer");
 
@@ -50,7 +50,14 @@ const mapDispatchToProps = (data) => {
   };
 };
 
-const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, set_balance3 }) => {
+const Landing = ({
+  user_login,
+  signup,
+  set_account,
+  set_balance1,
+  set_balance2,
+  set_balance3,
+}) => {
   const [isLogin, setIsLogin] = useState(false);
   const [account, setAccount] = React.useState("");
   const [user, setUser] = React.useState({});
@@ -72,11 +79,7 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
     return;
   };
 
-
-
   const getBalance1 = async () => {
-    console.log("Testing if this method is working");
-
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
       const tokenBalanceABIObject = new web3.eth.Contract(
@@ -93,9 +96,7 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
         ethAddressConfig.gas_token
       );
 
-      let balance2 = await gasTokenABIObject.methods
-        .balanceOf(account)
-        .call();
+      let balance2 = await gasTokenABIObject.methods.balanceOf(account).call();
       balance2 = balance2 / 1000000000000000000;
 
       const govTokenABIObject = new web3.eth.Contract(
@@ -103,9 +104,7 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
         ethAddressConfig.gov_token_address
       );
 
-      let balance3 = await govTokenABIObject.methods
-        .balanceOf(account)
-        .call();
+      let balance3 = await govTokenABIObject.methods.balanceOf(account).call();
       set_balance1(balance1);
       set_balance2(balance2);
       set_balance3(balance3);
@@ -119,35 +118,25 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
       const accounts = await web3.eth.getAccounts();
-      console.log("accounts - " + accounts[0]);
       setAccount(accounts[0]);
     }
   };
 
-
   const getAccount = () => {
     UserService.account(account).then((resolve) => {
-      console.log("resolve.data.payload.user = ", resolve.data.payload.user);
-
       if (resolve.data.payload.user.length === 0) {
-        console.log(resolve.data.payload.user);
         setIsLogin(true);
         user_login(true);
         setIsOpen(!isOpen);
-
-      }
-      else {
+      } else {
         loginSuccessFull(resolve.data.payload);
       }
     });
   };
 
   const togglePopup = (data) => {
-    
     if (data === "MetaMask") {
-      console.log("MetaMast");
       loadBlockchainData();
-      
     }
     if (data === "open") {
       if (account !== "") {
@@ -165,21 +154,17 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
   };
 
   const loginSuccessFull = (payload) => {
-    console.log('loginsuccessfull')
-    console.log(payload);
     setUser(payload.user);
-    signup(payload.user)
+    signup(payload.user);
     setIsLogin(true);
     user_login(true);
-    console.log(" Set Account is = ", account)
     set_account(account);
-    console.log(isOpen);
     togglePopup("close");
-  }
+  };
 
   const handlePage = (page) => {
-    setPage(page)
-  }
+    setPage(page);
+  };
 
   const getTxn = () => {
     if (user.avatar !== "" && user.avatar !== undefined) {
@@ -204,7 +189,6 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
       newHash,
       lockStatus
     );
-    console.log("creating new promise", txnComplete);
     getTxn();
     return Promise.resolve();
   };
@@ -213,7 +197,6 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
     let isClaimed = false;
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
-  
       const govABIObject = new web3.eth.Contract(
         govABI,
         ethAddressConfig.gas_token
@@ -223,23 +206,20 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
           .claimRewards(account)
           .send({ from: account })
           .on("transactionHash", (unlockedHash) => {
-          console.log("Claimed rewards");
-          isClaimed=true;
+            isClaimed = true;
           })
           .on("error", (event) => {
             console.log(event);
           })
           .catch((message) => console.log(message));
       } catch (err) {
-        console.log(err);
         throw new Error("error");
-      } 
+      }
     }
-  return isClaimed;
-  }
+    return isClaimed;
+  };
 
   const handleClaim = async () => {
-
     let isClaimed = claimRewards();
     if (isClaimed) {
       UserService.fetchAccount(account).then((resolve) => {
@@ -247,36 +227,11 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
 
         if (resolve.data.payload.user.length === 0) {
           console.log(resolve.data.payload.user);
-
         } else {
-          signup(resolve.data.payload.user)
-
-          //disable Claim button
-          // loginSuccessFull(resolve.data.payload);
+          signup(resolve.data.payload.user);
         }
       });
     }
-
-    /* let transactions = [...txnRows];
-     let senderId = transactions[index].lockAddress;
-     let receiverId = transactions[index].unlockAddress;
-     let hash = transactions[index].transactionHash;
-     let lockId = transactions[index].lockId;
-     let amount = transactions[index].amount;
- 
-     try {
-       let completeHandle = await handleClaimEvent(
-         senderId,
-         receiverId,
-         hash,
-         lockId,
-         amount,
-         lockStatus
-       );
-       console.log("handle Claim  completeHandle" + completeHandle);
-     } catch (err) {
-       console.log(err);
-     } */
   };
   const handleUnlock = async (index, lockStatus) => {
     let transactions = [...txnRows];
@@ -301,17 +256,6 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
     }
   };
 
-  // const handleClaimEvent = async (
-  //   senderId,
-  //   receiverId,
-  //   hash,
-  //   lockId,
-  //   amount,
-  //   lockStatus
-  // ) => {
-  //   return updateTransaction(hash, senderId, receiverId, lockStatus);
-  // };
-
   const handleUnlockEvent = async (
     senderId,
     receiverId,
@@ -328,9 +272,7 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
         ethAddressConfig.gov_address
       );
     }
-    // const { toBN } = web3.utils;
     const lockValueBN = bigInt(parseFloat(amount) * 1000000000000000000);
-    // const newLockValue = toBN(lockValueBN);
     try {
       return govABIObject.methods
         .unlockTokens(lockId, lockValueBN.value)
@@ -343,28 +285,21 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
         })
         .catch((message) => console.log(message));
     } catch (err) {
-      console.log(err);
       throw new Error("error");
     }
   };
 
-
   useEffect(() => {
-    console.log("accoun - ", account)
     if (account !== "") {
       getAccount();
       getTxn();
-      // handleStake();
-      // getBalance2();
-      // getBalance3();
     }
-
   }, [isLogin, account]);
 
   return (
     <>
       <Header user={user} isLogin={isLogin} handleLoginWallet={togglePopup} />
-      {isOpen && isLogin   && (
+      {isOpen && isLogin && (
         <LoginWalletOptions
           accountId={account}
           isLogin={isLogin}
@@ -381,28 +316,24 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
         <div className="col-lg-9 col-xs-12 mb-140 pull-left">
           <MyRewards />
           <hr class="line"></hr>
-          {isLogin && page === 'deposit' &&
-            <Deposit  getBalance1={getBalance1} account={account} />
-
-          }
-          {isLogin && page === 'escrow' &&
-            <Escrow getTxn={getTxn} />
-          }
-          {isLogin && page === 'tasklist' &&
-            <TaskList lastClaimedTimeStamp={user.lastClaimedTimeStamp}
+          {isLogin && page === "deposit" && (
+            <Deposit getBalance1={getBalance1} account={account} />
+          )}
+          {isLogin && page === "escrow" && <Escrow getTxn={getTxn} />}
+          {isLogin && page === "tasklist" && (
+            <TaskList
+              lastClaimedTimeStamp={user.lastClaimedTimeStamp}
               handleUnlock={handleUnlock}
               handleClaim={handleClaim}
               txnRows={txnRows}
               isLogin={isLogin}
-              avatar={user.avatar} />
-          }
-          {/* <TaskList /> */}
+              avatar={user.avatar}
+            />
+          )}
         </div>
       </div>
-
-
     </>
-  )
+  );
 };
 
 export default connect(null, mapDispatchToProps)(Landing);
