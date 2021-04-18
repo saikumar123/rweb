@@ -1,0 +1,105 @@
+.contacts {
+  width:31%;
+  color:black;
+}
+
+.search-field {
+  width:100%;
+  padding:10px;
+  font-size:16px
+}
+
+.contacts-list{
+    position: absolute;
+  padding:0;
+  width:100%;
+}
+
+.contact{
+  display: flex;
+  align-items: center;
+  font-family: sans-serif;
+  width: 29.5%;
+  padding: 5px;
+  border-bottom: 1px dotted grey;
+  position: relative;
+  background-color: white;
+  color: black;
+  opacity: 80%;
+
+}
+
+.contact-image{
+    margin:5px;
+}
+
+.contact-email{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.contact-avatar{
+  font-size:18px;
+  color:grey;
+}
+
+.wrapper {
+    position: relative;
+}
+
+.wrapper i {
+position: absolute;
+right: 0px;
+
+}
+
+.wrapperbutton {
+    background-color: #ff4339;
+    color:white;
+    top: 0px;
+    height: 46px;
+    width: 50px;
+    right: 50px;
+}
+
+.selectboxgrid {
+  display: flex;
+}
+
+.selectboxdisplay {  
+    top: 0px;
+    
+    width: 75px;
+    right: 50px;
+}
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.buttonDisabled {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.marginclass {
+margin-left: 10px;
+margin-right: 10px;
+}
+

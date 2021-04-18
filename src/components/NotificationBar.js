@@ -10,7 +10,7 @@ NotificationBar.propTypes = {
 };
 
 NotificationBar.defaultProps = {
-  notification: "Notifications from American Protocol",
+  notification: "Notifications from Mandalore Protocol",
 };
 
 export default NotificationBar;
