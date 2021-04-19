@@ -10,7 +10,7 @@ const Sidebar = (props) => {
           <li>
             <a
               className="has-arrow"
-              href="#top"
+              href="javascript:void(0)"
               onClick={() => {
                 toggle === "collapse"
                   ? setToggle("collapse.show")
@@ -42,44 +42,46 @@ const Sidebar = (props) => {
             </ul>
           </li>
         </ul>
-        <ul className="metismenu" id="menu">
-          <li className="menu-heading">
-            <span className="nav-text smlTxt">User Menu</span>
-          </li>
-          <li>
-            <a
-              href="#"
-              onClick={() => props.handlePage("deposit")}
-              aria-expanded="true"
-            >
-              <span className="nav-text">Deposit</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              onClick={() => props.handlePage("escrow")}
-              aria-expanded="false"
-            >
-              <span className="nav-text">Escrow</span>
-            </a>
-          </li>
+        {toggle === "collapse" && (
+          <ul className="metismenu" id="menu">
+            <li className="menu-heading">
+              <span className="nav-text smlTxt">User Menu</span>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={() => props.handlePage("deposit")}
+                aria-expanded="true"
+              >
+                <span className="nav-text">Deposit</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={() => props.handlePage("escrow")}
+                aria-expanded="false"
+              >
+                <span className="nav-text">Escrow</span>
+              </a>
+            </li>
 
-          <li>
-            <a
-              href="#"
-              onClick={() => props.handlePage("tasklist")}
-              aria-expanded="false"
-            >
-              <span className="nav-text">Task List</span>
-            </a>
-          </li>
-          <li>
-            <a href="#" aria-expanded="false">
-              <span className="nav-text">Staking</span>
-            </a>
-          </li>
-        </ul>
+            <li>
+              <a
+                href="#"
+                onClick={() => props.handlePage("tasklist")}
+                aria-expanded="false"
+              >
+                <span className="nav-text">Task List</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" aria-expanded="false">
+                <span className="nav-text">Staking</span>
+              </a>
+            </li>
+          </ul>
+        )}
       </div>
     </div>
   );

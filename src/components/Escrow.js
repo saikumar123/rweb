@@ -255,40 +255,42 @@ const Escrow = (props) => {
   }, [lockValue, useWalletValue, creditWalletValue]);
 
   return (
-    <div class="row m-b-30 blueTxt">
-      <div class="col-lg-12 m-b-30">
+    <div className="row m-b-30 blueTxt">
+      <div className="col-lg-12 m-b-30">
         {" "}
-        <small class="tag-line">
+        <small className="tag-line">
           {" "}
           <i>Escrow</i>
         </small>{" "}
         {successMessage && (
-          <small class="tag-line-success">{successMessage}</small>
+          <small className="tag-line-success">{successMessage}</small>
         )}
-        {errorMessage && <small class="tag-line-error">{errorMessage}</small>}
+        {errorMessage && (
+          <small className="tag-line-error">{errorMessage}</small>
+        )}
       </div>
-      <div class="col-lg-2 m-t-5">
+      <div className="col-lg-2 m-t-5">
         MCT
         <br />
       </div>
-      <div class="col-lg-3 ">
+      <div className="col-lg-3 ">
         <input
           type="number"
           onChange={handleLock}
           value={lockValue}
-          class="form-control form-control-active"
+          className="form-control form-control-active"
           placeholder="Enter Amount"
         />
-        <span class="smlTxt">
+        <span className="smlTxt">
           {remainderValue !== 0 ? remainderValue + " times" : ""}
         </span>
       </div>
-      <div class="col-lg-2 m-t-5">
+      <div className="col-lg-2 m-t-5">
         Unlocked By
         <br />
         <br /> <br />
       </div>
-      <div class="col-lg-3 pull-left">
+      <div className="col-lg-3 pull-left">
         <input
           type="text"
           onChange={handleUnlockUser}
@@ -298,17 +300,17 @@ const Escrow = (props) => {
             }
           }}
           value={unlockedUser}
-          class="form-control form-control-active form-control-search"
+          className="form-control form-control-active form-control-search"
           placeholder=""
         />
-        <button className="wrapperbutton" onClick={search}>
+        <button className="wrapperbutton search-box-btn" onClick={search}>
           <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>{" "}
         </button>
-        <span class="smlTxt">This field cannot be left blank.</span>
+        <span className="smlTxt">This field cannot be left blank.</span>
       </div>
       {unlockedSelectUser.length >= 1 && (
-        <div class="col-lg-2 pull-left">
-          <select class="custom-select" value={unlockedSelectUser}>
+        <div className="col-lg-2 pull-left">
+          <select className="custom-select" value={unlockedSelectUser}>
             {unlockedSelectUser.map((option) => {
               return (
                 <option value={option} key={option}>
@@ -320,12 +322,12 @@ const Escrow = (props) => {
         </div>
       )}
 
-      <div class="col-lg-12 p0 ">
+      <div className="col-lg-12 p0 ">
         {creditedUser.map((useroption, index) => {
           return (
-            <div class="col-lg-12 h100 pull-left p0">
-              <div class="col-lg-2 m-t-5 pull-left ">Credited To</div>
-              <div class="col-lg-3 pull-left">
+            <div className="col-lg-12 h100 pull-left p0">
+              <div className="col-lg-2 m-t-5 pull-left ">Credited To</div>
+              <div className="col-lg-3 pull-left">
                 <input
                   type="text"
                   onChange={(e) => handleCreditWallet(index, e)}
@@ -335,7 +337,7 @@ const Escrow = (props) => {
                     }
                   }}
                   value={useroption.searchName}
-                  class="form-control form-control-active form-control-search"
+                  className="form-control form-control-active form-control-search"
                   placeholder=""
                 />
                 <button
@@ -344,14 +346,14 @@ const Escrow = (props) => {
                 >
                   <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>{" "}
                 </button>
-                <span class="smlTxt">
+                <span className="smlTxt">
                   If left blank the unlocking avatar will choose the credited to
                 </span>
               </div>
 
               {useroption.userName && (
-                <div class="col-lg-2 pull-left">
-                  <select class="custom-select" value={unlockedSelectUser}>
+                <div className="col-lg-2 pull-left">
+                  <select className="custom-select" value={unlockedSelectUser}>
                     <option
                       value={useroption.userName}
                       key={useroption.userName}
@@ -363,14 +365,14 @@ const Escrow = (props) => {
               )}
 
               {index + 1 !== creditedUser.length && (
-                <div class="col-lg-5 pull-left"></div>
+                <div className="col-lg-5 pull-left"></div>
               )}
               {index + 1 === creditedUser.length && (
-                <div class="col-lg-3 pull-left">
+                <div className="col-lg-3 pull-left">
                   <button
                     type="button"
                     onClick={addCreditedTo}
-                    class="btn btn-primary btn-circular"
+                    className="btn btn-primary btn-circular"
                   >
                     {" "}
                     Add additional avatars{" "}
@@ -382,12 +384,12 @@ const Escrow = (props) => {
         })}
       </div>
 
-      <div class="col-lg-12 p0">
-        <div class="col-lg-3 m-auto">
+      <div className="col-lg-12 p0">
+        <div className="col-lg-3 m-auto">
           {showButton === "false" || creditedUser.length !== 1 ? (
             <button
               type="button"
-              class="btn button btn-button btn-circular disabled"
+              className="btn button btn-button btn-circular disabled"
             >
               {" "}
               Lock{" "}
@@ -396,7 +398,7 @@ const Escrow = (props) => {
             <button
               type="button"
               onClick={handleSubmit}
-              class="btn button btn-button btn-circular"
+              className="btn button btn-button btn-circular"
             >
               {" "}
               Lock{" "}

@@ -7,6 +7,7 @@ import Deposit from "./Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
+
 import LoginWalletOptions from "./LoginWalletOptions";
 import { tokenBalance1ABI } from "../abis/XY_Token";
 import ethAddressConfig from "../abis/ethAddressConfig";
@@ -25,6 +26,7 @@ import {
   set_balance2,
   set_balance3,
 } from "../redux/action";
+import LockedValues from "./LockedValues";
 var bigInt = require("big-integer");
 
 const mapDispatchToProps = (data) => {
@@ -62,7 +64,7 @@ const Landing = ({
   const [account, setAccount] = React.useState("");
   const [user, setUser] = React.useState({});
   const [isOpen, setIsOpen] = useState(false);
-  const [page, setPage] = React.useState("deposit");
+  const [page, setPage] = React.useState("");
   const [txnRows, setTxnRows] = useState([]);
 
   const loadWeb3 = async () => {
@@ -163,7 +165,9 @@ const Landing = ({
   };
 
   const handlePage = (page) => {
-    setPage(page);
+    if (isLogin) {
+      setPage(page);
+    }
   };
 
   const getTxn = () => {
@@ -314,21 +318,33 @@ const Landing = ({
           <Sidebar handlePage={handlePage} />
         </div>
         <div className="col-lg-9 col-xs-12 mb-140 pull-left">
-          <MyRewards />
-          <hr class="line"></hr>
+          {!isLogin && <LockedValues />}
+          {isLogin && <MyRewards />}
+
           {isLogin && page === "deposit" && (
-            <Deposit getBalance1={getBalance1} account={account} />
+            <>
+              <hr class="line"></hr>
+              <Deposit getBalance1={getBalance1} account={account} />
+            </>
           )}
-          {isLogin && page === "escrow" && <Escrow getTxn={getTxn} />}
+          {isLogin && page === "escrow" && (
+            <>
+              <hr class="line"></hr>
+              <Escrow getTxn={getTxn} />
+            </>
+          )}
           {isLogin && page === "tasklist" && (
-            <TaskList
-              lastClaimedTimeStamp={user.lastClaimedTimeStamp}
-              handleUnlock={handleUnlock}
-              handleClaim={handleClaim}
-              txnRows={txnRows}
-              isLogin={isLogin}
-              avatar={user.avatar}
-            />
+            <>
+              <hr class="line"></hr>
+              <TaskList
+                lastClaimedTimeStamp={user.lastClaimedTimeStamp}
+                handleUnlock={handleUnlock}
+                handleClaim={handleClaim}
+                txnRows={txnRows}
+                isLogin={isLogin}
+                avatar={user.avatar}
+              />{" "}
+            </>
           )}
         </div>
       </div>

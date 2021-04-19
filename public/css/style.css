@@ -1837,6 +1837,21 @@ border-color: #373227; background: #2e2a20;color: #71aceb; font-size: 11px;}
     z-index: 0;
     padding-top: 120px;
 }
+.content-body-padding {
+    z-index: 0;
+    padding-top: 120px;
+}
+.search-box-btn {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
 @media (min-width: 768px) {
     .nav-mini .nav-header {
         width: 60px;

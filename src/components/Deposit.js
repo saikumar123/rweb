@@ -67,35 +67,37 @@ const Deposit = (props) => {
     setTextValue(e.target.value);
   };
   return (
-    <div class="row m-b-30 blueTxt">
-      <div class="col-lg-12 m-b-30">
+    <div className="row m-b-30 blueTxt">
+      <div className="col-lg-12 m-b-30">
         {" "}
-        <small class="tag-line">
+        <small className="tag-line">
           {" "}
           <i>Deposits</i>
         </small>{" "}
         {successMessage && (
-          <small class="tag-line-success">{successMessage}</small>
+          <small className="tag-line-success">{successMessage}</small>
         )}
-        {errorMessage && <small class="tag-line-error">{errorMessage}</small>}
+        {errorMessage && (
+          <small className="tag-line-error">{errorMessage}</small>
+        )}
       </div>
 
-      <div class="col-lg-1.5 p-l-15 m-t-28">Enter Amount</div>
-      <div class="col-lg-3  m-t-23">
+      <div className="col-lg-1.5 p-l-15 m-t-28">Enter Amount</div>
+      <div className="col-lg-3  m-t-23">
         <input
           type="number"
           onChange={handleChange}
           value={textValue}
-          class="form-control form-control-active"
+          className="form-control form-control-active"
           placeholder=""
         />
       </div>
 
-      {/* <div class="col-lg-1 "></div> */}
-      <div class="col-lg-2">
-        <span class="smlTxt">Select Unit</span>
+      {/* <div className="col-lg-1 "></div> */}
+      <div className="col-lg-2">
+        <span className="smlTxt">Select Unit</span>
         <select
-          class="custom-select"
+          className="custom-select"
           id="newlocale"
           value={value}
           onChange={onChange}
@@ -122,23 +124,23 @@ const Deposit = (props) => {
         <button
           type="button"
           onClick={handleDeposit}
-          class="btn button btn-button btn-circular m-t-10"
+          className="btn button btn-button btn-circular m-t-10"
         >
           Deposit
         </button>
       </div>
-      {/* <div class="col-lg-1"></div> */}
-      <div class="col-lg-2.5 m-t-28 m-l-10">
+      {/* <div className="col-lg-1"></div> */}
+      <div className="col-lg-2.5 m-t-28 m-l-10">
         Enter % share allocation
         {/* <br /> */}
       </div>
-      <div class="col-lg-3 m-t-23">
+      <div className="col-lg-3 m-t-23">
         <input
           type="text"
-          class="form-control form-control-active"
+          className="form-control form-control-active"
           placeholder=""
         />
-        <span class="smlTxt">This field cannot be left blank.</span>
+        <span className="smlTxt">This field cannot be left blank.</span>
       </div>
     </div>
   );
