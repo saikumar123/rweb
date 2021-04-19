@@ -15,6 +15,7 @@ const mapStateToProps = (state) => ({
   avatar: state.avatar,
   balance1: state.balance1,
   account: state.account,
+  all_users: state.all_users,
 });
 
 const Escrow = (props) => {
@@ -216,24 +217,47 @@ const Escrow = (props) => {
       }
     }
   };
-  const search = () => {
-    UserService.userByUsername(unlockedUser).then((resolve) => {
-      console.log("resolve.data = ",resolve.data)
-      if (resolve.data.payload.user.userName) {
-        setUseWalletValue(resolve.data.payload.user.accountId);
-        setUnlockedSelectUser([
-          {
-            userName: resolve.data.payload.user.userName,
-            accountId: resolve.data.payload.user.accountId,
-          },
-        ]);
-        return resolve.data.payload.user.userName;
-      } else {
-        setUseWalletValue("");
-        setUnlockedSelectUser([{ userName: "No user found", accountId: "" }]);
-      }
+  // const search = () => {
+  //   UserService.userByUsername(unlockedUser).then((resolve) => {
+  //     console.log("resolve.data = ",resolve.data)
+  //     if (resolve.data.payload.user.userName) {
+  //       setUseWalletValue(resolve.data.payload.user.accountId);
+  //       setUnlockedSelectUser([
+  //         {
+  //           userName: resolve.data.payload.user.userName,
+  //           accountId: resolve.data.payload.user.accountId,
+  //         },
+  //       ]);
+  //       return resolve.data.payload.user.userName;
+  //     } else {
+  //       setUseWalletValue("");
+  //       setUnlockedSelectUser([{ userName: "No user found", accountId: "" }]);
+  //     }
+  //   });
+  // };
+
+  const setUserAccount = () => {
+    let user = props.all_users.filter(user => {
+      return user.avatar === unlockedUser;
     });
-  };
+    if (user.length>0) {
+      user = user[0]
+      if(user.avatar === props.avatar){
+        setUseWalletValue('')
+        setUnlockedSelectUser([{userName: "Select another User", accountId: ""}])
+        setUnlockError("You can not select own avatar")
+        
+      }else{
+        setUseWalletValue(user.accountId);
+        setUnlockedSelectUser([{userName: user.userName, accountId: user.accountId}])
+      }
+      
+      return user.userName;
+    }else{
+      setUseWalletValue('')
+      setUnlockedSelectUser([{userName: "No user found", accountId: ""}])
+    }
+  }
 
   const removeCreditTo = (index) => {
     var searchData = creditedUser;
@@ -245,31 +269,70 @@ const Escrow = (props) => {
     setCreditedUser([...creditedUser, { searchName: "" }]);
   };
 
+  // const searchCreditTo = (index) => {
+  //   var searchData = creditedUser;
+  //   UserService.userByUsername(searchData[index].searchName).then((resolve) => {
+  //     if (resolve.data.payload.user.userName) {
+  //       var newData = {
+  //         searchName: searchData[index].searchName,
+  //         userName: resolve.data.payload.user.userName,
+  //         accountId: resolve.data.payload.user.accountId,
+  //       };
+  //       searchData[index] = newData;
+  //       setCreditWalletValue(resolve.data.payload.user.accountId);
+  //       setCreditedUser([...creditedUser]);
+  //     } else {
+  //       searchData[index] = {
+  //         searchName: searchData[index].searchName,
+  //         userName: "No user found",
+  //         accountId: "",
+  //       };
+  //       setCreditWalletValue("");
+  //       setCreditedUser([...creditedUser]);
+  //     }
+  //   });
+  // };
+
   const searchCreditTo = (index) => {
+    if(props.all_users === undefined){
+      UserService.allUsers().then((resolve) => {
+        props.set_allusers(resolve.data.payload.user)
+        searchCreditToUser(index)
+      });
+    }else{
+      searchCreditToUser(index)
+    }
+  }
+  const searchCreditToUser = (index) => {
     var searchData = creditedUser;
-    UserService.userByUsername(searchData[index].searchName).then((resolve) => {
-      if (resolve.data.payload.user.userName) {
-        var newData = {
-          searchName: searchData[index].searchName,
-          userName: resolve.data.payload.user.userName,
-          accountId: resolve.data.payload.user.accountId,
-        };
-        searchData[index] = newData;
-        setCreditWalletValue(resolve.data.payload.user.accountId);
-        setCreditedUser([...creditedUser]);
-      } else {
-        searchData[index] = {
-          searchName: searchData[index].searchName,
-          userName: "No user found",
-          accountId: "",
-        };
-        setCreditWalletValue("");
-        setCreditedUser([...creditedUser]);
-      }
+    let user = props.all_users.filter(user => {
+      return user.avatar === searchData[index].searchName;
     });
-  };
+    
+    if (user.length>0) {
+      user = user[0];
+      var newData = {searchName: searchData[index].searchName, userName: user.userName, accountId: user.accountId}
+      searchData[index] = newData
+      setCreditWalletValue(user.accountId)
+      setCreditedUser([...creditedUser,]);
+    }else{
+      searchData[index] = {searchName: searchData[index].searchName, userName: "No user found", accountId: ""}
+      setCreditWalletValue("")
+      setCreditedUser([...creditedUser,]);
+    }
+  }
+
+  const searchUser = () => {
+    if(props.all_users === undefined){
+      UserService.allUsers().then((resolve) => {
+        props.set_allusers(resolve.data.payload.user)
+        
+      });
+    }
+  }
 
   useEffect(() => {
+    searchUser()
     transactionEventRefresh();
   }, [props.account]);
 
@@ -332,14 +395,14 @@ const Escrow = (props) => {
           onChange={handleUnlockUser}
           onKeyPress={(event) => {
             if (event.key === "Enter") {
-              search();
+              setUserAccount();
             }
           }}
           value={unlockedUser}
           className="form-control form-control-active form-control-search"
           placeholder=""
         />
-        <button className="wrapperbutton search-box-btn" onClick={search}>
+        <button className="wrapperbutton search-box-btn" onClick={setUserAccount}>
           <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>{" "}
         </button>
         <span class="smlTxt">{unlockError}</span>

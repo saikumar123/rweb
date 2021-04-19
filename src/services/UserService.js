@@ -27,6 +27,16 @@ const UserService = {
         console.log(error);
       });
   },
+  allUsers: function async(){
+    return axios
+      .get(this.apiBaseUrl.url + "api/user/fetch-all-user/")
+      .then((resolve) => {
+        return resolve;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
   userByUsername: function async(text) {
     return axios
       .get(this.apiBaseUrl.url + "api/user/fetch-user/" + text)

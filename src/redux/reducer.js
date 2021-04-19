@@ -29,6 +29,8 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, { page: {}, jsonObj: action.data });
     case "Fetch":
       return state;
+    case "allusers":
+      return Object.assign({}, state, { all_users: action.data });
     case "account":
       return Object.assign({}, state, { account: action.data });
     case "balance1":

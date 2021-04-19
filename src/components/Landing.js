@@ -26,6 +26,7 @@ import {
   set_balance1,
   set_balance2,
   set_balance3,
+  set_allusers,
 } from "../redux/action";
 import LockedValues from "./LockedValues";
 var bigInt = require("big-integer");
@@ -46,6 +47,9 @@ const mapDispatchToProps = (data) => {
     },
     set_balance2: (data) => {
       set_balance2(data);
+    },
+    set_allusers: (data) => {
+      set_allusers(data);
     },
     set_balance3: (data) => {
       set_balance3(data);
@@ -334,7 +338,7 @@ const Landing = ({
           {isLogin && page === "escrow" && (
             <>
               <hr class="line"></hr>
-              <Escrow getTxn={getTxn} />
+              <Escrow getTxn={getTxn}  set_allusers={set_allusers} />
             </>
           )}
           {isLogin && page === "tasklist" && (

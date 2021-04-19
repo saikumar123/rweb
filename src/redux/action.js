@@ -69,6 +69,13 @@ export const FETCHTRANSACTION = (data) => {
   };
 };
 
+export const SETALLUSERS = (data) => {
+  return {
+    type: "allusers",
+    data: data,
+  };
+};
+
 export const logout_user = (data) => {
   return store.dispatch(LOGOUT(data));
 };
@@ -91,6 +98,10 @@ export const fetch_user = () => {
 
 export const set_account = (data) => {
   return store.dispatch(SETACCOUNT(data));
+};
+
+export const set_allusers = (data) => {
+  return store.dispatch(SETALLUSERS(data));
 };
 
 export const set_balance1 = (data) => {
