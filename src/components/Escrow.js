@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
+
 import { govABI } from "../abis/Gov";
 import ethAddressConfig from "../abis/ethAddressConfig";
 import { tokenBalance1ABI } from "../abis/XY_Token";
@@ -15,6 +16,8 @@ const mapStateToProps = (state) => ({
   avatar: state.avatar,
   balance1: state.balance1,
   account: state.account,
+  all_users: state.all_users,
+  count: state.task_count
 });
 
 
@@ -30,6 +33,11 @@ const Escrow = (props) => {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   const [lockingBlockNumber, setLockingBlockNumber] = React.useState("");
+  const [unlockError, setUnlockError] = React.useState("");
+  const [creditError, setCreditError] = React.useState("");
+  const [amountError, setAmountError] = React.useState("");
+  
+  
 
   const handleLock = (event) => {
     console.log("event.target.value = ",event.target.value)
@@ -63,6 +71,7 @@ const Escrow = (props) => {
   };
   const handleUnlockUser = (event) => {
     setUnlockedUser(event.target.value);
+    setUnlockError("");
   };
   
   const handleCreditWallet = (index, event) => {
@@ -70,6 +79,7 @@ const Escrow = (props) => {
     creditedUser[index]={searchName:event.target.value}
     setCreditedUser(creditedUser);
     setCreditedUser([...creditedUser,]);
+    setCreditError("")
   };
 
   const getAvatarFromAccountId = async (accountId) => {
@@ -152,6 +162,9 @@ const Escrow = (props) => {
           setUnlockedSelectUser("")
           setErrorMessage("Some error occurs. Please check the transaction");
         console.log('else',event)
+        console.log("props.count = ",props.count)
+        props.task_count(props.count+1)
+        props.setTaskCount(props.count+1)
         setTimeout(props.getTxn,60000)        
       }
      
@@ -227,19 +240,54 @@ console.log(lockValue, useWalletValue, props.account )
       }
     }
   };
-  const search = () => {
-      console.log("unlockedUser = ",unlockedUser)
-      UserService.userByUsername(unlockedUser).then((resolve) => {
-        if (resolve.data.payload.user.userName) {
-          setUseWalletValue(resolve.data.payload.user.accountId);
-          setUnlockedSelectUser([{userName: resolve.data.payload.user.userName, accountId: resolve.data.payload.user.accountId}])
-          return resolve.data.payload.user.userName;
-        }else{
-          setUseWalletValue('')
-          setUnlockedSelectUser([{userName: "No user found", accountId: ""}])
-        }
-      });
+  const setUserAccount = () => {
+    console.log("setUserAccount = props.all_users",props.all_users)
+    let user = props.all_users.filter(user => {
+      return user.avatar === unlockedUser;
+    });
+    console.log("nall_users = ",user)
+    if (user.length>0) {
+      user = user[0]
+      if(user.avatar === props.avatar){
+        setUseWalletValue('')
+        setUnlockedSelectUser([{userName: "Select another User", accountId: ""}])
+        setUnlockError("You can not select own avatar")
+        
+      }else{
+        setUseWalletValue(user.accountId);
+        setUnlockedSelectUser([{userName: user.userName, accountId: user.accountId}])
+      }
+      
+      return user.userName;
+    }else{
+      setUseWalletValue('')
+      setUnlockedSelectUser([{userName: "No user found", accountId: ""}])
+    }
   }
+  const searchUser = () => {
+    console.log("all_users = ",props.all_users)
+    if(props.all_users === undefined){
+      UserService.allUsers().then((resolve) => {
+        console.log("allUsers = ",resolve.data)
+        props.set_allusers(resolve.data.payload.user)
+        
+      });
+    }
+    
+  }
+  // const search = () => {
+  //     console.log("unlockedUser = ",unlockedUser)
+  //     UserService.userByUsername(unlockedUser).then((resolve) => {
+  //       if (resolve.data.payload.user.userName) {
+  //         setUseWalletValue(resolve.data.payload.user.accountId);
+  //         setUnlockedSelectUser([{userName: resolve.data.payload.user.userName, accountId: resolve.data.payload.user.accountId}])
+  //         return resolve.data.payload.user.userName;
+  //       }else{
+  //         setUseWalletValue('')
+  //         setUnlockedSelectUser([{userName: "No user found", accountId: ""}])
+  //       }
+  //     });
+  // }
   
   const addCreditedTo = () => {
     // console.log(creditedUser)
@@ -247,41 +295,80 @@ console.log(lockValue, useWalletValue, props.account )
     // newCreditedUser.push({})
     setCreditedUser([...creditedUser,{searchName:''}]);
   }
-
   const searchCreditTo = (index) => {
+    console.log("all_users = ",props.all_users)
+    if(props.all_users === undefined){
+      UserService.allUsers().then((resolve) => {
+        console.log("allUsers = ",resolve.data)
+        props.set_allusers(resolve.data.payload.user)
+        searchCreditToUser(index)
+      });
+    }else{
+      searchCreditToUser(index)
+    }
+    
+  }
+  const searchCreditToUser = (index) => {
     var searchData = creditedUser;
     console.log("event.target.value index = ",searchData)
-    UserService.userByUsername(searchData[index].searchName).then((resolve) => {
-      console.log("resolve.data.payload.user = ",resolve.data)
-      if (resolve.data.payload.user.userName) {
-        console.log(resolve.data.payload.user.userName)
-        var newData = {searchName: searchData[index].searchName, userName: resolve.data.payload.user.userName, accountId: resolve.data.payload.user.accountId}
-        searchData[index] = newData
-        setCreditWalletValue(resolve.data.payload.user.accountId)
-        setCreditedUser([...creditedUser,]);
-        console.log("searchData ==  ",searchData)
-        // setCreditedUser(
-          // searchData.map((item, index) => {
-          //     item.userName === resolve.data.payload.user.userName ? newData : item
-          //   })
-          // )
-        // setCreditedUser(searchData)
-        // return setCreditedUser(creditedUser)
-      }else{
-        searchData[index] = {searchName: searchData[index].searchName, userName: "No user found", accountId: ""}
-        setCreditWalletValue("")
-        setCreditedUser([...creditedUser,]);
-      }
+    let user = props.all_users.filter(user => {
+      return user.avatar === searchData[index].searchName;
     });
+    
+    if (user.length>0) {
+      user = user[0];
+      console.log(user.userName)
+      var newData = {searchName: searchData[index].searchName, userName: user.userName, accountId: user.accountId}
+      searchData[index] = newData
+      setCreditWalletValue(user.accountId)
+      setCreditedUser([...creditedUser,]);
+      console.log("searchData ==  ",searchData)
+      
+    }else{
+      searchData[index] = {searchName: searchData[index].searchName, userName: "No user found", accountId: ""}
+      setCreditWalletValue("")
+      setCreditedUser([...creditedUser,]);
+    }
+  }
+
+  const removeCreditTo = (index) => {
+    
+    var searchData = creditedUser;
+    searchData.splice(index, 1);
+    setCreditedUser([...creditedUser,]);
+
   }
   
+  const checkValidation = () => {
+    if (creditedUser.length === 1){}
+    if (lockValue === 0 || lockValue === ""){
+      setAmountError("Please enter the valid amount.")
+    }
+    
+    if (lockValue > props.balance1){
+      setRemainderValue(0);
+      setAmountError("Please enter amount less tha MCT.")
+    }
+    if (useWalletValue === ""){
+      setUnlockError("Please select the valid user.")
+    } 
+    if(creditWalletValue === "") {
+      setCreditError("Please select the valid user.")
+    } 
+  }
+
   useEffect(() => {
+    searchUser();
     transactionEventRefresh();
   },[props.account])
 
   useEffect(() => {
+    console.log("creditedUser.length = ",creditedUser.length)
+    console.log("lockValue = ",lockValue)
+    console.log("props.balance1 = ",props.balance1)
+    console.log("useWalletValue = ",useWalletValue)
     console.log("creditWalletValue = ",creditWalletValue)
-    if (creditedUser.length === 1 && lockValue !== 0 && useWalletValue !== "" && creditWalletValue !== "") {
+    if (creditedUser.length === 1 && lockValue < props.balance1 && lockValue !== 0 && useWalletValue !== "" && creditWalletValue !== "") {
       setShowButton("true");
     } else {
       setShowButton("false");
@@ -291,7 +378,7 @@ console.log(lockValue, useWalletValue, props.account )
 
 
   return (
-  <div class="row m-b-30 blueTxt">
+  <div class="row m-b-30 blueTxt" id="escrow">
     <div class="col-lg-12 m-b-30">
       {" "}
       <small class="tag-line">
@@ -318,7 +405,8 @@ console.log(lockValue, useWalletValue, props.account )
       <input type="number"  onChange={handleLock}
             value={lockValue}
             class="form-control form-control-active" placeholder="Enter Amount" />
-            <span class="smlTxt">{remainderValue !== 0 ? remainderValue + " times" : ""}</span>
+            <span class="smlTxt">{remainderValue !== 0 ? remainderValue + " times" : amountError}</span>
+
     </div>
     <div class="col-lg-2 m-t-5">
       Unlocked By
@@ -334,13 +422,13 @@ console.log(lockValue, useWalletValue, props.account )
         onChange={handleUnlockUser}
         onKeyPress={event => {
           if (event.key === 'Enter') {
-            search()
+            setUserAccount()
           }
         }}
         value={unlockedUser} class="form-control form-control-active form-control-search" placeholder="" />
-        <button className="wrapperbutton" onClick={search}>
+        <button className="wrapperbutton" onClick={setUserAccount}>
         <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>  </button>
-        <span class="smlTxt">This field cannot be left blank.</span>
+      <span class="smlTxt">{unlockError}</span>
     </div>
     {unlockedSelectUser.length >= 1 &&
       <div class="col-lg-2 pull-left">
@@ -374,20 +462,26 @@ console.log(lockValue, useWalletValue, props.account )
           <button className="wrapperbutton" onClick={(e) => searchCreditTo(index)}>
           <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>  </button>
           <span class="smlTxt">
-            If left blank the unlocking avatar will choose the credited to
+            {creditError}
           </span>
       </div>
       
+      
       { useroption.userName &&
       <div class="col-lg-2 pull-left">
-        <select class="custom-select"  value={unlockedSelectUser}>
+        <select class="custom-select "  value={unlockedSelectUser}>
                 <option value={useroption.userName} key={useroption.userName}>
                   {useroption.userName}
                 </option>
         </select>
         </div>
+        
       }
-      
+      { index > 0 &&
+        <div class="col-lg-1 m-t-5 pull-left">
+          <FontAwesomeIcon title="click here to remove it" onClick={(e) => removeCreditTo(index)} class="icon-cursor" icon={faTrash}> </FontAwesomeIcon> 
+        </div>
+      }
       
       { index+1 !== creditedUser.length &&
             <div class="col-lg-5 pull-left"></div>
@@ -405,7 +499,7 @@ console.log(lockValue, useWalletValue, props.account )
     <div class="col-lg-12 p0">
       <div class="col-lg-3 m-auto">
         {showButton === "false" || creditedUser.length !== 1 ? (
-              <button type="button"  class="btn button btn-button btn-circular disabled"> Lock </button>
+              <button type="button" onClick={checkValidation}  class="btn button btn-button btn-circular disabled"> Lock </button>
             ) : (
               <button type="button" onClick={handleSubmit} class="btn button btn-button btn-circular"> Lock </button>
             )}

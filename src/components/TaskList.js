@@ -10,30 +10,49 @@ const TaskList = (props) => {
           {" "}
           <i>Task List</i>
         </small>
+        {props.txnRows.length === 0 &&
+          <small class="tag-line-error">
+            {"No task item found"}    
+          </small>
+        }
+        {props.taskUnlock !== '' &&
+          <small class="tag-line-success">
+            {props.taskUnlock}    
+          </small>
+        }
       </div>
+      <div class="col-lg-12 pull-left">
+        <div class="col-lg-7 pull-left">
+
+        </div>
+        <div class="col-lg-1.5 pull-left">
+          <span id="rangeValue" class="rangeColor">Share %</span>
+        </div>
+      </div>
+      
       {props.txnRows.map(
         (row, index) => { return (
-          
-          
+             
           <>
           {row.lockStatus === "UNLOCK" && 
-          <>
-            <div class="col-lg-3">
+          <div class="col-lg-12 p0 pull-left">
+            <div class="col-lg-1 m-t-5 pull-left">
               Amount
-      <br />
-              <input type="text" value={row.amount} readonly="readonly" class="form-control disabled" placeholder="" />
+            </div>
+            <div class="col-lg-2 pull-left">
+              <input type="text" value={row.amount} disabled="disabled" readonly="readonly" class="form-control disabled fulldisabled" placeholder="" />
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-1.5 m-t-5 pull-left">
               Credited To
-      <br />
-              <input type="text" value={row.recipientAvatar} readonly="readonly" class="form-control" placeholder="" />
+            </div>
+            <div class="col-lg-2 pull-left">
+              <input type="text" value={row.recipientAvatar} disabled="disabled" readonly="readonly" class="form-control fulldisabled" placeholder="" />
             </div>
 
-            <div class="col-lg-3 p-top10">
+            <div class="col-lg-3 p-top10 pull-left">
               <div>
-                <span id="rangeValue ">Share %</span>
-                <span id="rangeValue">0</span>
+                
                 <input
                   class="range"
                   type="range"
@@ -44,9 +63,10 @@ const TaskList = (props) => {
                 // onChange="rangeSlide(this.value)"
                 // onmousemove="rangeSlide(this.value)"
                 />
+                <span id="rangeValue">0</span>
               </div>
             </div>
-            <div class="col-lg-3 p-top20">
+            <div class="col-lg-2 p-top5 pull-left">
               {row.lockStatus === "DONE" ? (
                 "Transaction completed"
               ) : row.lockStatus === "UNLOCK" ? (
@@ -61,7 +81,7 @@ const TaskList = (props) => {
                     )}{" "}
 
             </div>
-            </>
+            </div>
         }
           </>
               )

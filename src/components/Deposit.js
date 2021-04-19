@@ -20,6 +20,8 @@ const Deposit = (props) =>{
   // const [resultTextValue, setResultTextValue] = React.useState("");
   const handleDeposit = async () => {
     console.log("account  = ",props.account)
+    setSuccessMessage("");
+    
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
       // const { toBN } = web3.utils;
@@ -40,7 +42,7 @@ const Deposit = (props) =>{
         .approve(ethAddressConfig.stake_address, lockValueBN.value)
         .send({ from: props.account })
         .on("transactionHash", (hash) => {
-          stakeABIObject.methods
+         stakeABIObject.methods
             .deposit("0", lockValueBN.value)
             .send({ from: props.account })
             .on("transactionHash", (hash) => {

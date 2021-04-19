@@ -27305,6 +27305,47 @@ button {
     color: #ac421b;
     margin-left:20px
   }
+  .mr5{
+    margin-right: 20px;
+  }
+  .icon-cursor{
+    cursor: pointer;
+    height:25px
+  }
+  .notify{
+    width: 22px;
+    height: 21px;
+    background-color: red;
+    float: right;
+    border-radius: 15px;
+  }
+  .rangeColor{
+    color: #896802;
+  }
+  .p-top5{
+    padding-top: 5px;
+  }
+  .p-top10{
+    padding-top: 10px;
+  }
+  .fulldisabled {
+    background-color: #fff !important;
+  }
+  .locked{
+    color: red;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .unlocked{
+    color: #e0b83c;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .completed{
+    color: #71aceb;
+    font-size: 15px;
+    font-weight: bold;
+  }
   /* .fullrow{
     width: 100%;
     float: left;

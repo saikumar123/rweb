@@ -47,24 +47,29 @@ const Sidebar = (props) => {
             <span className="nav-text smlTxt">User Menu</span>
           </li>
           <li>
-            <a href="#" onClick={() =>  props.handlePage("deposit")} aria-expanded="true">
+            <a href onClick={() =>  props.handlePage("deposit")} aria-expanded="true">
               <span className="nav-text">Deposit</span>
             </a>
           </li>
           <li>
-            <a href="#" onClick={() =>  props.handlePage("escrow")} aria-expanded="false">
+            <a href onClick={() =>  props.handlePage("escrow")} aria-expanded="false">
               <span className="nav-text">Escrow</span>
             </a>
           </li>
-
           <li>
-            <a href="#" onClick={() =>  props.handlePage("tasklist")} aria-expanded="false">
-              <span className="nav-text">Task List</span>
+            <a href onClick={() =>  props.handlePage("tasklist")} aria-expanded="false">
+            <span className="nav-text">Task List {props.taskCount > 0 && <span className="notify">{props.taskCount}</span>}</span>
             </a>
           </li>
+          
           <li>
             <a href="#" aria-expanded="false">
               <span className="nav-text">Staking</span>
+            </a>
+          </li>
+          <li>
+            <a href onClick={() =>  props.handlePage("transcations")} aria-expanded="false">
+              <span className="nav-text">Transcations</span>
             </a>
           </li>
         </ul>

@@ -46,7 +46,7 @@ body,
 
 .box {
   position: relative;
-  width: 45%;
+  width: 35%;
   margin: 0 auto;
   height: auto;
   max-height: 70vh;
@@ -54,7 +54,7 @@ body,
   background: #000000;
   border-radius: 4px;
   padding: 20px;
-  border: 1px solid #999;
+  border: 1px solid #e9b321;
   overflow: auto;
   z-index: 9999;
 }

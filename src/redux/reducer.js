@@ -8,6 +8,7 @@ const initialState = {
   avatar: "",
   jsonObj: {},
   txn: [],
+  count:0
 };
 
 const reducer = (state = initialState, action) => {
@@ -34,6 +35,12 @@ const reducer = (state = initialState, action) => {
     case "account":
       console.log(action.data);
       return Object.assign({}, state, { account: action.data });
+    case "allusers":
+      console.log(action.data);
+      return Object.assign({}, state, { all_users: action.data });
+    case "taskcount":
+      console.log(action.data);
+      return Object.assign({}, state, { count: action.data });
     case "balance1":
       console.log(action.data);
       return Object.assign({}, state, { balance1: action.data });

@@ -42,6 +42,13 @@ export const SETACCOUNT = (data) => {
   };
 };
 
+export const SETALLUSERS = (data) => {
+  return {
+    type: "allusers",
+    data: data,
+  };
+};
+
 export const SETBALANCE1 = (data) => {
   return {
     type: "balance1",
@@ -70,6 +77,13 @@ export const FETCHTRANSACTION = (data) => {
   };
 };
 
+export const TASKCOUNT = (data) => {
+  return {
+    type: "taskcount",
+    data: data,
+  };
+};
+
 export const logout_user = (data) => {
   return store.dispatch(LOGOUT(data));
 };
@@ -77,6 +91,11 @@ export const logout_user = (data) => {
 export const signup_user = (data) => {
   console.log(data);
   return store.dispatch(SIGNUP(data));
+};
+
+export const task_count = (data) => {
+  console.log(data);
+  return store.dispatch(TASKCOUNT(data));
 };
 
 export const create_user = (data) => {
@@ -94,6 +113,11 @@ export const fetch_user = () => {
 export const set_account = (data) => {
   return store.dispatch(SETACCOUNT(data));
 };
+
+export const set_allusers = (data) => {
+  return store.dispatch(SETALLUSERS(data));
+};
+
 
 export const set_balance1 = (data) => {
   return store.dispatch(SETBALANCE1(data));

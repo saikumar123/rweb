@@ -6,6 +6,7 @@ import MyRewards from "./MyRewards";
 import Deposit from "./Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
+import TranscationList from './TranscationList';
 import Sidebar from "./Sidebar";
 import LoginWalletOptions from "./LoginWalletOptions";
 import { tokenBalance1ABI } from "../abis/XY_Token";
@@ -23,7 +24,9 @@ import {
   set_account,
   set_balance1,
   set_balance2,
-  set_balance3
+  set_balance3,
+  set_allusers,
+  task_count
 } from "../redux/action";
 var bigInt = require("big-integer");
 
@@ -47,16 +50,25 @@ const mapDispatchToProps = (data) => {
     set_balance3: (data) => {
       set_balance3(data);
     },
+    set_allusers: (data) => {
+      set_allusers(data);
+    },
+    task_count: (data) => {
+      task_count(data)
+    }
   };
 };
 
 const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, set_balance3 }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [account, setAccount] = React.useState("");
+  const [taskCount, setTaskCount] = React.useState(0);
   const [user, setUser] = React.useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = React.useState("deposit");
   const [txnRows, setTxnRows] = useState([]);
+  const [taskUnlock, setTaskUnlock] = React.useState("");
+  
 
   const loadWeb3 = async () => {
     if (window.ethereum) {
@@ -147,7 +159,7 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
     if (data === "MetaMask") {
       console.log("MetaMast");
       loadBlockchainData();
-      
+      setIsOpen(!isOpen);
     }
     if (data === "open") {
       if (account !== "") {
@@ -336,9 +348,11 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
         .unlockTokens(lockId, lockValueBN.value)
         .send({ from: account })
         .on("transactionHash", (unlockedHash) => {
+          setTaskUnlock("Transaction completed successfully");
           return updateTransaction(hash, senderId, receiverId, lockStatus);
         })
         .on("error", (event) => {
+          setTaskUnlock("Some error occurr");
           console.log(event);
         })
         .catch((message) => console.log(message));
@@ -376,7 +390,7 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
       <NotificationBar />
       <div className="col-lg-12 col-xs-12 m-b-30 pull-left">
         <div className="col-lg-3 col-xs-12  m-b-30 pull-left">
-          <Sidebar handlePage={handlePage} />
+          <Sidebar taskCount={taskCount} handlePage={handlePage} />
         </div>
         <div className="col-lg-9 col-xs-12 mb-140 pull-left">
           <MyRewards />
@@ -386,7 +400,7 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
 
           }
           {isLogin && page === 'escrow' &&
-            <Escrow getTxn={getTxn} />
+            <Escrow setTaskCount={setTaskCount} getTxn={getTxn} task_count={task_count} set_allusers={set_allusers} />
           }
           {isLogin && page === 'tasklist' &&
             <TaskList lastClaimedTimeStamp={user.lastClaimedTimeStamp}
@@ -394,7 +408,11 @@ const Landing = ({ user_login, signup, set_account, set_balance1, set_balance2, 
               handleClaim={handleClaim}
               txnRows={txnRows}
               isLogin={isLogin}
+              taskUnlock={taskUnlock}
               avatar={user.avatar} />
+          }
+          {isLogin && page === 'transcations' &&
+            <TranscationList txnRows={txnRows} />
           }
           {/* <TaskList /> */}
         </div>

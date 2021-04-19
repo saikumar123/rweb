@@ -29,6 +29,8 @@ function CustomizedLogin(props) {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  
   // const [lgn_btn_class, setLoginBtnClass] = useState("login_btn");
   const [reg_btn_class, setRegBtnClass] = useState("register_btn");
   const [bottom_line_class, setBottomLineClass] = useState("login_bottom_line");
@@ -45,6 +47,13 @@ function CustomizedLogin(props) {
       password: password,
       accountId: props.accountId,
     };
+    setUsernameError("");
+    
+    if(username.lengh<4 || username.lengh === undefined){
+      setUsernameError("Please enter the avtar name greater than 4 character");
+      return false
+    }
+    
     console.log(isLogin);
     console.log(payload);
     if (isLogin === true) {
@@ -54,6 +63,9 @@ function CustomizedLogin(props) {
           // self.setState({ isLoading: "false" });
           console.log(response);
           if (response.status === 200) {
+            if(response.data.msg === "User already exists. Please login"){
+              setUsernameError("User already exists.");
+            }
             if (
               response.data &&
               response.data.msg === "New user. Please Signup"
@@ -193,17 +205,19 @@ function CustomizedLogin(props) {
             <div id="bottom_line" className={bottom_line_class}></div>
           </div>
           <div className="card-body-bottom">
-            <form id="login_form">
-              
-              <input
-                type="text"
-                className="input-field"
-                value={username}
-                required=""
-                placeholder="Enter your name"
-                onChange={usernameChange}
-              />
-              <input
+            <form id="login_form" class="col-lg-12">
+              <div class="col-lg-12 p0 m-t-15">
+                <input
+                  type="text"
+                  className="form-control form-control-active"
+                  value={username}
+                  required=""
+                  placeholder="Enter your name"
+                  onChange={usernameChange}
+                />
+                <span class="smlTxt">{usernameError !== '' ? usernameError : ''}</span>
+              </div>
+              {/* <input
                 type="email"
                 className="input-field"
                 required=""
@@ -220,15 +234,16 @@ function CustomizedLogin(props) {
                 value={password}
                 placeholder="Enter your password"
                 onChange={passwordChange}
-              />
-              <input
-                type="text"
-                className="input-field"
-                value={props.accountId}
-                disabled="disabled"
-                
-              />
-
+              /> */}
+              <div class="col-lg-12 p0 m-t-15">
+                <input
+                  type="text"
+                  className="form-control form-control-active"
+                  value={props.accountId}
+                  disabled="disabled"
+                  
+                />
+              </div>
               <br />
               <br />
               <br />
