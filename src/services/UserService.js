@@ -2,8 +2,8 @@ import axios from "axios";
 
 const UserService = {
   apiBaseUrl: {
-    // url: "http://localhost:8080/",
-    url: "http://104.42.113.67/api/",
+    url: "http://localhost:8080/",
+    // url: "http://104.42.113.67/api/",
   },
   account: function async(id) {
     return axios

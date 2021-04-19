@@ -18,6 +18,8 @@ const Deposit = (props) => {
   const [successMessage, setSuccessMessage] = React.useState("");
   // const [resultTextValue, setResultTextValue] = React.useState("");
   const handleDeposit = async () => {
+    setSuccessMessage("");
+    setErrorMessage("");
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
       const lockValueBN = bigInt(parseFloat(textValue) * 1000000000000000000);
@@ -60,10 +62,13 @@ const Deposit = (props) => {
     }
   };
   const onChange = (e) => {
+    
     setValue(e.target.value);
   };
 
   const handleChange = (e) => {
+    setSuccessMessage("");
+    setErrorMessage("");
     setTextValue(e.target.value);
   };
   return (

@@ -80,6 +80,14 @@ const Sidebar = (props) => {
                 <span className="nav-text">Staking</span>
               </a>
             </li>
+            <li>
+            <a href="#" 
+              onClick={() =>  props.handlePage("transcations")} 
+              aria-expanded="false"
+            >
+              <span className="nav-text">Transcations</span>
+            </a>
+          </li>
           </ul>
         )}
       </div>

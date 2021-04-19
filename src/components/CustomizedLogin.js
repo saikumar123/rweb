@@ -64,7 +64,7 @@ function CustomizedLogin(props) {
               props.handleLoginClose(response.data.payload);
             }
           } else if (response.status === 200) {
-            setErrorMessage("This user account already exists. Try Login");
+            setErrorMessage("* Avatar name already choosen.");
             login_btn("login");
           }
         })
@@ -99,7 +99,59 @@ function CustomizedLogin(props) {
 
   return (
     <div className="main">
-      <Error data={errorMessage} />
+      <div class="list">
+            Choose an avtar name for yourself.<br/>
+          - Characters length between 4-15 <br/>
+            - Can Contain numbers.
+
+            <br/>- Can Contain letters.
+
+            <br/>
+            - No special characters allowed
+            <br/>
+            </div>
+            <div class="text-center p-top p30">
+              <input type="text" 
+                value={username}
+                required=""
+                placeholder="Enter your name"
+                onChange={usernameChange}
+                class="form-control form-control-active"
+                />
+              {errorMessage !== '' && <span class="text-danger text-left">{errorMessage}</span>}
+            </div>
+            <div class="text-center"> <button type="button" onClick={handleLogin} class="btn button btn-button btn-circular">Done</button>
+              <br/><span class="clrwhite">* note: You will not be allowed to change the avatar name later.</span>
+          </div>
+      {/* <div class="modal fade top30" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content modalNew">
+      
+          <div class="modal-body">
+              <div class="list">
+            Choose an avtar name for yourself.<br/>
+          - Characters length between 4-15 <br/>
+            - Can Contain numbers.
+
+            <br/>- Can Contain letters.
+
+            <br/>
+            - No special characters allowed
+            <br/>
+            </div>
+            <div class="text-center p-top p30">
+              <input type="text" class="form-control inputWhite" placeholder=""/>
+              <span class="text-danger text-left">* Avatar name already choosen.</span>
+            </div>
+            <div class="text-center"> <button type="button"  class="btn button btn-button btn-circular">Done</button>
+              <br/>* note: You will not be allowed to change the avatar name later.
+          </div>
+          </div>
+        
+        </div>
+      </div>
+      </div> */}
+      {/* <Error data={errorMessage} />
       <button
         type="button"
         aria-label="Close"
@@ -188,7 +240,7 @@ function CustomizedLogin(props) {
             <div className="clear"></div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
