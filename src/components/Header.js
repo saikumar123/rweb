@@ -17,7 +17,7 @@ const Header = (props) => {
               width="25"
               height="25"
             ></img>
-            <span className="brand-title">Football Protocall</span>
+            <span className="brand-title">Football Protocol</span>
           </a>
         </div>
       </div>

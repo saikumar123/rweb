@@ -34,7 +34,7 @@ const TransactionList = (props) => {
       </div>
       <div class="col-lg-12 p0 pull-left smlTxt">
         <div class="col-lg-3 m-t-5 pull-left">
-          Transactions
+          Transactions (Amount)
         </div>
         <div class="col-lg-4 pull-left">
           Timestamp (mm/dd/yyyy) UTC
@@ -51,7 +51,7 @@ const TransactionList = (props) => {
             <>
               <div class="col-lg-12 p0 pull-left" className={row.lockStatus === "DONE" || row.lockStatus === "CLAIM" ? 'col-lg-12 p0 pull-left completed' : row.lockStatus === "UNLOCK" ? 'col-lg-12 p0 pull-left unlocked' : 'col-lg-12 p0 pull-left locked'}>
                 <div class="col-lg-3 m-t-5 pull-left">
-                  Amount {row.amount}
+                   {row.amount}
                 </div>
                 <div class="col-lg-4 pull-left">
                   {convertDateTime(row.timestamp)}
