@@ -1,9 +1,10 @@
 import axios from "axios";
+import config from "../environmentConfig"
 
 const UserService = {
   apiBaseUrl: {
     // url: "http://localhost:8080/",
-    url: "http://104.42.113.67/api/",
+    url: config.url+"api/",
   },
   account: function async(id) {
     return axios

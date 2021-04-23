@@ -42,7 +42,7 @@ const LockedValues = () => (
         <div className="row m-b-30 blueTxt">
           <div className="col-lg-1"></div>
           <div className="col-lg-3 "></div>
-          <div className="col-lg-1 tright">Governanace</div>
+          <div className="col-lg-1 tright">Gov</div>
           <div className="col-lg-3">
             <input type="text" className="form-control" placeholder="" />
           </div>

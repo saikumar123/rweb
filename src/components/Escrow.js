@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { govABI } from "../abis/Gov";
 import ethAddressConfig from "../abis/ethAddressConfig";
 import { tokenBalance1ABI } from "../abis/XY_Token";
@@ -29,6 +29,9 @@ const Escrow = (props) => {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   const [lockingBlockNumber, setLockingBlockNumber] = React.useState("");
+  const [unlockError, setUnlockError] = React.useState("");
+  const [creditError, setCreditError] = React.useState("");
+  const [amountError, setAmountError] = React.useState("");
 
   const handleLock = (event) => {
     if (event.target.value === "") {
@@ -55,12 +58,14 @@ const Escrow = (props) => {
   };
   const handleUnlockUser = (event) => {
     setUnlockedUser(event.target.value);
+    setUnlockError("");
   };
 
   const handleCreditWallet = (index, event) => {
     creditedUser[index] = { searchName: event.target.value };
     setCreditedUser(creditedUser);
     setCreditedUser([...creditedUser]);
+    setCreditError("")
   };
 
   const getAvatarFromAccountId = async (accountId) => {
@@ -129,6 +134,7 @@ const Escrow = (props) => {
               postTxn(props.avatar, event);
               setErrorMessage("");
               setUnlockedUser("");
+              setRemainderValue("")
               setLockValue("");
               setUnlockedSelectUser("");
               setCreditedUser([{ searchName: "" }]);
@@ -137,6 +143,7 @@ const Escrow = (props) => {
             setSuccessMessage("");
             setUnlockedUser("");
             setLockValue("");
+            setRemainderValue("")
             setUnlockedSelectUser("");
             setErrorMessage("Some error occurs. Please check the transaction");
             setTimeout(props.getTxn, 60000);
@@ -148,6 +155,24 @@ const Escrow = (props) => {
         });
     }
   };
+
+  const checkValidation = () => {
+    if (creditedUser.length === 1){}
+    if (lockValue === 0 || lockValue === ""){
+      setAmountError("Please enter the valid amount.")
+    }
+    
+    if (lockValue > props.balance1){
+      setRemainderValue(0);
+      setAmountError("Please enter amount less tha MCT.")
+    }
+    if (useWalletValue === ""){
+      setUnlockError("Please select the valid user.")
+    } 
+    if(creditWalletValue === "") {
+      setCreditError("Please select the valid user.")
+    } 
+  }
 
   const handleSubmit = async () => {
     const web3 = window.web3;
@@ -193,6 +218,7 @@ const Escrow = (props) => {
   };
   const search = () => {
     UserService.userByUsername(unlockedUser).then((resolve) => {
+      console.log("resolve.data = ",resolve.data)
       if (resolve.data.payload.user.userName) {
         setUseWalletValue(resolve.data.payload.user.accountId);
         setUnlockedSelectUser([
@@ -208,6 +234,12 @@ const Escrow = (props) => {
       }
     });
   };
+
+  const removeCreditTo = (index) => {
+    var searchData = creditedUser;
+    searchData.splice(index, 1);
+    setCreditedUser([...creditedUser,]);
+  }
 
   const addCreditedTo = () => {
     setCreditedUser([...creditedUser, { searchName: "" }]);
@@ -242,6 +274,8 @@ const Escrow = (props) => {
   }, [props.account]);
 
   useEffect(() => {
+    setErrorMessage("");
+    setSuccessMessage("");
     if (
       creditedUser.length === 1 &&
       lockValue !== 0 &&
@@ -249,6 +283,8 @@ const Escrow = (props) => {
       creditWalletValue !== ""
     ) {
       setShowButton("true");
+    }else if(lockValue > props.balance1){
+      setShowButton("false");
     } else {
       setShowButton("false");
     }
@@ -306,7 +342,7 @@ const Escrow = (props) => {
         <button className="wrapperbutton search-box-btn" onClick={search}>
           <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>{" "}
         </button>
-        <span className="smlTxt">This field cannot be left blank.</span>
+        <span class="smlTxt">{unlockError}</span>
       </div>
       {unlockedSelectUser.length >= 1 && (
         <div className="col-lg-2 pull-left">
@@ -346,8 +382,8 @@ const Escrow = (props) => {
                 >
                   <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>{" "}
                 </button>
-                <span className="smlTxt">
-                  If left blank the unlocking avatar will choose the credited to
+                <span class="smlTxt">
+                  {creditError}
                 </span>
               </div>
 
@@ -363,6 +399,12 @@ const Escrow = (props) => {
                   </select>
                 </div>
               )}
+
+              { index > 0 &&
+                <div class="col-lg-1 m-t-5 pull-left">
+                  <FontAwesomeIcon title="click here to remove it" onClick={(e) => removeCreditTo(index)} class="icon-cursor" icon={faTrash}> </FontAwesomeIcon> 
+                </div>
+              }
 
               {index + 1 !== creditedUser.length && (
                 <div className="col-lg-5 pull-left"></div>
@@ -389,6 +431,7 @@ const Escrow = (props) => {
           {showButton === "false" || creditedUser.length !== 1 ? (
             <button
               type="button"
+              onClick={checkValidation}
               className="btn button btn-button btn-circular disabled"
             >
               {" "}

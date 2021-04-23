@@ -27305,6 +27305,45 @@ button {
     color: #ac421b;
     margin-left:20px
   }
+  .icon-cursor{
+    cursor: pointer;
+    height:25px
+  }
+  .fulldisabled {
+    background-color: #fff !important;
+  }
+  .locked{
+    color: red;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .unlocked{
+    color: #e0b83c;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .completed{
+    color: #71aceb;
+    font-size: 15px;
+    font-weight: bold;
+  }
+  .p30{
+    padding:30px 
+  }
+  .top30{
+    top: 30%;
+  }
+  .list{
+    margin-left: 20%;
+    color: #fff
+  }
+  .clrwhite{
+    color: #b39a9a
+  }
+  .inputWhite{
+    background-color: #fff;
+  }
+  
   /* .fullrow{
     width: 100%;
     float: left;
