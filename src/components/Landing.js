@@ -7,6 +7,7 @@ import Deposit from "./Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
+import TransactionList from './TransactionList';
 
 import LoginWalletOptions from "./LoginWalletOptions";
 import { tokenBalance1ABI } from "../abis/XY_Token";
@@ -66,6 +67,7 @@ const Landing = ({
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = React.useState("");
   const [txnRows, setTxnRows] = useState([]);
+  const [taskUnlock, setTaskUnlock] = React.useState("");
 
   const loadWeb3 = async () => {
     if (window.ethereum) {
@@ -282,9 +284,11 @@ const Landing = ({
         .unlockTokens(lockId, lockValueBN.value)
         .send({ from: account })
         .on("transactionHash", (unlockedHash) => {
+          setTaskUnlock("Transaction completed successfully");
           return updateTransaction(hash, senderId, receiverId, lockStatus);
         })
         .on("error", (event) => {
+          setTaskUnlock("Some error occurr");
           console.log(event);
         })
         .catch((message) => console.log(message));
@@ -342,10 +346,20 @@ const Landing = ({
                 handleClaim={handleClaim}
                 txnRows={txnRows}
                 isLogin={isLogin}
+                taskUnlock={taskUnlock}
                 avatar={user.avatar}
               />{" "}
             </>
           )}
+          {isLogin && page === 'transactions' &&
+            <>
+              <hr class="line"></hr>
+              <TransactionList 
+                txnRows={txnRows} 
+              />{" "}
+            </>
+          }
+          
         </div>
       </div>
     </>

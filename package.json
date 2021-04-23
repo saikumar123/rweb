@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "big-integer": "^1.6.48",
+    "moment": "^2.29.1",
     "node-sass": "^5.0.0",
     "react": "^17.0.2",
     "react-cookie": "^4.0.3",
