@@ -3,8 +3,7 @@ import config from "../environmentConfig"
 
 const LoginService = {
   apiBaseUrl: {
-    // url: "http://localhost:8080/",
-    url: config.url+"api/",
+    url:config.url
   },
   login: function async(payload) {
     return axios
