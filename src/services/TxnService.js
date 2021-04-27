@@ -2,8 +2,7 @@ import axios from "axios";
 import config from "../environmentConfig"
 const TxnService = {
   apiBaseUrl: {
-    // url: "http://localhost:8080/",
-    url: config.url+"api/",
+    url:config.url
   },
   fetchTransaction: function async(text) {
     return axios

@@ -151,7 +151,7 @@ const Landing = ({
     } else {
       if (data === "close") {
         if (isOpen) {
-          // setIsOpen(!isOpen);
+           setIsOpen(!isOpen);
         }
       }
     }
@@ -302,7 +302,13 @@ const Landing = ({
       getAccount();
       getTxn();
     }
-  }, [isLogin, account]);
+  }, [account]);
+
+  useEffect(() => {    
+    if (account !== "") {
+      getTxn();
+    }
+  }, [user]);
 
   return (
     <>

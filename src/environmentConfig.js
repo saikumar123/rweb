@@ -1,17 +1,11 @@
 
 
 const dev = {
-    url: 'http://sample.testmycoding.com/'
+    url: 'http://localhost:8080/'
 };
-
-const stage = {
-    url: 'http://localhost:8081'
-};
-
-
 
 const prod = {
-    url: ''
+    url: 'api/'
 };
 
 const config1 = process.env.REACT_APP_STAGE === 'dev' ? dev : prod;
