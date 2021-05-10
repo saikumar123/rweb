@@ -292,7 +292,7 @@ const Escrow = (props) => {
 
   return (
     <div className="row m-b-30 blueTxt">
-      <div className="col-lg-12 m-b-30">
+      <div className="col-lg-12 m-b-15">
         {" "}
         <small className="tag-line">
           {" "}

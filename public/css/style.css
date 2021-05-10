@@ -198,7 +198,7 @@ h6 {
 .btn {
     text-align: center;
     color: #fff;
-    text-transform: uppercase;
+    text-transform: capitalize;
     font-size: 14px;
     font-weight: 700;
     border: 0;
@@ -1082,12 +1082,12 @@ border-color: #373227; background: #2e2a20;color: #71aceb; font-size: 11px;}
     margin-bottom: 30px;
     text-align: center;
 }
-.fix-header .header {
+/* .fix-header .header {
     position: fixed;
 }
 .fix-nav .nk-sidebar {
     position: fixed;
-}
+} */
 .fix-nav .nk-sidebar.nav-mini {
     position: absolute;
 }
@@ -1127,9 +1127,9 @@ border-color: #373227; background: #2e2a20;color: #71aceb; font-size: 11px;}
 }
 .nk-sidebar {
     /* background: #212529; */
-    width: 250px;
+    /* width: 250px; */
     height: 100%;
-    position: fixed;
+    /* position: fixed; */
     top: 0;
     padding-top: 50px;
     z-index: 1;
@@ -1779,11 +1779,12 @@ border-color: #373227; background: #2e2a20;color: #71aceb; font-size: 11px;}
 }
 .nk-sidebar {
     background: none;
-    width: 250px;
+    /* width: 250px; */
     height: 100%;
-    position: fixed;
+    /* position: fixed; */
     top: 0;
-    padding-top: 125px;
+    /* padding-top: 125px; */
+    padding-top: 65px;
     z-index: 1;
 }
 .nk-sidebar ul {
@@ -2569,6 +2570,9 @@ border-color: #373227; background: #2e2a20;color: #71aceb; font-size: 11px;}
 .error-msg .exc-icon {
     color: #1e9379;
 }
+.clrWhite{
+    color: #fff;
+}
 .currency-hero-area {
     /* background-image: url(../assets/images/07_currency_exchange.jpg); */
     padding: 100px 0;
@@ -2601,4 +2605,7 @@ border-color: #373227; background: #2e2a20;color: #71aceb; font-size: 11px;}
 .currency-hero-area h1 {
     color: #fff;
     margin-bottom: 45px;
+}
+.pd-top{
+    padding-top: 35px;
 }

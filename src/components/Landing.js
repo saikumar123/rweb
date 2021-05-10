@@ -7,7 +7,9 @@ import Deposit from "./Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
+import Staking from './Staking';
 import TransactionList from './TransactionList';
+import TransactionListTable from './TransactionListTable';
 
 import LoginWalletOptions from "./LoginWalletOptions";
 import { tokenBalance1ABI } from "../abis/XY_Token";
@@ -167,6 +169,7 @@ const Landing = ({
   };
 
   const handlePage = (page) => {
+    console.log("page = ",page)
     if (isLogin) {
       setPage(page);
     }
@@ -327,9 +330,9 @@ const Landing = ({
         <div className="col-lg-3 col-xs-12  m-b-30 pull-left">
           <Sidebar handlePage={handlePage} />
         </div>
-        <div className="col-lg-9 col-xs-12 mb-140 pull-left">
+        <div className="col-lg-9 col-xs-12 mb-140 pd-top pull-left">
           {!isLogin && <LockedValues />}
-          {isLogin && <MyRewards />}
+          {isLogin && page !== 'transactions' && <MyRewards />}
 
           {isLogin && page === "deposit" && (
             <>
@@ -344,7 +347,7 @@ const Landing = ({
             </>
           )}
           {isLogin && page === "tasklist" && (
-            <>
+            <> 
               <hr class="line"></hr>
               <TaskList
                 lastClaimedTimeStamp={user.lastClaimedTimeStamp}
@@ -357,8 +360,19 @@ const Landing = ({
               />{" "}
             </>
           )}
+          {isLogin && page === 'staking' &&
+            <>
+              <hr class="line"></hr>
+                <Staking 
+                  txnRows={txnRows} 
+                />
+            </>
+          }
           {isLogin && page === 'transactions' &&
             <>
+              <TransactionListTable 
+                txnRows={txnRows} 
+              />
               <hr class="line"></hr>
               <TransactionList 
                 txnRows={txnRows} 

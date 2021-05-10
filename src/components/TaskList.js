@@ -4,7 +4,7 @@ const TaskList = (props) => {
 
   return (
     <div class="row m-b-30 blueTxt">
-      <div class="col-lg-12 m-b-30">
+      <div class="col-lg-12">
         <small class="tag-line">
           {" "}
           <i>Task List</i>
@@ -38,21 +38,20 @@ const TaskList = (props) => {
                 <div class="col-lg-12 p0 pull-left">
                   <div class="col-lg-1 m-t-5 pull-left">
                     Amount
-            </div>
+                  </div>
                   <div class="col-lg-2 pull-left">
                     <input type="text" value={row.amount} disabled="disabled" readonly="readonly" class="form-control disabled fulldisabled" placeholder="" />
                   </div>
 
                   <div class="col-lg-1.5 m-t-5 pull-left">
                     Credited To
-            </div>
+                  </div>
                   <div class="col-lg-2 pull-left">
                     <input type="text" value={row.recipientAvatar} disabled="disabled" readonly="readonly" class="form-control fulldisabled" placeholder="" />
                   </div>
 
                   <div class="col-lg-3 p-top10 pull-left">
                     <div>
-
                       <input
                         class="range"
                         type="range"

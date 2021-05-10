@@ -52,7 +52,7 @@ body#modern .login-card .custom-control-input:checked ~ .custom-control-label::b
 
 .nk-sidebar {
   /* background: #ffffff; */
-  width: 260px;
+  /* width: 260px; */
 }
 
 .nk-sidebar .menu-heading {
@@ -67,7 +67,7 @@ body#modern .login-card .custom-control-input:checked ~ .custom-control-label::b
 }
 
 .nk-sidebar .metismenu {
-  background: none; border: 1px solid #0d0d0d; border-radius: 15px; margin:10px 5px 5px 25px; padding: 0 20px 20px;
+  background: none; border: 1px solid #0d0d0d; border-radius: 15px; margin:10px 25px 5px 5px; padding: 0 20px 20px;
 }
 
 .nk-sidebar .metismenu a {

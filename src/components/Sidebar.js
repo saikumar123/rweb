@@ -4,9 +4,9 @@ const Sidebar = (props) => {
   const [toggle, setToggle] = useState("collapse");
 
   return (
-    <div className="nk-sidebar">
+    <div className="col-sm-10 nk-sidebar">
       <div className="nk-nav-scroll">
-        <ul className="metismenu togg" id="menu">
+        {/* <ul className="metismenu togg" id="menu">
           <li>
             <a
               className="has-arrow"
@@ -41,7 +41,7 @@ const Sidebar = (props) => {
               </li>
             </ul>
           </li>
-        </ul>
+        </ul> */}
         {toggle === "collapse" && (
           <ul className="metismenu" id="menu">
             <li className="menu-heading">
@@ -76,7 +76,9 @@ const Sidebar = (props) => {
               </a>
             </li>
             <li>
-              <a href="#" aria-expanded="false">
+              <a href="#"
+              onClick={() => props.handlePage("staking")}
+               aria-expanded="false">
                 <span className="nav-text">Staking</span>
               </a>
             </li>

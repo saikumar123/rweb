@@ -21,7 +21,7 @@ const TransactionList = (props) => {
   };
   return (
     <div class="row m-b-30 blueTxt">
-      <div class="col-lg-12 m-b-30">
+      <div class="col-lg-12 m-b-15\">
         <small class="tag-line">
           {" "}
           <i>Transaction List</i>
@@ -32,14 +32,14 @@ const TransactionList = (props) => {
           </small>
         }
       </div>
-      <div class="col-lg-12 p0 pull-left smlTxt">
-        <div class="col-lg-3 m-t-5 pull-left">
+      <div class="col-lg-12 col-sm-12 p0 pull-left smlTxt">
+        <div class="col-lg-3 col-sm-3 m-t-5 pull-left">
           Transactions (Amount)
         </div>
-        <div class="col-lg-4 pull-left">
+        <div class="col-lg-4 col-sm-4 pull-left">
           Timestamp (mm/dd/yyyy) UTC
         </div>
-        <div class="col-lg-3 m-t-5 pull-left">
+        <div class="col-lg-3 col-sm-3 m-t-5 pull-left">
           Type
         </div>
       </div>
@@ -49,15 +49,15 @@ const TransactionList = (props) => {
           return (
 
             <>
-              <div class="col-lg-12 p0 pull-left" className={row.lockStatus === "DONE" || row.lockStatus === "CLAIM" ? 'col-lg-12 p0 pull-left completed' : row.lockStatus === "UNLOCK" ? 'col-lg-12 p0 pull-left unlocked' : 'col-lg-12 p0 pull-left locked'}>
-                <div class="col-lg-3 m-t-5 pull-left">
+              <div class="col-lg-12 col-sm-12 p0 pull-left" className={row.lockStatus === "DONE" || row.lockStatus === "CLAIM" ? 'col-lg-12 p0 pull-left completed' : row.lockStatus === "UNLOCK" ? 'col-lg-12 p0 pull-left unlocked' : 'col-lg-12 p0 pull-left locked'}>
+                <div class="col-lg-3 col-sm-3 m-t-5 pull-left">
                    {row.amount}
                 </div>
-                <div class="col-lg-4 pull-left">
+                <div class="col-lg-4 col-sm-4 pull-left">
                   {convertDateTime(row.timestamp)}
                 </div>
 
-                <div class="col-lg-3 m-t-5 pull-left">
+                <div class="col-lg-3 col-sm-3 m-t-5 pull-left">
 
                   {row.lockStatus === "DONE" ? (
                     "completed"

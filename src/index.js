@@ -5,6 +5,7 @@ import App from "./App";
 import store from "./redux/store";
 import { Provider } from "react-redux";
 import { CookiesProvider } from "react-cookie";
+import 'semantic-ui-css/semantic.min.css'
 
 ReactDOM.render(
   <React.StrictMode>

@@ -3,9 +3,28 @@ import ethAddressConfig from "../abis/ethAddressConfig";
 import { stakeABI } from "../abis/Stake";
 import { lpABI } from "../abis/Liquidity_Pool";
 import { connect } from "react-redux";
+import usdc from '../assets/icon/usd-coin-usdc.png'
+import { Dropdown } from 'semantic-ui-react'
+
 var bigInt = require("big-integer");
 
-const options = ["Eth", "DAI"];
+const options = [{
+  key: 'USDT',
+  text: 'USDT',
+  value: 'USDT',
+  image: { avatar: true, src: '/icon/usdt-logo-2.png' },
+  },{
+  key: 'USDC',
+  text: 'USDC',
+  value: 'USDC',
+  image: { avatar: true, src: '/icon/usd-coin-usdc.png' },
+  },{
+    key: 'DAI',
+    text: 'DAI',
+    value: 'DAI',
+    image: { avatar: true, src: '/icon/dai-logo.png' },
+  }]
+// const options =["Eth", "DAI"];
 const mapStateToProps = (state) => ({
   balance1: state.balance1,
   account: state.account,
@@ -14,6 +33,12 @@ const mapStateToProps = (state) => ({
 const Deposit = (props) => {
   const [value, setValue] = React.useState("");
   const [textValue, setTextValue] = React.useState("");
+  const [selectedVal, setSelectedVal]= React.useState({
+    key: 'USDT',
+    text: 'USDT',
+    value: 'USDT',
+    image: { avatar: true, src: '/icon/usdt.png' },
+    })
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   // const [resultTextValue, setResultTextValue] = React.useState("");
@@ -61,9 +86,9 @@ const Deposit = (props) => {
         });
     }
   };
-  const onChange = (e) => {
+  const onChange = (e, data) => {
+    setValue(data.value);
     
-    setValue(e.target.value);
   };
 
   const handleChange = (e) => {
@@ -73,7 +98,7 @@ const Deposit = (props) => {
   };
   return (
     <div className="row m-b-30 blueTxt">
-      <div className="col-lg-12 m-b-30">
+      <div className="col-lg-12 m-b-10">
         {" "}
         <small className="tag-line">
           {" "}
@@ -101,19 +126,28 @@ const Deposit = (props) => {
       {/* <div className="col-lg-1 "></div> */}
       <div className="col-lg-2">
         <span className="smlTxt">Select Unit</span>
-        <select
+        <Dropdown
+          placeholder='Select Unit'
+          
+          defaultValue={'USDT'}
+          fluid
+          selection
+          onChange={onChange}
+          options={options}
+        />
+        {/* <select
           className="custom-select"
           id="newlocale"
           value={value}
           onChange={onChange}
-        >
-          {options.map((option) => {
+        > */}
+          {/* {options.map((option) => {
             return (
               <option value={option} key={option}>
-                {option}
-              </option>
+                 <div><img src={usdc} height="30px" width="30px"/>{option} </div>
+              </option> 
             );
-          })}
+          })} */}
           {/* <option value="1"><img
               src="../assets/images/football.png"
               alt=""
@@ -122,7 +156,7 @@ const Deposit = (props) => {
             /></option>
         <option value="2">Ethereum</option>
         <option value="3">Repple</option> */}
-        </select>
+        {/* </select> */}
         <br />
         <br />
 
@@ -141,7 +175,7 @@ const Deposit = (props) => {
       </div>
       <div className="col-lg-3 m-t-23">
         <input
-          type="text"
+          type="number"
           className="form-control form-control-active"
           placeholder=""
         />
