@@ -1,13 +1,25 @@
-import React from "react";
-import ethAddressConfig from "../abis/ethAddressConfig";
-import { stakeABI } from "../abis/Stake";
-import { lpABI } from "../abis/Liquidity_Pool";
+import React, { useCallback } from "react";
+import ethAddressConfig from "../../abis/ethAddressConfig";
+import { Form, Formik, Field } from "formik";
 import { connect } from "react-redux";
-import usdc from "../assets/icon/usd-coin-usdc.png";
 import { Dropdown } from "semantic-ui-react";
-import { depositABI } from "../abis/deposit";
+import { depositABI } from "../../abis/deposit";
+import * as yup from "yup";
+import { useFormSubmitWithLoading } from "../../hooks/useFormSubmitWithLoading";
+import FormikInput from "../../atoms/FormikInput";
+import { Button } from "../../atoms/Button/Button";
 
 var bigInt = require("big-integer");
+
+const DepositValidationSchema = yup.object().shape({
+  amount: yup.string().required("Required*"),
+  stakeRate: yup.string().required("Required*"),
+});
+
+const defaultValues = {
+  amount: "",
+  stakeRate: "",
+};
 
 const options = [
   {
@@ -36,8 +48,6 @@ const mapStateToProps = (state) => ({
 });
 
 const Deposit = (props) => {
-  const [value, setValue] = React.useState("");
-  const [textValue, setTextValue] = React.useState("");
   const [selectedVal, setSelectedVal] = React.useState({
     key: "USDT",
     text: "USDT",
@@ -92,11 +102,8 @@ const Deposit = (props) => {
   //       });
   //   }
   // };
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
 
-  const handleDeposit = async () => {
+  const onSubmit = useCallback(async (values) => {
     setSuccessMessage("");
     setErrorMessage("");
     const web3 = window.web3;
@@ -106,107 +113,75 @@ const Deposit = (props) => {
         ethAddressConfig.deposit_address
       );
 
-      const lockValueBN = bigInt(parseFloat(textValue) * 100000);
-      console.log(lockValueBN?.value);
+      const lockValueBN = bigInt(parseFloat(values?.amount) * 100000);
+
       await depositABIObject.methods
-        .depositAndStake(0, lockValueBN?.value, value)
+        .depositAndStake(0, lockValueBN?.value, values?.stakeRate)
         .send({ from: props.account })
         .on("transactionHash", (hash) => {
           console.log(hash);
         });
     }
-  };
+  }, []);
 
-  const handleChange = (e) => {
-    setSuccessMessage("");
-    setErrorMessage("");
-    setTextValue(e.target.value);
-  };
+  const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);
+
   return (
-    <div className="row m-b-30 blueTxt">
-      <div className="col-lg-12 m-b-10">
-        {" "}
-        <small className="tag-line">
-          {" "}
-          <i>Deposits</i>
-        </small>{" "}
-        {successMessage && (
-          <small className="tag-line-success">{successMessage}</small>
-        )}
-        {errorMessage && (
-          <small className="tag-line-error">{errorMessage}</small>
-        )}
-      </div>
+    <Formik
+      initialValues={defaultValues}
+      enableReinitialize={true}
+      onSubmit={onSubmitHandler}
+      validationSchema={DepositValidationSchema}
+    >
+      {({ errors }) => (
+        <Form>
+          {console.log(errors)}
+          <div className="d-flex flex-column ">
+            <div className="row m-b-30 blueTxt ">
+              <div className="col-lg-12 m-b-10">
+                {" "}
+                <small className="tag-line">
+                  {" "}
+                  <i>Deposits</i>
+                </small>{" "}
+                {successMessage && (
+                  <small className="tag-line-success">{successMessage}</small>
+                )}
+                {errorMessage && (
+                  <small className="tag-line-error">{errorMessage}</small>
+                )}
+              </div>
 
-      <div className="col-lg-1.5 p-l-15 m-t-28">Enter Amount</div>
-      <div className="col-lg-3  m-t-23">
-        <input
-          type="number"
-          onChange={handleChange}
-          value={textValue}
-          className="form-control form-control-active"
-          placeholder=""
-        />
-      </div>
+              <div className="col-lg-1.5 p-l-15 m-t-28">Enter Amount</div>
+              <div className="col-lg-3  m-t-23">
+                <FormikInput name="amount" />
+              </div>
 
-      {/* <div className="col-lg-1 "></div> */}
-      <div className="col-lg-2">
-        <span className="smlTxt">Select Unit</span>
-        <Dropdown
-          placeholder="Select Unit"
-          defaultValue={"USDT"}
-          fluid
-          selection
-          options={options}
-        />
-        {/* <select
-          className="custom-select"
-          id="newlocale"
-          value={value}
-          onChange={onChange}
-        > */}
-        {/* {options.map((option) => {
-            return (
-              <option value={option} key={option}>
-                 <div><img src={usdc} height="30px" width="30px"/>{option} </div>
-              </option> 
-            );
-          })} */}
-        {/* <option value="1"><img
-              src="../assets/images/football.png"
-              alt=""
-              width="25"
-              height="25"
-            /></option>
-        <option value="2">Ethereum</option>
-        <option value="3">Repple</option> */}
-        {/* </select> */}
-        <br />
-        <br />
-
-        <button
-          type="button"
-          onClick={handleDeposit}
-          className="btn button btn-button btn-circular m-t-10"
-        >
-          Deposit
-        </button>
-      </div>
-      {/* <div className="col-lg-1"></div> */}
-      <div className="col-lg-2.5 m-t-28 m-l-10">
-        Enter % share allocation
-        {/* <br /> */}
-      </div>
-      <div className="col-lg-3 m-t-23">
-        <input
-          type="number"
-          className="form-control form-control-active"
-          placeholder=""
-          onChange={onChange}
-        />
-        <span className="smlTxt">This field cannot be left blank.</span>
-      </div>
-    </div>
+              <div className="col-lg-2">
+                <div className="mb-2 blueTxt">Select Unit</div>
+                <div className="border border-white ">
+                  <Dropdown
+                    placeholder="Select Unit"
+                    defaultValue={"USDT"}
+                    fluid
+                    selection
+                    options={options}
+                    style={{ border: "1px sold red" }}
+                  />
+                </div>
+              </div>
+              <div className="col-lg-2.5 m-t-28 m-l-10">
+                Enter % share allocation
+              </div>
+              <div className="col-lg-3 m-t-23">
+                <FormikInput name="stakeRate" />
+              </div>
+            </div>
+            <Button>Deposit</Button>
+          </div>
+        </Form>
+      )}
+    </Formik>
   );
 };
 Deposit.propTypes = {};

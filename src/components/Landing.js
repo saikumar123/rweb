@@ -3,7 +3,7 @@ import Web3 from "web3";
 import Header from "./Header";
 import NotificationBar from "./NotificationBar";
 import MyRewards from "./MyRewards";
-import Deposit from "./Deposit";
+import Deposit from "./Deposit/Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
@@ -132,12 +132,12 @@ const Landing = ({
 
   const getAccount = () => {
     UserService.account(account).then((resolve) => {
-      if (resolve.data.payload.user.length === 0) {
+      if (resolve?.data.payload.user.length === 0) {
         setIsLogin(true);
         user_login(true);
         setIsOpen(!isOpen);
       } else {
-        loginSuccessFull(resolve.data.payload);
+        loginSuccessFull(resolve?.data.payload);
       }
     });
   };
@@ -162,8 +162,8 @@ const Landing = ({
   };
 
   const loginSuccessFull = (payload) => {
-    setUser(payload.user);
-    signup(payload.user);
+    setUser(payload?.user);
+    signup(payload?.user);
     setIsLogin(true);
     user_login(true);
     set_account(account);
@@ -171,7 +171,6 @@ const Landing = ({
   };
 
   const handlePage = (page) => {
-    console.log("page = ", page);
     if (isLogin) {
       setPage(page);
     }
@@ -330,7 +329,7 @@ const Landing = ({
       <NotificationBar />
       <div className="col-lg-12 col-xs-12 m-b-30 pull-left">
         <div className="col-lg-3 col-xs-12  m-b-30 pull-left">
-          <Sidebar handlePage={handlePage} />
+          <Sidebar handlePage={handlePage} page={page} />
         </div>
         <div className="col-lg-9 col-xs-12 mb-140 pd-top pull-left">
           {!isLogin && <LockedValues />}
