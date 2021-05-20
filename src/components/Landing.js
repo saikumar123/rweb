@@ -3,13 +3,14 @@ import Web3 from "web3";
 import Header from "./Header";
 import NotificationBar from "./NotificationBar";
 import MyRewards from "./MyRewards";
-import Deposit from "./Deposit";
+import Deposit from "./Deposit/Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
-import Staking from './Staking';
-import TransactionList from './TransactionList';
-import TransactionListTable from './TransactionListTable';
+import Staking from "./Staking";
+import TransactionList from "./TransactionList";
+import TransactionListTable from "./TransactionListTable";
+import { depositABI } from "../abis/deposit";
 
 import LoginWalletOptions from "./LoginWalletOptions";
 import { tokenBalance1ABI } from "../abis/XY_Token";
@@ -33,6 +34,7 @@ import LockedValues from "./LockedValues";
 var bigInt = require("big-integer");
 
 const mapDispatchToProps = (data) => {
+  console.log(data);
   return {
     user_login: (data) => {
       create_user(data);
@@ -89,13 +91,13 @@ const Landing = ({
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
       const tokenBalanceABIObject = new web3.eth.Contract(
-        tokenBalance1ABI,
-        ethAddressConfig.xy_token
+        depositABI,
+        ethAddressConfig.deposit_address
       );
+      console.log(tokenBalanceABIObject);
       let balance1 = await tokenBalanceABIObject.methods
-        .balanceOf(account)
+        .userInfoMCT(account)
         .call();
-      balance1 = balance1 / 1000000000000000000;
 
       const gasTokenABIObject = new web3.eth.Contract(
         gasTokenABI,
@@ -130,12 +132,12 @@ const Landing = ({
 
   const getAccount = () => {
     UserService.account(account).then((resolve) => {
-      if (resolve.data.payload.user.length === 0) {
+      if (resolve?.data.payload.user.length === 0) {
         setIsLogin(true);
         user_login(true);
         setIsOpen(!isOpen);
       } else {
-        loginSuccessFull(resolve.data.payload);
+        loginSuccessFull(resolve?.data.payload);
       }
     });
   };
@@ -153,15 +155,15 @@ const Landing = ({
     } else {
       if (data === "close") {
         if (isOpen) {
-           setIsOpen(!isOpen);
+          setIsOpen(!isOpen);
         }
       }
     }
   };
 
   const loginSuccessFull = (payload) => {
-    setUser(payload.user);
-    signup(payload.user);
+    setUser(payload?.user);
+    signup(payload?.user);
     setIsLogin(true);
     user_login(true);
     set_account(account);
@@ -169,7 +171,6 @@ const Landing = ({
   };
 
   const handlePage = (page) => {
-    console.log("page = ",page)
     if (isLogin) {
       setPage(page);
     }
@@ -307,7 +308,7 @@ const Landing = ({
     }
   }, [account]);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (account !== "") {
       getTxn();
     }
@@ -328,11 +329,11 @@ const Landing = ({
       <NotificationBar />
       <div className="col-lg-12 col-xs-12 m-b-30 pull-left">
         <div className="col-lg-3 col-xs-12  m-b-30 pull-left">
-          <Sidebar handlePage={handlePage} />
+          <Sidebar handlePage={handlePage} page={page} />
         </div>
         <div className="col-lg-9 col-xs-12 mb-140 pd-top pull-left">
           {!isLogin && <LockedValues />}
-          {isLogin && page !== 'transactions' && <MyRewards />}
+          {isLogin && page !== "transactions" && <MyRewards />}
 
           {isLogin && page === "deposit" && (
             <>
@@ -347,7 +348,7 @@ const Landing = ({
             </>
           )}
           {isLogin && page === "tasklist" && (
-            <> 
+            <>
               <hr class="line"></hr>
               <TaskList
                 lastClaimedTimeStamp={user.lastClaimedTimeStamp}
@@ -360,26 +361,19 @@ const Landing = ({
               />{" "}
             </>
           )}
-          {isLogin && page === 'staking' &&
+          {isLogin && page === "staking" && (
             <>
               <hr class="line"></hr>
-                <Staking 
-                  txnRows={txnRows} 
-                />
+              <Staking txnRows={txnRows} />
             </>
-          }
-          {isLogin && page === 'transactions' &&
+          )}
+          {isLogin && page === "transactions" && (
             <>
-              <TransactionListTable 
-                txnRows={txnRows} 
-              />
+              <TransactionListTable txnRows={txnRows} />
               <hr class="line"></hr>
-              <TransactionList 
-                txnRows={txnRows} 
-              />{" "}
+              <TransactionList txnRows={txnRows} />{" "}
             </>
-          }
-          
+          )}
         </div>
       </div>
     </>

@@ -52,6 +52,7 @@ const Sidebar = (props) => {
                 href="#"
                 onClick={() => props.handlePage("deposit")}
                 aria-expanded="true"
+                className={props.page === "deposit" && "active"}
               >
                 <span className="nav-text">Deposit</span>
               </a>
@@ -76,20 +77,23 @@ const Sidebar = (props) => {
               </a>
             </li>
             <li>
-              <a href="#"
-              onClick={() => props.handlePage("staking")}
-               aria-expanded="false">
+              <a
+                href="#"
+                onClick={() => props.handlePage("staking")}
+                aria-expanded="false"
+              >
                 <span className="nav-text">Staking</span>
               </a>
             </li>
             <li>
-            <a href="#" 
-              onClick={() =>  props.handlePage("transactions")} 
-              aria-expanded="false"
-            >
-              <span className="nav-text">Transactions</span>
-            </a>
-          </li>
+              <a
+                href="#"
+                onClick={() => props.handlePage("transactions")}
+                aria-expanded="false"
+              >
+                <span className="nav-text">Transactions</span>
+              </a>
+            </li>
           </ul>
         )}
       </div>

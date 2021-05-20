@@ -176,6 +176,9 @@ const Escrow = (props) => {
 
   const handleSubmit = async () => {
     const web3 = window.web3;
+    console.log("useWalletValue = ",useWalletValue)
+    console.log("creditWalletValue = ",creditWalletValue)
+    // return false
     if (web3 !== undefined && web3.eth !== undefined) {
       const govABIObject = new web3.eth.Contract(
         govABI,
