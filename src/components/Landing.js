@@ -3,7 +3,7 @@ import Web3 from "web3";
 import Header from "./Header";
 import NotificationBar from "./NotificationBar";
 import MyRewards from "./MyRewards";
-import Deposit from "./Deposit/Deposit";
+import Deposit from "./Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
@@ -13,7 +13,7 @@ import TransactionListTable from "./TransactionListTable";
 import { depositABI } from "../abis/deposit";
 
 import LoginWalletOptions from "./LoginWalletOptions";
-import { tokenBalance1ABI } from "../abis/XY_Token";
+
 import ethAddressConfig from "../abis/ethAddressConfig";
 import { govTokenABI } from "../abis/Gov_Token";
 import { gasTokenABI } from "../abis/Gas_Token";
@@ -92,12 +92,13 @@ const Landing = ({
     if (web3 !== undefined && web3.eth !== undefined) {
       const tokenBalanceABIObject = new web3.eth.Contract(
         depositABI,
-        ethAddressConfig.deposit_address
+        ethAddressConfig.deposit_Address
       );
       console.log(tokenBalanceABIObject);
       let balance1 = await tokenBalanceABIObject.methods
         .userInfoMCT(account)
         .call();
+      console.log(balance1);
 
       const gasTokenABIObject = new web3.eth.Contract(
         gasTokenABI,

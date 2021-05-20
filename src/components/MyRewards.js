@@ -25,7 +25,7 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             type="text"
             disabled="disabled"
             className="form-control"
-            value={balance1?.lockedMCT}
+            value={balance1.lockedMCT / 1000000000000}
             placeholder=""
           />
         </div>
@@ -36,7 +36,7 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             className="form-control"
             disabled="disabled"
             placeholder=""
-            value={balance1?.unlockedMCT}
+            value={balance1.unlockedMCT / 1000000000000}
           />
         </div>
         <div className="col-lg-11 col-sm-12 m-auto">

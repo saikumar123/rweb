@@ -1,13 +1,14 @@
 import React, { useCallback } from "react";
-import ethAddressConfig from "../../abis/ethAddressConfig";
+import ethAddressConfig from "../abis/ethAddressConfig";
 import { Form, Formik, Field } from "formik";
 import { connect } from "react-redux";
 import { Dropdown } from "semantic-ui-react";
-import { depositABI } from "../../abis/deposit";
+import { depositABI } from "../abis/deposit";
 import * as yup from "yup";
-import { useFormSubmitWithLoading } from "../../hooks/useFormSubmitWithLoading";
-import FormikInput from "../../atoms/FormikInput";
-import { Button } from "../../atoms/Button/Button";
+import { useFormSubmitWithLoading } from "../hooks/useFormSubmitWithLoading";
+import FormikInput from "../atoms/FormikInput";
+import { Button } from "../atoms/Button/Button";
+import { nithinTokenABI } from "../abis/nithin_Token";
 
 var bigInt = require("big-integer");
 
@@ -56,72 +57,41 @@ const Deposit = (props) => {
   });
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
-  // const [resultTextValue, setResultTextValue] = React.useState("");
-  // const handleDeposit = async () => {
-  //   setSuccessMessage("");
-  //   setErrorMessage("");
-  //   const web3 = window.web3;
-  //   if (web3 !== undefined && web3.eth !== undefined) {
-  //     const lockValueBN = bigInt(parseFloat(textValue) * 1000000000000000000);
-  //     const depositABIObject = new web3.eth.Contract(
-  //       depositABI,
-  //       ethAddressConfig.deposit_address
-  //     );
-  //     console.log(depositABIObject);
 
-  //     const stakeABIObject = new web3.eth.Contract(
-  //       stakeABI,
-  //       ethAddressConfig.stake_address
-  //     );
-
-  //     // await lpABIObject.methods
-  //     //   .approve(ethAddressConfig.stake_address, lockValueBN.value)
-  //     //   .send({ from: props.account })
-  //     //   .on("transactionHash", (hash) => {
-  //     //     stakeABIObject.methods
-  //     //       .deposit("0", lockValueBN.value)
-  //     //       .send({ from: props.account })
-  //     //       .on("transactionHash", (hash) => {});
-  //     //   });
-
-  //     // stakeABIObject.events
-  //     //   .Deposit({ fromBlock: "0" })
-  //     //   .on("data", (event) => {});
-  //     const depositEvent = stakeABIObject.events
-  //       .Deposit({ fromBlock: "0" })
-  //       .on("data", (event) => {
-  //         if (event.transactionHash) {
-  //           props.getBalance1();
-  //           setTextValue("");
-  //           setSuccessMessage("Transaction completed successfully.");
-  //           setErrorMessage("");
-  //         } else {
-  //           setSuccessMessage("");
-  //           setErrorMessage("Some error occurs. Please check the transaction");
-  //         }
-  //       });
-  //   }
-  // };
-
-  const onSubmit = useCallback(async (values) => {
+  const handleDeposit = (amount, stakeRate) => {
     setSuccessMessage("");
     setErrorMessage("");
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
+      const lockValueBN = bigInt(parseFloat(amount) * 1000000000);
+      console.log(lockValueBN);
+
       const depositABIObject = new web3.eth.Contract(
         depositABI,
-        ethAddressConfig.deposit_address
+        ethAddressConfig.deposit_Address
+      );
+      const nithinTokenABIObject = new web3.eth.Contract(
+        nithinTokenABI,
+        ethAddressConfig.updated_nithin_token
       );
 
-      const lockValueBN = bigInt(parseFloat(values?.amount) * 100000);
-
-      await depositABIObject.methods
-        .depositAndStake(0, lockValueBN?.value, values?.stakeRate)
+      nithinTokenABIObject.methods
+        .approve(ethAddressConfig.deposit_Address, lockValueBN.value)
         .send({ from: props.account })
         .on("transactionHash", (hash) => {
           console.log(hash);
+          depositABIObject.methods
+            .depositAndStake(0, lockValueBN.value, stakeRate)
+            .send({ from: props.account })
+            .on("transactionHash", (hash) => {
+              console.log(hash);
+            });
         });
     }
+  };
+
+  const onSubmit = useCallback(async (values) => {
+    handleDeposit(values?.amount, values?.stakeRate);
   }, []);
 
   const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);
