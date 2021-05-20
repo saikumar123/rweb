@@ -25,13 +25,13 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             type="text"
             disabled="disabled"
             className="form-control"
-            value={balance1}
+            value={balance1.lockedMCT/1000000000000}
             placeholder=""
           />
         </div>
         <div className="col-lg-12 p0 m-b-10">
           <i className="smlTxt">Unlocked</i>
-          <input type="text" className="form-control" disabled="disabled" placeholder="" />
+          <input type="text" className="form-control" disabled="disabled" placeholder="" value={balance1.unlockedMCT/1000000000000} />
         </div>
         <div className="col-lg-11 col-sm-12 m-auto">
           <button type="button" className="btn button btn-button btn-circular col-sm-11">

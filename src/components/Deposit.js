@@ -1,10 +1,12 @@
 import React from "react";
-import ethAddressConfig from "../abis/ethAddressConfig";
+import ethAddressConfig, { updated_nithin_token } from "../abis/ethAddressConfig";
 import { stakeABI } from "../abis/Stake";
 import { lpABI } from "../abis/Liquidity_Pool";
 import { connect } from "react-redux";
 import usdc from '../assets/icon/usd-coin-usdc.png'
 import { Dropdown } from 'semantic-ui-react'
+import { depositABI } from "../abis/deposit";
+import { nithinTokenABI } from "../abis/nithin_Token";
 
 var bigInt = require("big-integer");
 
@@ -33,6 +35,7 @@ const mapStateToProps = (state) => ({
 const Deposit = (props) => {
   const [value, setValue] = React.useState("");
   const [textValue, setTextValue] = React.useState("");
+  const [textValue1, setTextValue1] = React.useState("");
   const [selectedVal, setSelectedVal]= React.useState({
     key: 'USDT',
     text: 'USDT',
@@ -42,12 +45,13 @@ const Deposit = (props) => {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   // const [resultTextValue, setResultTextValue] = React.useState("");
-  const handleDeposit = async () => {
+  const handleDeposit =  () => {
     setSuccessMessage("");
     setErrorMessage("");
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
-      const lockValueBN = bigInt(parseFloat(textValue) * 1000000000000000000);
+      const lockValueBN = bigInt(parseFloat(textValue) * 1000000000);
+      console.log(lockValueBN)
       const lpABIObject = new web3.eth.Contract(
         lpABI,
         ethAddressConfig.lp_token
@@ -57,20 +61,46 @@ const Deposit = (props) => {
         stakeABI,
         ethAddressConfig.stake_address
       );
-
-      await lpABIObject.methods
-        .approve(ethAddressConfig.stake_address, lockValueBN.value)
+      const depositABIObject = new web3.eth.Contract(
+        depositABI,
+        ethAddressConfig.deposit_Address
+      );
+      const nithinTokenABIObject = new web3.eth.Contract(
+        nithinTokenABI,
+        ethAddressConfig.updated_nithin_token
+      )
+       console.log(textValue)
+       console.log(textValue1)
+      nithinTokenABIObject.methods
+        .approve(ethAddressConfig.deposit_Address, lockValueBN.value)
         .send({ from: props.account })
         .on("transactionHash", (hash) => {
-          stakeABIObject.methods
-            .deposit("0", lockValueBN.value)
+          console.log(hash);
+            depositABIObject.methods
+            .depositAndStake(0, lockValueBN.value,textValue1)
             .send({ from: props.account })
-            .on("transactionHash", (hash) => {});
+            .on("transactionHash", (hash) => {
+              console.log(hash)
+            });
         });
 
-      stakeABIObject.events
-        .Deposit({ fromBlock: "0" })
-        .on("data", (event) => {});
+
+
+      // await lpABIObject.methods
+      //   .approve(ethAddressConfig.stake_address, lockValueBN.value)
+      //   .send({ from: props.account })
+      //   .on("transactionHash", (hash) => {
+      //     stakeABIObject.methods
+      //       .deposit("0", lockValueBN.value)
+      //       .send({ from: props.account })
+      //       .on("transactionHash", (hash) => {});
+      //   });
+
+      // depositABIObject.events
+      //   .Deposit({ fromBlock: "0" })
+      //   .on("data", (event) => {
+      //     console.log(event);
+      //   });
       const depositEvent = stakeABIObject.events
         .Deposit({ fromBlock: "0" })
         .on("data", (event) => {
@@ -96,6 +126,12 @@ const Deposit = (props) => {
     setErrorMessage("");
     setTextValue(e.target.value);
   };
+
+  const handleChange1 = (e)=>{
+    setSuccessMessage("");
+    setErrorMessage("");
+    setTextValue1(e.target.value);
+  }
   return (
     <div className="row m-b-30 blueTxt">
       <div className="col-lg-12 m-b-10">
@@ -177,6 +213,8 @@ const Deposit = (props) => {
         <input
           type="number"
           className="form-control form-control-active"
+          onChange={handleChange1}
+          value={textValue1}
           placeholder=""
         />
         <span className="smlTxt">This field cannot be left blank.</span>

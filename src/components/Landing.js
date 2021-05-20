@@ -18,6 +18,7 @@ import { govTokenABI } from "../abis/Gov_Token";
 import { gasTokenABI } from "../abis/Gas_Token";
 import { govABI } from "../abis/Gov";
 import { connect } from "react-redux";
+import {depositABI} from "../abis/deposit"
 
 import UserService from "../services/UserService";
 import TxnService from "../services/TxnService";
@@ -89,13 +90,14 @@ const Landing = ({
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
       const tokenBalanceABIObject = new web3.eth.Contract(
-        tokenBalance1ABI,
-        ethAddressConfig.xy_token
+        depositABI,
+        ethAddressConfig.deposit_Address
       );
+      console.log(tokenBalanceABIObject)
       let balance1 = await tokenBalanceABIObject.methods
-        .balanceOf(account)
+        .userInfoMCT(account)
         .call();
-      balance1 = balance1 / 1000000000000000000;
+        console.log(balance1)
 
       const gasTokenABIObject = new web3.eth.Contract(
         gasTokenABI,
