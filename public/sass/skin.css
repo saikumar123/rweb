@@ -87,7 +87,7 @@ body#modern
   border: 5px solid #004c9d;
   padding: 10px;
 }
-
+.nk-sidebar .metismenu a.active,
 .nk-sidebar .metismenu a:hover,
 .nk-sidebar .metismenu a:focus,
 .nk-sidebar .metismenu a:active {
