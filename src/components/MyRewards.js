@@ -8,6 +8,7 @@ const mapStateToProps = (state) => ({
 });
 
 const MyRewards = ({ balance1, balance2, balance3 }) => {
+  const convertNumber = 1000000000;
   return (
     <div className="row blueTxt">
       <div className="col-lg-12 m-b-15">
@@ -25,7 +26,7 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             type="text"
             disabled="disabled"
             className="form-control"
-            value={balance1.lockedMCT / 1000000000000}
+            value={balance1.lockedMCT / convertNumber}
             placeholder=""
           />
         </div>
@@ -36,7 +37,7 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             className="form-control"
             disabled="disabled"
             placeholder=""
-            value={balance1.unlockedMCT / 1000000000000}
+            value={balance1.unlockedMCT / convertNumber}
           />
         </div>
         <div className="col-lg-11 col-sm-12 m-auto">

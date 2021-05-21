@@ -55,16 +55,17 @@ const Deposit = (props) => {
     value: "USDT",
     image: { avatar: true, src: "/icon/usdt.png" },
   });
+
+  const convertNumber = 1000000000;
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
 
-  const handleDeposit = (amount, stakeRate) => {
+  const handleDeposit = async (amount, stakeRate) => {
     setSuccessMessage("");
     setErrorMessage("");
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
-      const lockValueBN = bigInt(parseFloat(amount) * 1000000000);
-      console.log(lockValueBN);
+      const lockValueBN = bigInt(parseFloat(amount) * convertNumber);
 
       const depositABIObject = new web3.eth.Contract(
         depositABI,
@@ -72,10 +73,10 @@ const Deposit = (props) => {
       );
       const nithinTokenABIObject = new web3.eth.Contract(
         nithinTokenABI,
-        ethAddressConfig.updated_nithin_token
+        ethAddressConfig.nithin_token
       );
 
-      nithinTokenABIObject.methods
+      await nithinTokenABIObject.methods
         .approve(ethAddressConfig.deposit_Address, lockValueBN.value)
         .send({ from: props.account })
         .on("transactionHash", (hash) => {
@@ -83,9 +84,7 @@ const Deposit = (props) => {
           depositABIObject.methods
             .depositAndStake(0, lockValueBN.value, stakeRate)
             .send({ from: props.account })
-            .on("transactionHash", (hash) => {
-              console.log(hash);
-            });
+            .on("transactionHash", (hash) => {});
         });
     }
   };
@@ -109,11 +108,9 @@ const Deposit = (props) => {
           <div className="d-flex flex-column ">
             <div className="row m-b-30 blueTxt ">
               <div className="col-lg-12 m-b-10">
-                {" "}
                 <small className="tag-line">
-                  {" "}
                   <i>Deposits</i>
-                </small>{" "}
+                </small>
                 {successMessage && (
                   <small className="tag-line-success">{successMessage}</small>
                 )}

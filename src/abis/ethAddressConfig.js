@@ -31,5 +31,5 @@ module.exports = {
   gas_token: "0xF26537cA6eB3E995C4F2520c5f51A06117F349ab",
 
   deposit_Address: "0xDd31d73c8441F694f48022E0E841ECE64aAdDB06",
-  updated_nithin_token: "0x47C2b81D31BA8387D6C3D8bDa8d9A4225fEfa6db",
+  nithin_token: "0x47C2b81D31BA8387D6C3D8bDa8d9A4225fEfa6db",
 };
