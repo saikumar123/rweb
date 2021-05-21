@@ -82,15 +82,20 @@ body#modern
   border-radius: 15px;
   -webkit-transition: ease-in-out 0.3s;
   transition: ease-in-out 0.3s;
-  margin-top: 10px;
+  margin-top: 20px;
+  font-size: 14px;
+  border: 5px solid #004c9d;
+  padding: 10px;
 }
 
 .nk-sidebar .metismenu a:hover,
 .nk-sidebar .metismenu a:focus,
 .nk-sidebar .metismenu a:active {
-  background: #004c9d;
+  background: #fff;
   border-radius: 15px;
-  color: #fff;
+  color: #000;
+  border-color: green;
+  font-weight: 600;
 }
 .togg {
   border: none !important;

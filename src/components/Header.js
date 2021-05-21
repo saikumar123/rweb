@@ -7,7 +7,7 @@ const Header = (props) => {
     setBtnvalue("Connecting...");
   };
   return (
-    <div className="header">
+    <div className="header pt-2">
       <div className="nav-header">
         <div className="brand-logo">
           <a href="index2.html">

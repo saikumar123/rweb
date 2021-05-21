@@ -3,6 +3,29 @@ import React, { useState } from "react";
 const Sidebar = (props) => {
   const [toggle, setToggle] = useState("collapse");
 
+  const data = [
+    {
+      label: "Deposit",
+      slug: "deposit",
+    },
+    {
+      label: "Escrow",
+      slug: "escrow",
+    },
+    {
+      label: "Task List",
+      slug: "tasklist",
+    },
+    {
+      label: "Staking",
+      slug: "staking",
+    },
+    {
+      label: "Transactions",
+      slug: "transactions",
+    },
+  ];
+
   return (
     <div className="col-sm-10 nk-sidebar">
       <div className="nk-nav-scroll">
@@ -47,53 +70,18 @@ const Sidebar = (props) => {
             <li className="menu-heading">
               <span className="nav-text smlTxt">User Menu</span>
             </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => props.handlePage("deposit")}
-                aria-expanded="true"
-                className={props.page === "deposit" && "active"}
-              >
-                <span className="nav-text">Deposit</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => props.handlePage("escrow")}
-                aria-expanded="false"
-              >
-                <span className="nav-text">Escrow</span>
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="#"
-                onClick={() => props.handlePage("tasklist")}
-                aria-expanded="false"
-              >
-                <span className="nav-text">Task List</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => props.handlePage("staking")}
-                aria-expanded="false"
-              >
-                <span className="nav-text">Staking</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => props.handlePage("transactions")}
-                aria-expanded="false"
-              >
-                <span className="nav-text">Transactions</span>
-              </a>
-            </li>
+            {data.map((obj) => (
+              <li>
+                <a
+                  href="#"
+                  onClick={() => props.handlePage(obj?.slug)}
+                  aria-expanded="true"
+                  className={props.page === obj?.slug && "active"}
+                >
+                  <span className="nav-text">{obj?.label}</span>
+                </a>
+              </li>
+            ))}
           </ul>
         )}
       </div>
