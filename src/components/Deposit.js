@@ -10,7 +10,7 @@ import FormikInput from "../atoms/FormikInput";
 import { Button } from "../atoms/Button/Button";
 import { nithinTokenABI } from "../abis/nithin_Token";
 
-var bigInt = require("big-integer");
+// var bigInt = require("big-integer");
 
 const DepositValidationSchema = yup.object().shape({
   amount: yup.string().required("Required*"),
@@ -65,7 +65,8 @@ const Deposit = (props) => {
     setErrorMessage("");
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
-      const lockValueBN = bigInt(parseFloat(amount) * convertNumber);
+      // const lockValueBN = bigInt(parseFloat(amount) * convertNumber)?.value;
+      const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
 
       const depositABIObject = new web3.eth.Contract(
         depositABI,
@@ -75,14 +76,13 @@ const Deposit = (props) => {
         nithinTokenABI,
         ethAddressConfig.nithin_token
       );
-
+      console.log(lockValueBN);
       await nithinTokenABIObject.methods
-        .approve(ethAddressConfig.deposit_Address, lockValueBN.value)
+        .approve(ethAddressConfig.deposit_Address, lockValueBN)
         .send({ from: props.account })
         .on("transactionHash", (hash) => {
-          console.log(hash);
           depositABIObject.methods
-            .depositAndStake(0, lockValueBN.value, stakeRate)
+            .depositAndStake(0, lockValueBN, stakeRate)
             .send({ from: props.account })
             .on("transactionHash", (hash) => {});
         });

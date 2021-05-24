@@ -34,7 +34,7 @@ const Header = (props) => {
         )}
         {props.isLogin && (
           <button type="button" className="btn button btn-button btn-circular">
-            {props.user.avatar}
+            {props?.user?.avatar}
           </button>
         )}
       </div>

@@ -31,6 +31,7 @@ import {
   set_balance3,
 } from "../redux/action";
 import LockedValues from "./LockedValues";
+import { tokenBalance1ABI } from "../abis/XY_Token";
 var bigInt = require("big-integer");
 
 const mapDispatchToProps = (data) => {
@@ -90,15 +91,24 @@ const Landing = ({
   const getBalance1 = async () => {
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
-      const tokenBalanceABIObject = new web3.eth.Contract(
+      const depositABIObject = new web3.eth.Contract(
         depositABI,
         ethAddressConfig.deposit_Address
       );
-      console.log(tokenBalanceABIObject);
-      let balance1 = await tokenBalanceABIObject.methods
+      const XYZTokenABIObject = new web3.eth.Contract(
+        tokenBalance1ABI,
+        ethAddressConfig.xy_token
+      );
+      let unlockedMCTBalance = await XYZTokenABIObject.methods
+        .balanceOf(account)
+        .call();
+      console.log(unlockedMCTBalance);
+
+      console.log(depositABIObject);
+      let lockMCTBalance = await depositABIObject.methods
         .userInfoMCT(account)
         .call();
-      console.log(balance1);
+      console.log(lockMCTBalance);
 
       const gasTokenABIObject = new web3.eth.Contract(
         gasTokenABI,
@@ -114,7 +124,10 @@ const Landing = ({
       );
 
       let balance3 = await govTokenABIObject.methods.balanceOf(account).call();
-      set_balance1(balance1);
+      set_balance1({
+        lockedMCT: lockMCTBalance?.lockedMCT,
+        unlockedMCT: unlockedMCTBalance,
+      });
       set_balance2(balance2);
       set_balance3(balance3);
     } else {
