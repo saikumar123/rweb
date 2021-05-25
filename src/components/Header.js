@@ -10,14 +10,14 @@ const Header = (props) => {
     <div className="header pt-2">
       <div className="nav-header">
         <div className="brand-logo">
-          <a href="index2.html">
+          <a href="index2.html" className="align-items-center">
             <img
               src="../assets/images/football.png"
               alt=""
               width="25"
               height="25"
             ></img>
-            <span className="brand-title">Football Protocol</span>
+            <span className="brand-title text-white">Football Protocol</span>
           </a>
         </div>
       </div>

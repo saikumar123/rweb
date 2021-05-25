@@ -4,7 +4,8 @@ import { Loader } from "semantic-ui-react";
 export const Button = ({ loading, title, children, ...props }) => {
   return (
     <button
-      className="btn button position-relative mt-5 h-auto btn-button align-self-center btn-circular p-3"
+      className="btn button position-relative mt-2 h-auto btn-button align-self-center btn-circular p-3"
+      disabled={loading}
       {...props}
     >
       {loading ? (

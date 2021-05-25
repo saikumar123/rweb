@@ -27,8 +27,8 @@ const Sidebar = (props) => {
   ];
 
   return (
-    <div className="col-sm-10 nk-sidebar">
-      <div className="nk-nav-scroll">
+    <div className="col-sm-10 nk-sidebar ">
+      <div className="nk-nav-scroll w-100">
         {/* <ul className="metismenu togg" id="menu">
           <li>
             <a
@@ -65,11 +65,13 @@ const Sidebar = (props) => {
             </ul>
           </li>
         </ul> */}
+
         {toggle === "collapse" && (
           <ul className="metismenu" id="menu">
-            <li className="menu-heading">
+            {/* <li className="menu-heading">
               <span className="nav-text smlTxt">User Menu</span>
-            </li>
+            </li> */}
+
             {data.map((obj) => (
               <li>
                 <a

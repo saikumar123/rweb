@@ -9,9 +9,6 @@ import TxnService from "../services/TxnService";
 import UserService from "../services/UserService";
 import { escrowABI } from "../abis/escrow_ABI";
 
-var bigInt = require("big-integer");
-const bigNumberMultiplier = 1000000000;
-
 const mapStateToProps = (state) => ({
   avatar: state.avatar,
   balance1: state.balance1,
@@ -45,7 +42,9 @@ const Escrow = (props) => {
       event.target.value !== "" &&
       intValue.toString() === event.target.value
     ) {
-      let rem = props.balance1 / intValue;
+      let rem =
+        window.web3.utils.fromWei(props?.balance1?.lockedMCT, "Ether") /
+        intValue;
       intValue === 0 ? setRemainderValue(0) : setRemainderValue(rem);
       setLockValue(intValue);
     } else if (intValue.toString() === "NaN") {
@@ -108,6 +107,9 @@ const Escrow = (props) => {
   };
 
   const transactionEventRefresh = async () => {
+    console.log(
+      "hitttttttttttttttttttttttt...................................."
+    );
     const web3 = window.web3;
     let lockingBlockNumber = await web3.eth.getBlockNumber();
     let govABIObject;
@@ -181,53 +183,6 @@ const Escrow = (props) => {
       setCreditError("Please select the valid user.");
     }
   };
-  console.log(creditWalletValue);
-  // const handleSubmit = async () => {
-  //   const web3 = window.web3;
-
-  //   if (web3 !== undefined && web3.eth !== undefined) {
-  //
-
-  //     const govABIObject = new web3.eth.Contract(
-  //       govABI,
-  //       ethAddressConfig.gov_address
-  //     );
-  //     let lockingBlockNumber = await web3.eth.getBlockNumber();
-  //     const tokenBalance1ABIObject = new web3.eth.Contract(
-  //       tokenBalance1ABI,
-  //       ethAddressConfig.xy_token
-  //     );
-  //     console.log(props, lockValue);
-  //     let lockTime = 0;
-  //     if (lockValue <= props.balance1.unlockedMCT) {
-  //       const lockValueBN = bigInt(parseFloat(lockValue) * bigNumberMultiplier);
-  //       try {
-  //         await tokenBalance1ABIObject.methods
-  //           .approve(ethAddressConfig.gov_address, lockValueBN.value)
-  //           .send({ from: props.account })
-  //           .on("transactionHash", (lockApprovedHash) => {
-  //             govABIObject.methods
-  //               .createFunctionLock(
-  //                 lockValueBN.value,
-  //                 lockTime,
-  //                 useWalletValue,
-  //                 creditWalletValue
-  //               )
-  //               .send({ from: props.account })
-  //               .on("transactionHash", (lockAcquiredHash) => {})
-  //               .on("error", (event) => {
-  //                 console.log(event);
-  //               });
-  //           })
-  //           .on("error", (event) => {
-  //             console.log(event);
-  //           });
-  //       } catch (err) {
-  //         console.log(err);
-  //       }
-  //     }
-  //   }
-  // };
 
   const handleSubmit = async () => {
     const web3 = window.web3;
@@ -241,9 +196,7 @@ const Escrow = (props) => {
         tokenBalance1ABI,
         ethAddressConfig.xy_token
       );
-
-      const lockValueBN = bigInt(parseFloat(lockValue) * bigNumberMultiplier)
-        ?.value;
+      const lockValueBN = web3.utils.toWei(lockValue.toString(), "Ether");
 
       if (lockValueBN <= props.balance1.unlockedMCT) {
         try {
@@ -371,9 +324,9 @@ const Escrow = (props) => {
           className="form-control form-control-active"
           placeholder="Enter Amount"
         />
-        <span className="smlTxt">
+        {/* <span className="smlTxt">
           {remainderValue !== 0 ? remainderValue + " times" : ""}
-        </span>
+        </span> */}
       </div>
       <div className="col-lg-2 m-t-5">
         Unlocked By

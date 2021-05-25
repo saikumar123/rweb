@@ -11,7 +11,11 @@ export const FormikInput = ({ name, ...props }) => {
         {...props}
       />
       <div className="mt-2">
-        <ErrorMessage name={name} component="div" style={{ color: "red" }} />
+        <ErrorMessage
+          name={name}
+          component="div"
+          style={{ color: "#FFEE28" }}
+        />
       </div>
     </>
   );

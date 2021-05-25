@@ -4,13 +4,13 @@ import { Form, Formik, Field } from "formik";
 import { connect } from "react-redux";
 import { Dropdown } from "semantic-ui-react";
 import { depositABI } from "../abis/deposit";
+import { toast } from "react-toastify";
+
 import * as yup from "yup";
 import { useFormSubmitWithLoading } from "../hooks/useFormSubmitWithLoading";
 import FormikInput from "../atoms/FormikInput";
 import { Button } from "../atoms/Button/Button";
 import { nithinTokenABI } from "../abis/nithin_Token";
-
-// var bigInt = require("big-integer");
 
 const DepositValidationSchema = yup.object().shape({
   amount: yup.string().required("Required*"),
@@ -42,7 +42,6 @@ const options = [
     image: { avatar: true, src: "/icon/dai-logo.png" },
   },
 ];
-// const options =["Eth", "DAI"];
 const mapStateToProps = (state) => ({
   balance1: state.balance1,
   account: state.account,
@@ -56,16 +55,9 @@ const Deposit = (props) => {
     image: { avatar: true, src: "/icon/usdt.png" },
   });
 
-  const convertNumber = 1000000000;
-  const [errorMessage, setErrorMessage] = React.useState("");
-  const [successMessage, setSuccessMessage] = React.useState("");
-
   const handleDeposit = async (amount, stakeRate) => {
-    setSuccessMessage("");
-    setErrorMessage("");
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
-      // const lockValueBN = bigInt(parseFloat(amount) * convertNumber)?.value;
       const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
 
       const depositABIObject = new web3.eth.Contract(
@@ -76,21 +68,28 @@ const Deposit = (props) => {
         nithinTokenABI,
         ethAddressConfig.nithin_token
       );
-      console.log(lockValueBN);
-      await nithinTokenABIObject.methods
-        .approve(ethAddressConfig.deposit_Address, lockValueBN)
-        .send({ from: props.account })
-        .on("transactionHash", (hash) => {
-          depositABIObject.methods
-            .depositAndStake(0, lockValueBN, stakeRate)
-            .send({ from: props.account })
-            .on("transactionHash", (hash) => {});
-        });
+      try {
+        const response = await nithinTokenABIObject.methods
+          .approve(ethAddressConfig.deposit_Address, lockValueBN)
+          .send({ from: props.account })
+          .on("transactionHash", (hash) => {
+            depositABIObject.methods
+              .depositAndStake(0, lockValueBN, stakeRate)
+              .send({ from: props.account })
+              .on("transactionHash", (hash) => {});
+          });
+        console.log(response);
+        toast.success("Transaction Successfull");
+      } catch (err) {
+        toast.error(err.message);
+      }
     }
   };
 
-  const onSubmit = useCallback(async (values) => {
-    handleDeposit(values?.amount, values?.stakeRate);
+  const onSubmit = useCallback(async (values, { resetForm }) => {
+    await handleDeposit(values?.amount, values?.stakeRate);
+    resetForm();
+    props.getBalance1();
   }, []);
 
   const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);
@@ -106,26 +105,29 @@ const Deposit = (props) => {
         <Form>
           {console.log(errors)}
           <div className="d-flex flex-column ">
-            <div className="row m-b-30 blueTxt ">
+            <div className="row m-b-30 text-white  ">
               <div className="col-lg-12 m-b-10">
                 <small className="tag-line">
-                  <i>Deposits</i>
+                  <i></i>
                 </small>
-                {successMessage && (
-                  <small className="tag-line-success">{successMessage}</small>
-                )}
-                {errorMessage && (
-                  <small className="tag-line-error">{errorMessage}</small>
-                )}
+
+                <div className=" my-4 ">
+                  <small
+                    className="tag-line font-weight-bold"
+                    style={{ fontSize: "20px" }}
+                  >
+                    Deposits
+                  </small>
+                </div>
               </div>
 
-              <div className="col-lg-1.5 p-l-15 m-t-28">Enter Amount</div>
-              <div className="col-lg-3  m-t-23">
+              <div className="col-lg-4 ">
+                <div className="">Enter Amount</div>
                 <FormikInput name="amount" />
               </div>
 
-              <div className="col-lg-2">
-                <div className="mb-2 blueTxt">Select Unit</div>
+              <div className="col-lg-3 mx-auto">
+                <div className="mb-2">Select Unit</div>
                 <div className="border border-white ">
                   <Dropdown
                     placeholder="Select Unit"
@@ -133,18 +135,17 @@ const Deposit = (props) => {
                     fluid
                     selection
                     options={options}
-                    style={{ border: "1px sold red" }}
+                    style={{ backgroundColor: "#fff !important" }}
                   />
                 </div>
               </div>
-              <div className="col-lg-2.5 m-t-28 m-l-10">
-                Enter % share allocation
-              </div>
-              <div className="col-lg-3 m-t-23">
+
+              <div className="col-lg-4 ">
+                <div className="">Enter % share allocation</div>
                 <FormikInput name="stakeRate" />
               </div>
             </div>
-            <Button>Deposit</Button>
+            <Button loading={loading}>Deposit</Button>
           </div>
         </Form>
       )}

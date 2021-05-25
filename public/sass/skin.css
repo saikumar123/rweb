@@ -55,6 +55,8 @@ body#modern
 .nk-sidebar {
   /* background: #ffffff; */
   /* width: 260px; */
+  border-right: 3px solid #6f6c6c;
+  height: 85vh;
 }
 
 .nk-sidebar .menu-heading {
@@ -70,7 +72,7 @@ body#modern
 
 .nk-sidebar .metismenu {
   background: none;
-  border: 1px solid #0d0d0d;
+  /* border: 1px solid #0d0d0d; */
   border-radius: 15px;
   margin: 10px 25px 5px 5px;
   padding: 0 20px 20px;
@@ -78,23 +80,23 @@ body#modern
 
 .nk-sidebar .metismenu a {
   color: #fff;
-  background: #004c9d;
+  background: #871a1d;
   border-radius: 15px;
   -webkit-transition: ease-in-out 0.3s;
   transition: ease-in-out 0.3s;
   margin-top: 20px;
   font-size: 14px;
-  border: 5px solid #004c9d;
+  border: 5px solid #871a1d;
   padding: 10px;
 }
 .nk-sidebar .metismenu a.active,
 .nk-sidebar .metismenu a:hover,
 .nk-sidebar .metismenu a:focus,
 .nk-sidebar .metismenu a:active {
-  background: #fff;
+  background: #ffee28;
   border-radius: 15px;
   color: #000;
-  border-color: green;
+  border-color: #a27603;
   font-weight: 600;
 }
 .togg {
@@ -260,7 +262,7 @@ body#modern
   padding-top: 20px;
 }
 .tag-line {
-  color: #f2e113;
+  color: #c2d4f4;
 }
 .pl-55 {
   padding-left: 55px;
@@ -281,7 +283,8 @@ body#modern
 }
 a,
 .smlTxt {
-  color: #896802;
+  /* color: #896802; */
+  color: #febe10;
 }
 .line {
   border-bottom: 2px solid #120602;
