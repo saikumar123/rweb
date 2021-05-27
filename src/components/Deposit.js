@@ -69,17 +69,26 @@ const Deposit = (props) => {
         ethAddressConfig.nithin_token
       );
       try {
-        const response = await nithinTokenABIObject.methods
+        await nithinTokenABIObject.methods
           .approve(ethAddressConfig.deposit_Address, lockValueBN)
           .send({ from: props.account })
           .on("transactionHash", (hash) => {
             depositABIObject.methods
               .depositAndStake(0, lockValueBN, stakeRate)
               .send({ from: props.account })
-              .on("transactionHash", (hash) => {});
+              .then((receipt) => {
+                console.log("Mined", receipt);
+                if (receipt.status) {
+                  toast.success("Transaction Success");
+                  console.log("Transaction Success");
+                }
+              })
+              .catch((err) => {
+                toast.error("Transaction Failed");
+                console.log("Transaction Failed");
+                console.log("Error", err);
+              });
           });
-        console.log(response);
-        toast.success("Transaction Successfull");
       } catch (err) {
         toast.error(err.message);
       }
