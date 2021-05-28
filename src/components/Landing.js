@@ -32,6 +32,7 @@ import {
 } from "../redux/action";
 import LockedValues from "./LockedValues";
 import { tokenBalance1ABI } from "../abis/XY_Token";
+import { escrowABI } from "../abis/escrow_ABI";
 var bigInt = require("big-integer");
 
 const mapDispatchToProps = (data) => {
@@ -295,23 +296,28 @@ const Landing = ({
         govABI,
         ethAddressConfig.gov_address
       );
-    }
-    const lockValueBN = bigInt(parseFloat(amount) * 1000000000000000000);
-    try {
-      return govABIObject.methods
-        .unlockTokens(lockId, lockValueBN.value)
-        .send({ from: account })
-        .on("transactionHash", (unlockedHash) => {
-          setTaskUnlock("Transaction completed successfully");
-          return updateTransaction(hash, senderId, receiverId, lockStatus);
-        })
-        .on("error", (event) => {
-          setTaskUnlock("Some error occurr");
-          console.log(event);
-        })
-        .catch((message) => console.log(message));
-    } catch (err) {
-      throw new Error("error");
+      const escrowABIObject = new web3.eth.Contract(
+        escrowABI,
+        ethAddressConfig.escrow_Address
+      );
+
+      const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
+      try {
+        return escrowABIObject.methods
+          .unlockTokens(lockId, lockValueBN)
+          .send({ from: account })
+          .on("transactionHash", (unlockedHash) => {
+            setTaskUnlock("Transaction completed successfully");
+            return updateTransaction(hash, senderId, receiverId, lockStatus);
+          })
+          .on("error", (event) => {
+            setTaskUnlock("Some error occurr");
+            console.log(event);
+          })
+          .catch((message) => console.log(message));
+      } catch (err) {
+        throw new Error("error");
+      }
     }
   };
 

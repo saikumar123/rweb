@@ -26,11 +26,10 @@ const TaskList = (props) => {
       </div>
 
       {props.txnRows.map((row, index) => {
-        console.log("12", row);
         return (
           <>
             {row.lockStatus === "UNLOCK" && (
-              <div class="col-lg-12 p0 pull-left">
+              <div class="col-lg-12 p0 pull-left d-flex align-items-center">
                 <div class="col-lg-1 m-t-5 pull-left">Amount</div>
                 <div class="col-lg-2 pull-left">
                   <input
@@ -47,7 +46,7 @@ const TaskList = (props) => {
                 <div class="col-lg-2 pull-left">
                   <input
                     type="text"
-                    value={row?.senderAvatar}
+                    value={row?.recipientAvatar}
                     disabled="disabled"
                     readonly="readonly"
                     class="form-control "

@@ -34,5 +34,5 @@ module.exports = {
 
   deposit_Address: "0xB720029D8A4873c8A52b715A88FeBE83066D2120",
   nithin_token: "0x47C2b81D31BA8387D6C3D8bDa8d9A4225fEfa6db",
-  escrow_Address: "0x66bb3B628743C2640DF0B1f3C76f942e4Fa075EB",
+  escrow_Address: "0xEc484b0c6b091843F6009F9868fdDb23b345Ec99",
 };

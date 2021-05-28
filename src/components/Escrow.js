@@ -84,6 +84,7 @@ const Escrow = (props) => {
       unlockAddress: event.returnValues.unlockAddress,
       recipientAvatar: recipientAvatar,
       senderAvatar: avatar,
+      creditTo: await getAvatarFromAccountId(event?.returnValues?.creditTo),
       amount: window.web3.utils.fromWei(event.returnValues.amount, "Ether"),
     };
     console.log(transaction);
