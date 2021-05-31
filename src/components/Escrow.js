@@ -8,6 +8,7 @@ import { tokenBalance1ABI } from "../abis/XY_Token";
 import TxnService from "../services/TxnService";
 import UserService from "../services/UserService";
 import { escrowABI } from "../abis/escrow_ABI";
+import { toast } from "react-toastify";
 
 const mapStateToProps = (state) => ({
   avatar: state.avatar,
@@ -84,16 +85,16 @@ const Escrow = (props) => {
       unlockAddress: event.returnValues.unlockAddress,
       recipientAvatar: recipientAvatar,
       senderAvatar: avatar,
-      creditTo: await getAvatarFromAccountId(event?.returnValues?.creditTo),
+      creditToAddress: event?.returnValues?.creditTo,
+      creditorAvatar: await getAvatarFromAccountId(
+        event?.returnValues?.creditTo
+      ),
       amount: window.web3.utils.fromWei(event.returnValues.amount, "Ether"),
     };
-    console.log(transaction);
     return TxnService.createTransaction(avatar, transaction).then((resolve) => {
       if (resolve !== undefined) {
         if (resolve.data.payload.transactions.length === 0) {
-          console.log(resolve.data.payload.transactions);
         } else {
-          console.log(resolve.data.payload.transactions);
           props.getTxn();
         }
       }
@@ -108,23 +109,13 @@ const Escrow = (props) => {
   };
 
   const transactionEventRefresh = async () => {
-    console.log(
-      "hitttttttttttttttttttttttt...................................."
-    );
     const web3 = window.web3;
     let lockingBlockNumber = await web3.eth.getBlockNumber();
-    let govABIObject;
-    if (web3 !== undefined && web3.eth !== undefined) {
-      govABIObject = new web3.eth.Contract(
-        govABI,
-        ethAddressConfig.gov_address
-      );
-    }
+
     const escrowABIObject = new web3.eth.Contract(
       escrowABI,
       ethAddressConfig.escrow_Address
     );
-    console.log(escrowABIObject, lockingBlockNumber);
     if (lockingBlockNumber !== "" && lockingBlockNumber !== undefined) {
       await escrowABIObject.events
         .FunctionLockCreated({
@@ -133,7 +124,6 @@ const Escrow = (props) => {
         })
         .on("data", (event) => {
           // we create sender and receiver transactions in DB based on the event from sender
-          console.log("event", event);
           if (
             event.returnValues &&
             event.returnValues.lockAddress === props.account
@@ -213,13 +203,18 @@ const Escrow = (props) => {
                   creditedUser[0]?.accountId
                 )
                 .send({ from: props.account })
-                .on("transactionHash", (hash) => {});
+                .then((receipt) => {
+                  if (receipt.status) {
+                    toast.success("Transaction Success");
+                  }
+                })
+                .catch((err) => {
+                  toast.error("Transaction Failed");
+                });
             })
-            .on("error", (event) => {
-              console.log(event);
-            });
+            .on("error", (event) => {});
         } catch (err) {
-          console.log(err);
+          toast.error(err.message);
         }
       }
     }
@@ -301,17 +296,14 @@ const Escrow = (props) => {
   return (
     <div className="row m-b-30 blueTxt">
       <div className="col-lg-12 m-b-15">
-        {" "}
-        <small className="tag-line">
-          {" "}
-          <i>Escrow</i>
-        </small>{" "}
-        {successMessage && (
-          <small className="tag-line-success">{successMessage}</small>
-        )}
-        {errorMessage && (
-          <small className="tag-line-error">{errorMessage}</small>
-        )}
+        <div className=" my-4 ">
+          <small
+            className="tag-line font-weight-bold"
+            style={{ fontSize: "20px" }}
+          >
+            Escrow
+          </small>
+        </div>
       </div>
       <div className="col-lg-2 m-t-5">
         MCT

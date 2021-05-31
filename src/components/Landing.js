@@ -33,7 +33,6 @@ import {
 import LockedValues from "./LockedValues";
 import { tokenBalance1ABI } from "../abis/XY_Token";
 import { escrowABI } from "../abis/escrow_ABI";
-var bigInt = require("big-integer");
 
 const mapDispatchToProps = (data) => {
   console.log(data);
@@ -103,13 +102,10 @@ const Landing = ({
       let unlockedMCTBalance = await XYZTokenABIObject.methods
         .balanceOf(account)
         .call();
-      console.log(unlockedMCTBalance);
 
-      console.log(depositABIObject);
       let lockMCTBalance = await depositABIObject.methods
         .userInfoMCT(account)
         .call();
-      console.log(lockMCTBalance);
 
       const gasTokenABIObject = new web3.eth.Contract(
         gasTokenABI,
@@ -233,9 +229,7 @@ const Landing = ({
           .on("transactionHash", (unlockedHash) => {
             isClaimed = true;
           })
-          .on("error", (event) => {
-            console.log(event);
-          })
+          .on("error", (event) => {})
           .catch((message) => console.log(message));
       } catch (err) {
         throw new Error("error");

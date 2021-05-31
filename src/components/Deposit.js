@@ -77,16 +77,12 @@ const Deposit = (props) => {
               .depositAndStake(0, lockValueBN, stakeRate)
               .send({ from: props.account })
               .then((receipt) => {
-                console.log("Mined", receipt);
                 if (receipt.status) {
                   toast.success("Transaction Success");
-                  console.log("Transaction Success");
                 }
               })
               .catch((err) => {
                 toast.error("Transaction Failed");
-                console.log("Transaction Failed");
-                console.log("Error", err);
               });
           });
       } catch (err) {
@@ -116,10 +112,6 @@ const Deposit = (props) => {
           <div className="d-flex flex-column ">
             <div className="row m-b-30 text-white  ">
               <div className="col-lg-12 m-b-10">
-                <small className="tag-line">
-                  <i></i>
-                </small>
-
                 <div className=" my-4 ">
                   <small
                     className="tag-line font-weight-bold"

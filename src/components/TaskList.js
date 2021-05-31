@@ -1,14 +1,17 @@
 import React from "react";
 
 const TaskList = (props) => {
-  console.log("123242", props);
   return (
     <div class="row m-b-30 blueTxt">
       <div class="col-lg-12">
-        <small class="tag-line">
-          {" "}
-          <i>Task List</i>
-        </small>
+        <div className=" my-4 ">
+          <small
+            className="tag-line font-weight-bold"
+            style={{ fontSize: "20px" }}
+          >
+            Task List
+          </small>
+        </div>
         {props.txnRows.length === 0 && (
           <small class="tag-line-error">{"No task item found"}</small>
         )}
@@ -46,7 +49,7 @@ const TaskList = (props) => {
                 <div class="col-lg-2 pull-left">
                   <input
                     type="text"
-                    value={row?.recipientAvatar}
+                    value={row?.creditorAvatar}
                     disabled="disabled"
                     readonly="readonly"
                     class="form-control "
