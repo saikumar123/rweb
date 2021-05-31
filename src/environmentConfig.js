@@ -1,8 +1,6 @@
 const dev = {
-  // url: "http://localhost:8080/",
-  url: "http://sample.testmycoding.com/api/",
+  url: "http://localhost:8080/",
 };
-
 const prod = {
   url: "api/",
 };
