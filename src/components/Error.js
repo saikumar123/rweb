@@ -2,7 +2,7 @@ const Error = (props) => {
   if (props.data === "") {
     return <></>;
   } else {
-    return <div style={{ color: "red" }}> {props.data} </div>;
+    return <div style={{ color: "#FFEE28" }}> {props.data} </div>;
   }
 };
 

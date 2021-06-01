@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import Error from "./Error";
+import ethAddressConfig from "../abis/ethAddressConfig";
+
 import LoginService from "../services/LoginService";
+import { tokenBalance1ABI } from "../abis/XY_Token";
 import "../assets/css/login.css";
 
 function CustomizedLogin(props) {
@@ -12,7 +15,23 @@ function CustomizedLogin(props) {
   const [reg_btn_class, setRegBtnClass] = useState("register_btn");
   const [bottom_line_class, setBottomLineClass] = useState("login_bottom_line");
 
-  const handleLogin = (e) => {
+  const handleWhiteList = async (amount, stakeRate) => {
+    setErrorMessage("");
+    const web3 = window.web3;
+    if (web3 !== undefined && web3.eth !== undefined) {
+      const XYZTokenABIObject = new web3.eth.Contract(
+        tokenBalance1ABI,
+        ethAddressConfig.xy_token
+      );
+      console.log(props?.account);
+      await XYZTokenABIObject.methods
+        .whiteListAddress(props?.accountId)
+        .send({ from: props?.accountId })
+        .on("transactionHash", (hash) => {});
+    }
+  };
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     var payload = {
       username: username,
@@ -53,14 +72,16 @@ function CustomizedLogin(props) {
         });
     } else {
       LoginService.signup(payload)
-        .then(function (response) {
+        .then(async (response) => {
           if (response.status === 201) {
             if (
               response.data &&
               response.data.msg === "User is successfully added"
             ) {
+              await handleWhiteList();
               props.loginSuccessFull(response.data.payload);
               setIsLogin(true);
+
               props.handleLoginClose(response.data.payload);
             }
           } else if (response.status === 200) {
@@ -100,29 +121,41 @@ function CustomizedLogin(props) {
   return (
     <div className="main">
       <div class="list">
-            Choose an avtar name for yourself.<br/>
-          - Characters length between 4-15 <br/>
-            - Can Contain numbers.
+        Choose an avtar name for yourself.
+        <br />
+        - Characters length between 4-15 <br />
+        - Can Contain numbers.
+        <br />- Can Contain letters.
+        <br />
+        - No special characters allowed
+        <br />
+      </div>
+      <div class="text-center p-top p30">
+        <input
+          type="text"
+          value={username}
+          required=""
+          placeholder="Enter your name"
+          onChange={usernameChange}
+          class="form-control form-control-active"
+        />
+        {errorMessage !== "" && (
+          <span class="text-danger text-left">{errorMessage}</span>
+        )}
+      </div>
+      <div class="text-center mt-10">
+        <button
+          type="button"
+          onClick={handleLogin}
+          class="btn button btn-button btn-circular"
+        >
+          Done
+        </button>
 
-            <br/>- Can Contain letters.
-
-            <br/>
-            - No special characters allowed
-            <br/>
-            </div>
-            <div class="text-center p-top p30">
-              <input type="text" 
-                value={username}
-                required=""
-                placeholder="Enter your name"
-                onChange={usernameChange}
-                class="form-control form-control-active"
-                />
-              {errorMessage !== '' && <span class="text-danger text-left">{errorMessage}</span>}
-            </div>
-            <div class="text-center"> <button type="button" onClick={handleLogin} class="btn button btn-button btn-circular">Done</button>
-              <br/><span class="clrwhite">* note: You will not be allowed to change the avatar name later.</span>
-          </div>
+        <div class="clrwhite mt-2">
+          * note: You will not be allowed to change the avatar name later.
+        </div>
+      </div>
       {/* <div class="modal fade top30" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" >
       <div class="modal-dialog" role="document">
         <div class="modal-content modalNew">

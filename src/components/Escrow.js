@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -7,9 +7,9 @@ import ethAddressConfig from "../abis/ethAddressConfig";
 import { tokenBalance1ABI } from "../abis/XY_Token";
 import TxnService from "../services/TxnService";
 import UserService from "../services/UserService";
-
-var bigInt = require("big-integer");
-const bigNumberMultiplier = 1000000000000000000;
+import { escrowABI } from "../abis/escrow_ABI";
+import { toast } from "react-toastify";
+import { Button } from "../atoms/Button/Button";
 
 const mapStateToProps = (state) => ({
   avatar: state.avatar,
@@ -32,6 +32,7 @@ const Escrow = (props) => {
   const [unlockError, setUnlockError] = React.useState("");
   const [creditError, setCreditError] = React.useState("");
   const [amountError, setAmountError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleLock = (event) => {
     if (event.target.value === "") {
@@ -44,12 +45,16 @@ const Escrow = (props) => {
       event.target.value !== "" &&
       intValue.toString() === event.target.value
     ) {
-      let rem = props.balance1 / intValue;
+      let rem =
+        window.web3.utils.fromWei(props?.balance1?.lockedMCT, "Ether") /
+        intValue;
       intValue === 0 ? setRemainderValue(0) : setRemainderValue(rem);
       setLockValue(intValue);
+      setAmountError("");
     } else if (intValue.toString() === "NaN") {
       setRemainderValue(0);
       setLockValue(0);
+      setAmountError("Please enter the valid amount.");
     }
   };
 
@@ -65,7 +70,7 @@ const Escrow = (props) => {
     creditedUser[index] = { searchName: event.target.value };
     setCreditedUser(creditedUser);
     setCreditedUser([...creditedUser]);
-    setCreditError("")
+    setCreditError("");
   };
 
   const getAvatarFromAccountId = async (accountId) => {
@@ -84,14 +89,16 @@ const Escrow = (props) => {
       unlockAddress: event.returnValues.unlockAddress,
       recipientAvatar: recipientAvatar,
       senderAvatar: avatar,
-      amount: event.returnValues.amt / bigNumberMultiplier,
+      creditToAddress: event?.returnValues?.creditTo,
+      creditorAvatar: await getAvatarFromAccountId(
+        event?.returnValues?.creditTo
+      ),
+      amount: window.web3.utils.fromWei(event.returnValues.amount, "Ether"),
     };
     return TxnService.createTransaction(avatar, transaction).then((resolve) => {
       if (resolve !== undefined) {
         if (resolve.data.payload.transactions.length === 0) {
-          console.log(resolve.data.payload.transactions);
         } else {
-          console.log(resolve.data.payload.transactions);
           props.getTxn();
         }
       }
@@ -108,16 +115,13 @@ const Escrow = (props) => {
   const transactionEventRefresh = async () => {
     const web3 = window.web3;
     let lockingBlockNumber = await web3.eth.getBlockNumber();
-    let govABIObject;
-    if (web3 !== undefined && web3.eth !== undefined) {
-      govABIObject = new web3.eth.Contract(
-        govABI,
-        ethAddressConfig.gov_address
-      );
-    }
 
+    const escrowABIObject = new web3.eth.Contract(
+      escrowABI,
+      ethAddressConfig.escrow_Address
+    );
     if (lockingBlockNumber !== "" && lockingBlockNumber !== undefined) {
-      await govABIObject.events
+      await escrowABIObject.events
         .FunctionLockCreated({
           fromBlock: lockingBlockNumber,
           address: useWalletValue,
@@ -134,16 +138,17 @@ const Escrow = (props) => {
               postTxn(props.avatar, event);
               setErrorMessage("");
               setUnlockedUser("");
-              setRemainderValue("")
+              setRemainderValue("");
               setLockValue("");
               setUnlockedSelectUser("");
+              setUnlockedSelectUser([]);
               setCreditedUser([{ searchName: "" }]);
             }
           } else {
             setSuccessMessage("");
             setUnlockedUser("");
             setLockValue("");
-            setRemainderValue("")
+            setRemainderValue("");
             setUnlockedSelectUser("");
             setErrorMessage("Some error occurs. Please check the transaction");
             setTimeout(props.getTxn, 60000);
@@ -157,69 +162,80 @@ const Escrow = (props) => {
   };
 
   const checkValidation = () => {
-    if (creditedUser.length === 1){}
-    if (lockValue === 0 || lockValue === ""){
-      setAmountError("Please enter the valid amount.")
+    if (creditedUser.length === 1) {
     }
-    
-    if (lockValue > props.balance1){
+    if (lockValue === 0 || lockValue === "") {
+      setAmountError("Please enter the valid amount.");
+    }
+
+    if (lockValue > props.balance1) {
       setRemainderValue(0);
-      setAmountError("Please enter amount less tha MCT.")
+      setAmountError("Please enter amount less tha MCT.");
     }
-    if (useWalletValue === ""){
-      setUnlockError("Please select the valid user.")
-    } 
-    if(creditWalletValue === "") {
-      setCreditError("Please select the valid user.")
-    } 
-  }
+    if (useWalletValue === "") {
+      setUnlockError("Please select the valid user.");
+    }
+    if (creditWalletValue === "") {
+      setCreditError("Please select the valid user.");
+    }
+  };
 
   const handleSubmit = async () => {
     const web3 = window.web3;
+
     if (web3 !== undefined && web3.eth !== undefined) {
-      const govABIObject = new web3.eth.Contract(
-        govABI,
-        ethAddressConfig.gov_address
+      const escrowABIObject = new web3.eth.Contract(
+        escrowABI,
+        ethAddressConfig.escrow_Address
       );
-      let lockingBlockNumber = await web3.eth.getBlockNumber();
-      const tokenBalance1ABIObject = new web3.eth.Contract(
+      const XYZTokenABIObject = new web3.eth.Contract(
         tokenBalance1ABI,
         ethAddressConfig.xy_token
       );
-      let lockTime = 0;
-      if (lockValue <= props.balance1) {
-        const lockValueBN = bigInt(parseFloat(lockValue) * bigNumberMultiplier);
+      const lockValueBN = web3.utils.toWei(lockValue.toString(), "Ether");
+
+      if (lockValueBN <= props.balance1.unlockedMCT) {
         try {
-          await tokenBalance1ABIObject.methods
-            .approve(ethAddressConfig.gov_address, lockValueBN.value)
+          await XYZTokenABIObject.methods
+            .approve(ethAddressConfig.escrow_Address, lockValueBN)
             .send({ from: props.account })
-            .on("transactionHash", (lockApprovedHash) => {
-              govABIObject.methods
+            .on("transactionHash", async (lockApprovedHash) => {
+              await escrowABIObject.methods
                 .createFunctionLock(
-                  lockValueBN.value,
-                  lockTime,
-                  useWalletValue,
-                  creditWalletValue
+                  lockValueBN,
+                  0,
+                  unlockedSelectUser[0]?.accountId,
+                  creditedUser[0]?.accountId
                 )
                 .send({ from: props.account })
-                .on("transactionHash", (lockAcquiredHash) => {})
-                .on("error", (event) => {
-                  console.log(event);
+                .then((receipt) => {
+                  if (receipt.status) {
+                    toast.success("Transaction Success");
+                    setUnlockedSelectUser([]);
+                    setUnlockedUser("");
+                  }
+                })
+                .catch((err) => {
+                  toast.error("Transaction Failed");
                 });
             })
-            .on("error", (event) => {
-              console.log(event);
-            });
+            .on("error", (event) => {});
         } catch (err) {
-          console.log(err);
+          toast.error(err.message);
         }
       }
     }
   };
+
+  const onSubmit = async () => {
+    setLoading(true);
+    await handleSubmit();
+    setLoading(false);
+  };
+
   const search = () => {
     UserService.userByUsername(unlockedUser).then((resolve) => {
-      console.log("resolve.data = ",resolve.data)
-      if (resolve.data.payload.user.userName) {
+      if (resolve?.data?.payload.user.userName) {
         setUseWalletValue(resolve.data.payload.user.accountId);
         setUnlockedSelectUser([
           {
@@ -238,8 +254,8 @@ const Escrow = (props) => {
   const removeCreditTo = (index) => {
     var searchData = creditedUser;
     searchData.splice(index, 1);
-    setCreditedUser([...creditedUser,]);
-  }
+    setCreditedUser([...creditedUser]);
+  };
 
   const addCreditedTo = () => {
     setCreditedUser([...creditedUser, { searchName: "" }]);
@@ -248,7 +264,7 @@ const Escrow = (props) => {
   const searchCreditTo = (index) => {
     var searchData = creditedUser;
     UserService.userByUsername(searchData[index].searchName).then((resolve) => {
-      if (resolve.data.payload.user.userName) {
+      if (resolve?.data?.payload.user.userName) {
         var newData = {
           searchName: searchData[index].searchName,
           userName: resolve.data.payload.user.userName,
@@ -278,12 +294,13 @@ const Escrow = (props) => {
     setSuccessMessage("");
     if (
       creditedUser.length === 1 &&
+      lockValue &&
       lockValue !== 0 &&
       useWalletValue !== "" &&
       creditWalletValue !== ""
     ) {
       setShowButton("true");
-    }else if(lockValue > props.balance1){
+    } else if (lockValue > props.balance1) {
       setShowButton("false");
     } else {
       setShowButton("false");
@@ -291,24 +308,22 @@ const Escrow = (props) => {
   }, [lockValue, useWalletValue, creditWalletValue]);
 
   return (
-    <div className="row m-b-30 blueTxt">
-      <div className="col-lg-12 m-b-30">
-        {" "}
-        <small className="tag-line">
-          {" "}
-          <i>Escrow</i>
-        </small>{" "}
-        {successMessage && (
-          <small className="tag-line-success">{successMessage}</small>
-        )}
-        {errorMessage && (
-          <small className="tag-line-error">{errorMessage}</small>
-        )}
+    <div className="row m-b-30 text-white ">
+      <div className="col-lg-12 m-b-15">
+        <div className=" my-4 ">
+          <small
+            className="tag-line font-weight-bold"
+            style={{ fontSize: "20px" }}
+          >
+            Escrow
+          </small>
+        </div>
       </div>
-      <div className="col-lg-2 m-t-5">
+      <div className="col-lg-2 m-t-5 ">
         MCT
         <br />
       </div>
+
       <div className="col-lg-3 ">
         <input
           type="number"
@@ -317,11 +332,12 @@ const Escrow = (props) => {
           className="form-control form-control-active"
           placeholder="Enter Amount"
         />
-        <span className="smlTxt">
+        {/* <span className="smlTxt">
           {remainderValue !== 0 ? remainderValue + " times" : ""}
-        </span>
+        </span> */}
+        <span class="smlTxt">{amountError}</span>
       </div>
-      <div className="col-lg-2 m-t-5">
+      <div className="col-lg-2 m-t-10 ">
         Unlocked By
         <br />
         <br /> <br />
@@ -382,9 +398,7 @@ const Escrow = (props) => {
                 >
                   <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>{" "}
                 </button>
-                <span class="smlTxt">
-                  {creditError}
-                </span>
+                <span class="smlTxt">{creditError}</span>
               </div>
 
               {useroption.userName && (
@@ -400,16 +414,23 @@ const Escrow = (props) => {
                 </div>
               )}
 
-              { index > 0 &&
+              {index > 0 && (
                 <div class="col-lg-1 m-t-5 pull-left">
-                  <FontAwesomeIcon title="click here to remove it" onClick={(e) => removeCreditTo(index)} class="icon-cursor" icon={faTrash}> </FontAwesomeIcon> 
+                  <FontAwesomeIcon
+                    title="click here to remove it"
+                    onClick={(e) => removeCreditTo(index)}
+                    class="icon-cursor"
+                    icon={faTrash}
+                  >
+                    {" "}
+                  </FontAwesomeIcon>
                 </div>
-              }
+              )}
 
               {index + 1 !== creditedUser.length && (
                 <div className="col-lg-5 pull-left"></div>
               )}
-              {index + 1 === creditedUser.length && (
+              {/* {index + 1 === creditedUser.length && (
                 <div className="col-lg-3 pull-left">
                   <button
                     type="button"
@@ -420,7 +441,7 @@ const Escrow = (props) => {
                     Add additional avatars{" "}
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           );
         })}
@@ -429,23 +450,23 @@ const Escrow = (props) => {
       <div className="col-lg-12 p0">
         <div className="col-lg-3 m-auto">
           {showButton === "false" || creditedUser.length !== 1 ? (
-            <button
+            <Button
               type="button"
               onClick={checkValidation}
               className="btn button btn-button btn-circular disabled"
             >
               {" "}
               Lock{" "}
-            </button>
+            </Button>
           ) : (
-            <button
+            <Button
               type="button"
-              onClick={handleSubmit}
+              onClick={onSubmit}
+              loading={loading}
               className="btn button btn-button btn-circular"
             >
-              {" "}
-              Lock{" "}
-            </button>
+              Lock
+            </Button>
           )}
         </div>
       </div>

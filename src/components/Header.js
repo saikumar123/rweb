@@ -7,17 +7,17 @@ const Header = (props) => {
     setBtnvalue("Connecting...");
   };
   return (
-    <div className="header">
+    <div className="header pt-2">
       <div className="nav-header">
         <div className="brand-logo">
-          <a href="index2.html">
+          <a href="index2.html" className="align-items-center">
             <img
               src="../assets/images/football.png"
               alt=""
               width="25"
               height="25"
             ></img>
-            <span className="brand-title">Football Protocol</span>
+            <span className="brand-title text-white">Football Protocol</span>
           </a>
         </div>
       </div>
@@ -34,7 +34,7 @@ const Header = (props) => {
         )}
         {props.isLogin && (
           <button type="button" className="btn button btn-button btn-circular">
-            {props.user.avatar}
+            {props?.user?.avatar}
           </button>
         )}
       </div>
