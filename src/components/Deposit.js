@@ -108,7 +108,6 @@ const Deposit = (props) => {
     >
       {({ errors }) => (
         <Form>
-          {console.log(errors)}
           <div className="d-flex flex-column ">
             <div className="row m-b-30 text-white  ">
               <div className="col-lg-12 m-b-10">

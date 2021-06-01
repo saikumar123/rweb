@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +9,7 @@ import TxnService from "../services/TxnService";
 import UserService from "../services/UserService";
 import { escrowABI } from "../abis/escrow_ABI";
 import { toast } from "react-toastify";
+import { Button } from "../atoms/Button/Button";
 
 const mapStateToProps = (state) => ({
   avatar: state.avatar,
@@ -31,6 +32,7 @@ const Escrow = (props) => {
   const [unlockError, setUnlockError] = React.useState("");
   const [creditError, setCreditError] = React.useState("");
   const [amountError, setAmountError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleLock = (event) => {
     if (event.target.value === "") {
@@ -48,9 +50,11 @@ const Escrow = (props) => {
         intValue;
       intValue === 0 ? setRemainderValue(0) : setRemainderValue(rem);
       setLockValue(intValue);
+      setAmountError("");
     } else if (intValue.toString() === "NaN") {
       setRemainderValue(0);
       setLockValue(0);
+      setAmountError("Please enter the valid amount.");
     }
   };
 
@@ -137,6 +141,7 @@ const Escrow = (props) => {
               setRemainderValue("");
               setLockValue("");
               setUnlockedSelectUser("");
+              setUnlockedSelectUser([]);
               setCreditedUser([{ searchName: "" }]);
             }
           } else {
@@ -194,8 +199,8 @@ const Escrow = (props) => {
           await XYZTokenABIObject.methods
             .approve(ethAddressConfig.escrow_Address, lockValueBN)
             .send({ from: props.account })
-            .on("transactionHash", (lockApprovedHash) => {
-              escrowABIObject.methods
+            .on("transactionHash", async (lockApprovedHash) => {
+              await escrowABIObject.methods
                 .createFunctionLock(
                   lockValueBN,
                   0,
@@ -206,6 +211,8 @@ const Escrow = (props) => {
                 .then((receipt) => {
                   if (receipt.status) {
                     toast.success("Transaction Success");
+                    setUnlockedSelectUser([]);
+                    setUnlockedUser("");
                   }
                 })
                 .catch((err) => {
@@ -219,10 +226,16 @@ const Escrow = (props) => {
       }
     }
   };
+
+  const onSubmit = async () => {
+    setLoading(true);
+    await handleSubmit();
+    setLoading(false);
+  };
+
   const search = () => {
     UserService.userByUsername(unlockedUser).then((resolve) => {
-      console.log("resolve.data = ", resolve.data);
-      if (resolve.data.payload.user.userName) {
+      if (resolve?.data?.payload.user.userName) {
         setUseWalletValue(resolve.data.payload.user.accountId);
         setUnlockedSelectUser([
           {
@@ -251,7 +264,7 @@ const Escrow = (props) => {
   const searchCreditTo = (index) => {
     var searchData = creditedUser;
     UserService.userByUsername(searchData[index].searchName).then((resolve) => {
-      if (resolve.data.payload.user.userName) {
+      if (resolve?.data?.payload.user.userName) {
         var newData = {
           searchName: searchData[index].searchName,
           userName: resolve.data.payload.user.userName,
@@ -281,6 +294,7 @@ const Escrow = (props) => {
     setSuccessMessage("");
     if (
       creditedUser.length === 1 &&
+      lockValue &&
       lockValue !== 0 &&
       useWalletValue !== "" &&
       creditWalletValue !== ""
@@ -294,7 +308,7 @@ const Escrow = (props) => {
   }, [lockValue, useWalletValue, creditWalletValue]);
 
   return (
-    <div className="row m-b-30 blueTxt">
+    <div className="row m-b-30 text-white ">
       <div className="col-lg-12 m-b-15">
         <div className=" my-4 ">
           <small
@@ -305,10 +319,11 @@ const Escrow = (props) => {
           </small>
         </div>
       </div>
-      <div className="col-lg-2 m-t-5">
+      <div className="col-lg-2 m-t-5 ">
         MCT
         <br />
       </div>
+
       <div className="col-lg-3 ">
         <input
           type="number"
@@ -320,8 +335,9 @@ const Escrow = (props) => {
         {/* <span className="smlTxt">
           {remainderValue !== 0 ? remainderValue + " times" : ""}
         </span> */}
+        <span class="smlTxt">{amountError}</span>
       </div>
-      <div className="col-lg-2 m-t-5">
+      <div className="col-lg-2 m-t-10 ">
         Unlocked By
         <br />
         <br /> <br />
@@ -433,25 +449,25 @@ const Escrow = (props) => {
 
       <div className="col-lg-12 p0">
         <div className="col-lg-3 m-auto">
-          {/* {showButton === "false" || creditedUser.length !== 1 ? (
-            <button
+          {showButton === "false" || creditedUser.length !== 1 ? (
+            <Button
               type="button"
               onClick={checkValidation}
               className="btn button btn-button btn-circular disabled"
             >
               {" "}
               Lock{" "}
-            </button>
-          ) : ( */}
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="btn button btn-button btn-circular"
-          >
-            {" "}
-            Lock{" "}
-          </button>
-          {/* )} */}
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={onSubmit}
+              loading={loading}
+              className="btn button btn-button btn-circular"
+            >
+              Lock
+            </Button>
+          )}
         </div>
       </div>
     </div>

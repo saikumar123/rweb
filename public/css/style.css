@@ -494,7 +494,7 @@ form .custom-file-label::after {
   box-shadow: none;
   border-color: #fff;
   background: #fff;
-  color: #71aceb;
+  color: #000;
   font-size: 14px;
 }
 
@@ -523,16 +523,17 @@ form .custom-file-label::after {
   border-radius: 5px;
 }
 .form-control:focus {
-  padding: 0.625rem 0.75rem;
+  /* padding: 0.625rem 0.75rem; */
   line-height: 1.5;
 }
 .form-control-active {
   border-color: #fff;
   background: #fff;
-  color: #71aceb;
+  font-weight: bold;
+  color: #000;
 }
 .form-control-active:focus {
-  padding: 0.625rem 0.75rem;
+  /* padding: 0.625rem 0.75rem; */
   line-height: 1.5;
 }
 .buy-token-form .token {
