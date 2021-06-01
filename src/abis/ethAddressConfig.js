@@ -4,29 +4,35 @@ module.exports = {
   my_account_address: "0x7c499dc41Aa453A89F6D8C60f932f3EA06E36Ce1",
   modified_stake_address: "0x94698C1dd3bE7d3b7dc1c08d4E8521eCb713Bd61",
   new_modified_address: "0x517295D17Fc4aB759B4Ccfe8964Df9fDc7527eaD",
-  
+
   // lp_token: "0x4d317Bb197CC3872712B667bC40E2A6872a68b7A",
   // lp_token: "0x14aaEb8080160591aA08F85aa4e63fe2D43d28f1",
   lp_token: "0x5951A41c4513cf1601c1F82D50C19fb3A95260C0",
   //xy_token: "0x40ee06E5e833E74A837C65BE34141F65E8331594",
   // xy_token: "0xd6e7dd4400354bBb2AD58296b7bc8e7c4Aac6144",
-  xy_token: "0xc0a25128462018B4F236d3414cAe40FCc21E5244",
-  
+  // xy_token: "0xc0a25128462018B4F236d3414cAe40FCc21E5244",
+  // xy_token: "0x0Efe57ae4e7B777e597fD70491e0d4612819AeDf",
+  xy_token: "0x22f9C9a6AC368E093a79fbF6fFaC7F2109D74e8f",
+
   // gov_address: "0xbF7C4D3bC965b10caF26DC82525305109cE328Df",
   //gov_address: "0x123b7a7305E18EfD3b3b74378F22d56770935186",
   // gov_address: "0xDc2D294041e7F2892Ef42d2dFB1e343e0b5DdD3e",
   // gov_address: "0x1078eD8c81f62546E54D5b63eEB4E13028EE2594",
   //gov_address: "0xc1D9267f2f8c9350fe02F598a4f0b4fC2EC70755",
   gov_address: "0x51f476AcA557fd1DD386f59F9d0e252F19951aCB",
-  
+
   // gov_token_address: "0x615D1Ce514fB76cD228E6bf609E3b9E68639dB74",
-   gov_token_address: "0x1cA81A82D5932c3C63420048973f1edeF5248aa0",
+  gov_token_address: "0x1cA81A82D5932c3C63420048973f1edeF5248aa0",
   //gov_token_address: "0x030D8816249D6dAd9c015660C7852aE7c7fa7b70",
-    
+
   // stake_address: "0x64c63DeFC8AbAd4f7C61E8E9E0935BAfAA258858",
   // stake_address: "0x77f6E003Dc80a4cFb80486DD153Dc018609613C9",
   stake_address: "0xC7f1aA88f058b0875f40e75531C212289bfe8Dfb",
   // gas_token: "0x38B4d13adCe417072a9f0C10c78A8791EdcBedfa",
   // gas_token: "0xe6808C87aD57ebB997Fa4c2ac1dC377b37643670",
   gas_token: "0xF26537cA6eB3E995C4F2520c5f51A06117F349ab",
+
+  deposit_Address: "0xB720029D8A4873c8A52b715A88FeBE83066D2120",
+  nithin_token: "0x47C2b81D31BA8387D6C3D8bDa8d9A4225fEfa6db",
+  escrow_Address: "0xEc484b0c6b091843F6009F9868fdDb23b345Ec99",
 };

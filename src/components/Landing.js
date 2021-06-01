@@ -7,12 +7,13 @@ import Deposit from "./Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
-import Staking from './Staking';
-import TransactionList from './TransactionList';
-import TransactionListTable from './TransactionListTable';
+import Staking from "./Staking";
+import TransactionList from "./TransactionList";
+import TransactionListTable from "./TransactionListTable";
+import { depositABI } from "../abis/deposit";
 
 import LoginWalletOptions from "./LoginWalletOptions";
-import { tokenBalance1ABI } from "../abis/XY_Token";
+
 import ethAddressConfig from "../abis/ethAddressConfig";
 import { govTokenABI } from "../abis/Gov_Token";
 import { gasTokenABI } from "../abis/Gas_Token";
@@ -30,9 +31,11 @@ import {
   set_balance3,
 } from "../redux/action";
 import LockedValues from "./LockedValues";
-var bigInt = require("big-integer");
+import { tokenBalance1ABI } from "../abis/XY_Token";
+import { escrowABI } from "../abis/escrow_ABI";
 
 const mapDispatchToProps = (data) => {
+  console.log(data);
   return {
     user_login: (data) => {
       create_user(data);
@@ -88,14 +91,21 @@ const Landing = ({
   const getBalance1 = async () => {
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
-      const tokenBalanceABIObject = new web3.eth.Contract(
+      const depositABIObject = new web3.eth.Contract(
+        depositABI,
+        ethAddressConfig.deposit_Address
+      );
+      const XYZTokenABIObject = new web3.eth.Contract(
         tokenBalance1ABI,
         ethAddressConfig.xy_token
       );
-      let balance1 = await tokenBalanceABIObject.methods
+      let unlockedMCTBalance = await XYZTokenABIObject.methods
         .balanceOf(account)
         .call();
-      balance1 = balance1 / 1000000000000000000;
+
+      let lockMCTBalance = await depositABIObject.methods
+        .userInfoMCT(account)
+        .call();
 
       const gasTokenABIObject = new web3.eth.Contract(
         gasTokenABI,
@@ -111,7 +121,10 @@ const Landing = ({
       );
 
       let balance3 = await govTokenABIObject.methods.balanceOf(account).call();
-      set_balance1(balance1);
+      set_balance1({
+        lockedMCT: lockMCTBalance?.lockedMCT,
+        unlockedMCT: unlockedMCTBalance,
+      });
       set_balance2(balance2);
       set_balance3(balance3);
     } else {
@@ -130,12 +143,12 @@ const Landing = ({
 
   const getAccount = () => {
     UserService.account(account).then((resolve) => {
-      if (resolve.data.payload.user.length === 0) {
+      if (resolve?.data.payload.user.length === 0) {
         setIsLogin(true);
         user_login(true);
         setIsOpen(!isOpen);
       } else {
-        loginSuccessFull(resolve.data.payload);
+        loginSuccessFull(resolve?.data.payload);
       }
     });
   };
@@ -153,15 +166,15 @@ const Landing = ({
     } else {
       if (data === "close") {
         if (isOpen) {
-           setIsOpen(!isOpen);
+          setIsOpen(!isOpen);
         }
       }
     }
   };
 
   const loginSuccessFull = (payload) => {
-    setUser(payload.user);
-    signup(payload.user);
+    setUser(payload?.user);
+    signup(payload?.user);
     setIsLogin(true);
     user_login(true);
     set_account(account);
@@ -169,7 +182,6 @@ const Landing = ({
   };
 
   const handlePage = (page) => {
-    console.log("page = ",page)
     if (isLogin) {
       setPage(page);
     }
@@ -217,9 +229,7 @@ const Landing = ({
           .on("transactionHash", (unlockedHash) => {
             isClaimed = true;
           })
-          .on("error", (event) => {
-            console.log(event);
-          })
+          .on("error", (event) => {})
           .catch((message) => console.log(message));
       } catch (err) {
         throw new Error("error");
@@ -280,23 +290,28 @@ const Landing = ({
         govABI,
         ethAddressConfig.gov_address
       );
-    }
-    const lockValueBN = bigInt(parseFloat(amount) * 1000000000000000000);
-    try {
-      return govABIObject.methods
-        .unlockTokens(lockId, lockValueBN.value)
-        .send({ from: account })
-        .on("transactionHash", (unlockedHash) => {
-          setTaskUnlock("Transaction completed successfully");
-          return updateTransaction(hash, senderId, receiverId, lockStatus);
-        })
-        .on("error", (event) => {
-          setTaskUnlock("Some error occurr");
-          console.log(event);
-        })
-        .catch((message) => console.log(message));
-    } catch (err) {
-      throw new Error("error");
+      const escrowABIObject = new web3.eth.Contract(
+        escrowABI,
+        ethAddressConfig.escrow_Address
+      );
+
+      const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
+      try {
+        return escrowABIObject.methods
+          .unlockTokens(lockId, lockValueBN)
+          .send({ from: account })
+          .on("transactionHash", (unlockedHash) => {
+            setTaskUnlock("Transaction completed successfully");
+            return updateTransaction(hash, senderId, receiverId, lockStatus);
+          })
+          .on("error", (event) => {
+            setTaskUnlock("Some error occurr");
+            console.log(event);
+          })
+          .catch((message) => console.log(message));
+      } catch (err) {
+        throw new Error("error");
+      }
     }
   };
 
@@ -307,14 +322,14 @@ const Landing = ({
     }
   }, [account]);
 
-  useEffect(() => {    
+  useEffect(() => {
     if (account !== "") {
       getTxn();
     }
   }, [user]);
 
   return (
-    <>
+    <div>
       <Header user={user} isLogin={isLogin} handleLoginWallet={togglePopup} />
       {isOpen && isLogin && (
         <LoginWalletOptions
@@ -328,61 +343,66 @@ const Landing = ({
       <NotificationBar />
       <div className="col-lg-12 col-xs-12 m-b-30 pull-left">
         <div className="col-lg-3 col-xs-12  m-b-30 pull-left">
-          <Sidebar handlePage={handlePage} />
+          <Sidebar handlePage={handlePage} page={page} />
         </div>
-        <div className="col-lg-9 col-xs-12 mb-140 pd-top pull-left">
-          {!isLogin && <LockedValues />}
-          {isLogin && page !== 'transactions' && <MyRewards />}
+        <div className="col-lg-9 col-xs-12 mb-140 pd-top pull-left ">
+          <div
+            style={{
+              background: "black",
+              position: "absolute",
+              minHeight: "80vh",
+              width: "100%",
+              opacity: "0.6",
+              borderRadius: "40px",
+            }}
+          ></div>
+          <div className="p-5">
+            {!isLogin && <LockedValues />}
+            {isLogin && page !== "transactions" && <MyRewards />}
 
-          {isLogin && page === "deposit" && (
-            <>
-              <hr class="line"></hr>
-              <Deposit getBalance1={getBalance1} account={account} />
-            </>
-          )}
-          {isLogin && page === "escrow" && (
-            <>
-              <hr class="line"></hr>
-              <Escrow getTxn={getTxn} />
-            </>
-          )}
-          {isLogin && page === "tasklist" && (
-            <> 
-              <hr class="line"></hr>
-              <TaskList
-                lastClaimedTimeStamp={user.lastClaimedTimeStamp}
-                handleUnlock={handleUnlock}
-                handleClaim={handleClaim}
-                txnRows={txnRows}
-                isLogin={isLogin}
-                taskUnlock={taskUnlock}
-                avatar={user.avatar}
-              />{" "}
-            </>
-          )}
-          {isLogin && page === 'staking' &&
-            <>
-              <hr class="line"></hr>
-                <Staking 
-                  txnRows={txnRows} 
-                />
-            </>
-          }
-          {isLogin && page === 'transactions' &&
-            <>
-              <TransactionListTable 
-                txnRows={txnRows} 
-              />
-              <hr class="line"></hr>
-              <TransactionList 
-                txnRows={txnRows} 
-              />{" "}
-            </>
-          }
-          
+            {isLogin && page === "deposit" && (
+              <>
+                <hr class="line"></hr>
+                <Deposit getBalance1={getBalance1} account={account} />
+              </>
+            )}
+            {isLogin && page === "escrow" && (
+              <>
+                <hr class="line"></hr>
+                <Escrow getTxn={getTxn} />
+              </>
+            )}
+            {isLogin && page === "tasklist" && (
+              <>
+                <hr class="line"></hr>
+                <TaskList
+                  lastClaimedTimeStamp={user.lastClaimedTimeStamp}
+                  handleUnlock={handleUnlock}
+                  handleClaim={handleClaim}
+                  txnRows={txnRows}
+                  isLogin={isLogin}
+                  taskUnlock={taskUnlock}
+                  avatar={user.avatar}
+                />{" "}
+              </>
+            )}
+            {isLogin && page === "staking" && (
+              <>
+                <hr class="line"></hr>
+                <Staking txnRows={txnRows} />
+              </>
+            )}
+            {isLogin && page === "transactions" && (
+              <>
+                <TransactionListTable txnRows={txnRows} />
+                <hr class="line"></hr>
+                <TransactionList txnRows={txnRows} />{" "}
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
