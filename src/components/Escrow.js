@@ -213,6 +213,8 @@ const Escrow = (props) => {
                     toast.success("Transaction Success");
                     setUnlockedSelectUser([]);
                     setUnlockedUser("");
+                    setUseWalletValue("");
+                    setCreditWalletValue("");
                   }
                 })
                 .catch((err) => {
@@ -355,7 +357,7 @@ const Escrow = (props) => {
           className="form-control form-control-active form-control-search"
           placeholder=""
         />
-        <button className="wrapperbutton search-box-btn" onClick={search}>
+        <button className="wrapperbutton " onClick={search}>
           <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>{" "}
         </button>
         <span class="smlTxt">{unlockError}</span>

@@ -1,21 +1,21 @@
 .contacts {
-  width:31%;
-  color:black;
+  width: 31%;
+  color: black;
 }
 
 .search-field {
-  width:100%;
-  padding:10px;
-  font-size:16px
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
 }
 
-.contacts-list{
-    position: absolute;
-  padding:0;
-  width:100%;
+.contacts-list {
+  position: absolute;
+  padding: 0;
+  width: 100%;
 }
 
-.contact{
+.contact {
   display: flex;
   align-items: center;
   font-family: sans-serif;
@@ -26,45 +26,45 @@
   background-color: white;
   color: black;
   opacity: 80%;
-
 }
 
-.contact-image{
-    margin:5px;
+.contact-image {
+  margin: 5px;
 }
 
-.contact-email{
-  font-size:20px;
-  font-weight:bold;
+.contact-email {
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.contact-avatar{
-  font-size:18px;
-  color:grey;
+.contact-avatar {
+  font-size: 18px;
+  color: grey;
 }
 
 .wrapper {
-    position: relative;
+  position: relative;
 }
 
 .wrapper i {
-position: absolute;
-right: 0px;
-
+  position: absolute;
+  right: 0px;
 }
 
 .wrapperbutton {
-    background-color: #ff4339;
-    color:white;
-    top: 0px;
-    height: 46px;
-    width: 50px;
-    right: 50px;
+  background-color: #ff4339;
+  color: white;
+  top: 0px;
+  height: 46px;
+  width: 50px;
+  right: 50px;
+  
+  cursor: pointer;
 }
 
 .search-box-btn {
   position: absolute;
-  top:0;
+  top: 0;
   z-index: 2;
   display: block;
   width: 2.375rem;
@@ -80,15 +80,15 @@ right: 0px;
   display: flex;
 }
 
-.selectboxdisplay {  
-    top: 0px;
-    
-    width: 75px;
-    right: 50px;
+.selectboxdisplay {
+  top: 0px;
+
+  width: 75px;
+  right: 50px;
 }
 
 .button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -100,7 +100,7 @@ right: 0px;
 }
 
 .buttonDisabled {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   border: none;
   color: white;
   padding: 15px 32px;
@@ -113,7 +113,6 @@ right: 0px;
 }
 
 .marginclass {
-margin-left: 10px;
-margin-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
-

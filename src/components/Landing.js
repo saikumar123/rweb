@@ -345,60 +345,62 @@ const Landing = ({
         <div className="col-lg-3 col-xs-12  m-b-30 pull-left">
           <Sidebar handlePage={handlePage} page={page} />
         </div>
-        <div className="col-lg-9 col-xs-12 mb-140 pd-top pull-left ">
+        <div className="col-lg-9 col-xs-12  pd-top pull-left ">
           <div
             style={{
               background: "black",
               position: "absolute",
-              minHeight: "80vh",
+              height: "100%",
               width: "100%",
               opacity: "0.6",
               borderRadius: "40px",
             }}
           ></div>
-          <div className="p-5">
-            {!isLogin && <LockedValues />}
-            {isLogin && page !== "transactions" && <MyRewards />}
+          <div style={{ maxHeight: "85vh", overflow: "auto" }}>
+            <div className="p-5">
+              {!isLogin && <LockedValues />}
+              {isLogin && page !== "transactions" && <MyRewards />}
 
-            {isLogin && page === "deposit" && (
-              <>
-                <hr class="line"></hr>
-                <Deposit getBalance1={getBalance1} account={account} />
-              </>
-            )}
-            {isLogin && page === "escrow" && (
-              <>
-                <hr class="line"></hr>
-                <Escrow getTxn={getTxn} />
-              </>
-            )}
-            {isLogin && page === "tasklist" && (
-              <>
-                <hr class="line"></hr>
-                <TaskList
-                  lastClaimedTimeStamp={user.lastClaimedTimeStamp}
-                  handleUnlock={handleUnlock}
-                  handleClaim={handleClaim}
-                  txnRows={txnRows}
-                  isLogin={isLogin}
-                  taskUnlock={taskUnlock}
-                  avatar={user.avatar}
-                />{" "}
-              </>
-            )}
-            {isLogin && page === "staking" && (
-              <>
-                <hr class="line"></hr>
-                <Staking txnRows={txnRows} />
-              </>
-            )}
-            {isLogin && page === "transactions" && (
-              <>
-                <TransactionListTable txnRows={txnRows} />
-                <hr class="line"></hr>
-                <TransactionList txnRows={txnRows} />{" "}
-              </>
-            )}
+              {isLogin && page === "deposit" && (
+                <>
+                  <hr class="line"></hr>
+                  <Deposit getBalance1={getBalance1} account={account} />
+                </>
+              )}
+              {isLogin && page === "escrow" && (
+                <>
+                  <hr class="line"></hr>
+                  <Escrow getTxn={getTxn} />
+                </>
+              )}
+              {isLogin && page === "tasklist" && (
+                <>
+                  <hr class="line"></hr>
+                  <TaskList
+                    lastClaimedTimeStamp={user.lastClaimedTimeStamp}
+                    handleUnlock={handleUnlock}
+                    handleClaim={handleClaim}
+                    txnRows={txnRows}
+                    isLogin={isLogin}
+                    taskUnlock={taskUnlock}
+                    avatar={user.avatar}
+                  />{" "}
+                </>
+              )}
+              {isLogin && page === "staking" && (
+                <>
+                  <hr class="line"></hr>
+                  <Staking txnRows={txnRows} />
+                </>
+              )}
+              {isLogin && page === "transactions" && (
+                <>
+                  <TransactionListTable txnRows={txnRows} />
+                  <hr class="line"></hr>
+                  <TransactionList txnRows={txnRows} />{" "}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
