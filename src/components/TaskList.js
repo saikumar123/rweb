@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import { Button } from "../atoms/Button/Button";
 
 const TaskList = (props) => {
+  const [selectedTransactionINdex, setSelectedTransactionIndex] = useState("");
+  console.log(props?.unLockLoader);
+  const handleUnlockAction = (index, lockStatus) => {
+    setSelectedTransactionIndex(index);
+    props.handleUnlock(index, lockStatus);
+  };
   return (
-    <div class="row m-b-30 blueTxt">
+    <div class="row m-b-30 text-yellow">
       <div class="col-lg-12">
         <div className=" my-4 ">
           <small
@@ -21,18 +28,20 @@ const TaskList = (props) => {
       </div>
       <div class="col-lg-12 pull-left">
         <div class="col-lg-7 pull-left"></div>
-        <div class="col-lg-1.5 pull-left">
-          <span id="rangeValue" class="rangeColor">
-            Share %
-          </span>
-        </div>
+        {props.txnRows.filter((obj) => obj?.lockStatus === "UNLOCK").length >
+          0 && (
+          <div class="col-lg-1.5 pull-left">
+            <span id="rangeValue" class="rangeColor">
+              Share %
+            </span>
+          </div>
+        )}
       </div>
-
       {props.txnRows.map((row, index) => {
         return (
           <>
             {row.lockStatus === "UNLOCK" && (
-              <div class="col-lg-12 p0 pull-left d-flex align-items-center">
+              <div class="col-lg-12 p0 mt-3 pull-left d-flex align-items-center">
                 <div class="col-lg-1 m-t-5 pull-left">Amount</div>
                 <div class="col-lg-2 pull-left">
                   <input
@@ -76,13 +85,17 @@ const TaskList = (props) => {
                   {row.lockStatus === "DONE" ? (
                     "Transaction completed"
                   ) : row.lockStatus === "UNLOCK" ? (
-                    <button
-                      onClick={() => props.handleUnlock(index, "CLAIM")}
+                    <Button
+                      onClick={() => handleUnlockAction(index, "CLAIM")}
                       type="button"
-                      class="btn button btn-button btn-circular"
+                      loading={
+                        props?.unLockLoader &&
+                        index === selectedTransactionINdex
+                      }
+                      className="btn  button btn-button  btn-circular"
                     >
                       Unlock MCT
-                    </button>
+                    </Button>
                   ) : row.lockStatus === "CLAIM" ? (
                     "Transaction completed"
                   ) : (

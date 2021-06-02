@@ -43,7 +43,7 @@ const options = [
   },
 ];
 const mapStateToProps = (state) => ({
-  balance1: state.balance1,
+  MCTBalance: state.MCTBalance,
   account: state.account,
 });
 
@@ -94,7 +94,7 @@ const Deposit = (props) => {
   const onSubmit = useCallback(async (values, { resetForm }) => {
     await handleDeposit(values?.amount, values?.stakeRate);
     resetForm();
-    props.getBalance1();
+    props.getAllBalance();
   }, []);
 
   const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);

@@ -13,7 +13,7 @@ import { Button } from "../atoms/Button/Button";
 
 const mapStateToProps = (state) => ({
   avatar: state.avatar,
-  balance1: state.balance1,
+  MCTBalance: state.MCTBalance,
   account: state.account,
 });
 
@@ -46,7 +46,7 @@ const Escrow = (props) => {
       intValue.toString() === event.target.value
     ) {
       let rem =
-        window.web3.utils.fromWei(props?.balance1?.lockedMCT, "Ether") /
+        window.web3.utils.fromWei(props?.MCTBalance?.lockedMCT, "Ether") /
         intValue;
       intValue === 0 ? setRemainderValue(0) : setRemainderValue(rem);
       setLockValue(intValue);
@@ -168,7 +168,7 @@ const Escrow = (props) => {
       setAmountError("Please enter the valid amount.");
     }
 
-    if (lockValue > props.balance1) {
+    if (lockValue > props.MCTBalance) {
       setRemainderValue(0);
       setAmountError("Please enter amount less tha MCT.");
     }
@@ -194,7 +194,7 @@ const Escrow = (props) => {
       );
       const lockValueBN = web3.utils.toWei(lockValue.toString(), "Ether");
 
-      if (lockValueBN <= props.balance1.unlockedMCT) {
+      if (lockValueBN <= props.MCTBalance.unlockedMCT) {
         try {
           await XYZTokenABIObject.methods
             .approve(ethAddressConfig.escrow_Address, lockValueBN)
@@ -213,6 +213,8 @@ const Escrow = (props) => {
                     toast.success("Transaction Success");
                     setUnlockedSelectUser([]);
                     setUnlockedUser("");
+                    setUseWalletValue("");
+                    setCreditWalletValue("");
                   }
                 })
                 .catch((err) => {
@@ -300,7 +302,7 @@ const Escrow = (props) => {
       creditWalletValue !== ""
     ) {
       setShowButton("true");
-    } else if (lockValue > props.balance1) {
+    } else if (lockValue > props.MCTBalance) {
       setShowButton("false");
     } else {
       setShowButton("false");
@@ -355,7 +357,7 @@ const Escrow = (props) => {
           className="form-control form-control-active form-control-search"
           placeholder=""
         />
-        <button className="wrapperbutton search-box-btn" onClick={search}>
+        <button className="wrapperbutton " onClick={search}>
           <FontAwesomeIcon icon={faSearch}> </FontAwesomeIcon>{" "}
         </button>
         <span class="smlTxt">{unlockError}</span>
@@ -450,21 +452,12 @@ const Escrow = (props) => {
       <div className="col-lg-12 p0">
         <div className="col-lg-3 m-auto">
           {showButton === "false" || creditedUser.length !== 1 ? (
-            <Button
-              type="button"
-              onClick={checkValidation}
-              className="btn button btn-button btn-circular disabled"
-            >
+            <Button type="button" onClick={checkValidation}>
               {" "}
-              Lock{" "}
+              Lock
             </Button>
           ) : (
-            <Button
-              type="button"
-              onClick={onSubmit}
-              loading={loading}
-              className="btn button btn-button btn-circular"
-            >
+            <Button type="button" onClick={onSubmit} loading={loading}>
               Lock
             </Button>
           )}

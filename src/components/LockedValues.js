@@ -75,7 +75,7 @@ const LockedValues = () => {
   }, [getLockedBalance]);
 
   return (
-    <div className="content-body-padding">
+    <div className="content-body-padding p-0">
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-12 m-b-30">

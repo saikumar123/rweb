@@ -1,14 +1,9 @@
-export const stakeABI = [
+export const stakeGovABI = [
   {
     inputs: [
       {
-        internalType: "contract XYZToken",
+        internalType: "contract GovernanceToken",
         name: "_token",
-        type: "address",
-      },
-      {
-        internalType: "contract GasToken",
-        name: "_gasToken",
         type: "address",
       },
       {
@@ -191,10 +186,10 @@ export const stakeABI = [
   },
   {
     inputs: [],
-    name: "gasToken",
+    name: "govToken",
     outputs: [
       {
-        internalType: "contract GasToken",
+        internalType: "contract GovernanceToken",
         name: "",
         type: "address",
       },
@@ -353,19 +348,6 @@ export const stakeABI = [
     name: "withdraw",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "xyzToken",
-    outputs: [
-      {
-        internalType: "contract XYZToken",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
 ];

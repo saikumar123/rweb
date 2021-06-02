@@ -2,12 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => ({
-  balance1: state.balance1,
-  balance2: state.balance2,
-  balance3: state.balance3,
+  MCTBalance: state.MCTBalance,
+  MGTBalance: state.MGTBalance,
+  MYTBalance: state.MYTBalance,
 });
 
-const MyRewards = ({ balance1, balance2, balance3 }) => {
+const MyRewards = ({ MCTBalance, MGTBalance, MYTBalance }) => {
   const web3 = window?.web3;
   return (
     <div className="row blueTxt text-white">
@@ -28,8 +28,8 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             disabled="disabled"
             className="form-control"
             value={
-              balance1?.lockedMCT &&
-              web3.utils.fromWei(balance1?.lockedMCT, "Ether")
+              MCTBalance?.lockedMCT &&
+              web3.utils.fromWei(MCTBalance?.lockedMCT, "Ether")
             }
             placeholder=""
           />
@@ -42,8 +42,8 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             disabled="disabled"
             placeholder=""
             value={
-              balance1?.unlockedMCT &&
-              web3.utils.fromWei(balance1?.unlockedMCT, "Ether")
+              MCTBalance?.unlockedMCT &&
+              web3.utils.fromWei(MCTBalance?.unlockedMCT, "Ether")
             }
           />
         </div>
@@ -65,7 +65,7 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             type="text"
             disabled="disabled"
             className="form-control"
-            value={balance3}
+            value={MGTBalance?.claimedMGTBalance}
             placeholder=""
           />
         </div>
@@ -76,6 +76,7 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
             disabled="disabled"
             className="form-control"
             placeholder=""
+            value={MGTBalance?.unClaimedMGTBalance}
           />
         </div>
         <div className="col-lg-11 col-sm-12 m-auto text-center">
@@ -91,21 +92,22 @@ const MyRewards = ({ balance1, balance2, balance3 }) => {
       <div className="col-lg-3 col-sm-3 col-xs-12">
         <div style={{ fontSize: "16px", fontWeight: "bold" }}> MYT</div>
         <div className="col-lg-12 p0 m-b-10 mt-3">
-          <i className="smlTxt">Available</i>
+          <i className="smlTxt">Claimed</i>
           <input
             type="text"
             className="form-control"
             disabled="disabled"
-            value={balance2}
+            value={MYTBalance?.claimedMYTBalance}
             placeholder=""
           />
         </div>
         <div className="col-lg-12 p0 m-b-10">
-          <i className="smlTxt">Unavailable</i>
+          <i className="smlTxt">Unclaimed</i>
           <input
             type="text"
             disabled="disabled"
             className="form-control"
+            value={MYTBalance?.unClaimedMYTBalance}
             placeholder=""
           />
         </div>

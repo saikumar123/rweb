@@ -13,13 +13,14 @@ function App(store) {
           backgroundImage: `url(${background})`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
-          height: "100vh",
+          height: "100%",
           width: "100%",
           opacity: "0.5",
-          position: "absolute",
+          position: "fixed",
         }}
       ></div>
       <ToastContainer hideProgressBar limit={1} autoClose={6000} />
+
       <Landing store={store} />
     </div>
   );

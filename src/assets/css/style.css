@@ -26592,9 +26592,9 @@ svg * {
   transition: none !important;
 }
 
-button {
+/* button {
   font-family: Montserrat;
-}
+} */
 
 #root {
   min-height: 100vh;
@@ -29076,7 +29076,9 @@ button {
   right: 14px;
   position: absolute;
   border: none;
+  cursor: pointer;
 }
+
 .form-control-search {
   border-radius: 0.25rem 0px 0px 0.25rem;
 }
