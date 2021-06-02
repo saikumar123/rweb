@@ -341,11 +341,14 @@ const Landing = ({
         />
       )}
       <NotificationBar />
-      <div className="col-lg-12 col-xs-12 m-b-30 pull-left">
-        <div className="col-lg-3 col-xs-12  m-b-30 pull-left">
+      <div className="col-lg-12 col-xs-12 p-b-30 pull-left">
+        <div className="col-lg-3 col-xs-12  p-b-30 pull-left">
           <Sidebar handlePage={handlePage} page={page} />
         </div>
-        <div className="col-lg-9 col-xs-12  pd-top pull-left ">
+        <div
+          className="col-lg-9 col-xs-12 pd-top pull-left "
+          style={{ overflow: "hidden" }}
+        >
           <div
             style={{
               background: "black",
