@@ -41,23 +41,23 @@ export const SETACCOUNT = (data) => {
   };
 };
 
-export const SETBALANCE1 = (data) => {
+export const SETMCTBALANCE = (data) => {
   return {
-    type: "balance1",
+    type: "MCTBalance",
     data: data,
   };
 };
 
-export const SETBALANCE2 = (data) => {
+export const SETMGTBALANCE = (data) => {
   return {
-    type: "balance2",
+    type: "MGTBalance",
     data: data,
   };
 };
 
-export const SETBALANCE3 = (data) => {
+export const SETMYTBALANCE = (data) => {
   return {
-    type: "balance3",
+    type: "MYTBalance",
     data: data,
   };
 };
@@ -93,14 +93,14 @@ export const set_account = (data) => {
   return store.dispatch(SETACCOUNT(data));
 };
 
-export const set_balance1 = (data) => {
-  return store.dispatch(SETBALANCE1(data));
+export const set_MCT_balance = (data) => {
+  return store.dispatch(SETMCTBALANCE(data));
 };
 
-export const set_balance2 = (data) => {
-  return store.dispatch(SETBALANCE2(data));
+export const set_MGT_balance = (data) => {
+  return store.dispatch(SETMGTBALANCE(data));
 };
 
-export const set_balance3 = (data) => {
-  return store.dispatch(SETBALANCE3(data));
+export const set_MYT_balance = (data) => {
+  return store.dispatch(SETMYTBALANCE(data));
 };

@@ -2,9 +2,9 @@ const initialState = {
   page: "",
   isLogin: false,
   account: "",
-  balance1: "",
-  balance2: "",
-  balance3: "",
+  MCTBalance: "",
+  MGTBalance: "",
+  MYTBalance: "",
   avatar: "",
   jsonObj: {},
   txn: [],
@@ -31,12 +31,12 @@ const reducer = (state = initialState, action) => {
       return state;
     case "account":
       return Object.assign({}, state, { account: action.data });
-    case "balance1":
-      return Object.assign({}, state, { balance1: action.data });
-    case "balance2":
-      return Object.assign({}, state, { balance2: action.data });
-    case "balance3":
-      return Object.assign({}, state, { balance3: action.data });
+    case "MCTBalance":
+      return Object.assign({}, state, { MCTBalance: action.data });
+    case "MGTBalance":
+      return Object.assign({}, state, { MGTBalance: action.data });
+    case "MYTBalance":
+      return Object.assign({}, state, { MYTBalance: action.data });
     case "transactions":
       return Object.assign({}, state, { txn: state.txn.push(action.data) });
     default:

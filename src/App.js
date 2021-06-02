@@ -16,7 +16,7 @@ function App(store) {
           height: "100%",
           width: "100%",
           opacity: "0.5",
-          position: "absolute",
+          position: "fixed",
         }}
       ></div>
       <ToastContainer hideProgressBar limit={1} autoClose={6000} />
