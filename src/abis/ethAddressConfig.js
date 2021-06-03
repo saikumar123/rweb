@@ -20,10 +20,10 @@ module.exports = {
   // gov_address: "0x1078eD8c81f62546E54D5b63eEB4E13028EE2594",
   //gov_address: "0xc1D9267f2f8c9350fe02F598a4f0b4fC2EC70755",
   // gov_address: "0x51f476AcA557fd1DD386f59F9d0e252F19951aCB",
-  gov_address: "0x58B55395548Aba861AC8F1081AEdF5AF4a7c1958",
+  gov_address: "0x9CaC48086BFd4b5CA04fB6F5C6e33936E6e07947",
   // gov_token_address: "0x615D1Ce514fB76cD228E6bf609E3b9E68639dB74",
   // gov_token_address: "0x1cA81A82D5932c3C63420048973f1edeF5248aa0",
-  gov_token_address: "0x42264f9a941d14fdf2254BE80db4F7E28598bE95",
+  gov_token_address: "0xdd00E3FA87Ba98f60583D90b1AE5B1152156C16C",
 
   // stake_address: "0x64c63DeFC8AbAd4f7C61E8E9E0935BAfAA258858",
   // stake_address: "0x77f6E003Dc80a4cFb80486DD153Dc018609613C9",

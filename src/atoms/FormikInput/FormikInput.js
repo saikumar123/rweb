@@ -10,7 +10,7 @@ export const FormikInput = ({ name, ...props }) => {
         name={name}
         {...props}
       />
-      <div className="mt-2">
+      <div className="mt-2 position-absolute">
         <ErrorMessage
           name={name}
           component="div"

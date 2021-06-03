@@ -3,7 +3,7 @@ import Web3 from "web3";
 import Header from "./Header";
 import NotificationBar from "./NotificationBar";
 import MyRewards from "./MyRewards";
-import Deposit from "./Deposit";
+import Deposit from "./Deposit/Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
@@ -137,8 +137,12 @@ const Landing = ({
         .call();
 
       set_MGT_balance({
-        claimedMGTBalance: web3.utils.fromWei(claimedMGTBalance, "Ether"),
-        unClaimedMGTBalance: web3.utils.fromWei(unClaimedMGTBalance, "Ether"),
+        claimedMGTBalance: claimedMGTBalance
+          ? web3.utils.fromWei(claimedMGTBalance, "Ether")
+          : 0,
+        unClaimedMGTBalance: unClaimedMGTBalance
+          ? web3.utils.fromWei(unClaimedMGTBalance, "Ether")
+          : 0,
       });
 
       // For MYT Balance
@@ -159,8 +163,12 @@ const Landing = ({
         .call();
 
       set_MYT_balance({
-        claimedMYTBalance: web3.utils.fromWei(claimedMYTBalance, "Ether"),
-        unClaimedMYTBalance: web3.utils.fromWei(unClaimedMYTBalance, "Ether"),
+        claimedMYTBalance: claimedMYTBalance
+          ? web3.utils.fromWei(claimedMYTBalance, "Ether")
+          : 0,
+        unClaimedMYTBalance: unClaimedMYTBalance
+          ? web3.utils.fromWei(unClaimedMYTBalance, "Ether")
+          : 0,
       });
     } else {
       console.log("web3 is not defined");
@@ -439,7 +447,7 @@ const Landing = ({
                 {isLogin && page === "staking" && (
                   <>
                     <hr class="line"></hr>
-                    <Staking txnRows={txnRows} />
+                    <Staking txnRows={txnRows} account={account} />
                   </>
                 )}
                 {isLogin && page === "transactions" && (

@@ -1,18 +1,18 @@
 import React, { useCallback } from "react";
-import ethAddressConfig from "../abis/ethAddressConfig";
-import { Form, Formik, Field } from "formik";
+import ethAddressConfig from "../../../abis/ethAddressConfig";
+import { Form, Formik } from "formik";
 import { connect } from "react-redux";
 import { Dropdown } from "semantic-ui-react";
-import { depositABI } from "../abis/deposit";
+import { depositABI } from "../../../abis/deposit";
 import { toast } from "react-toastify";
 
 import * as yup from "yup";
-import { useFormSubmitWithLoading } from "../hooks/useFormSubmitWithLoading";
-import FormikInput from "../atoms/FormikInput";
-import { Button } from "../atoms/Button/Button";
-import { nithinTokenABI } from "../abis/nithin_Token";
+import { useFormSubmitWithLoading } from "../../../hooks/useFormSubmitWithLoading";
+import FormikInput from "../../../atoms/FormikInput";
+import { Button } from "../../../atoms/Button/Button";
+import { nithinTokenABI } from "../../../abis/nithin_Token";
 
-const DepositValidationSchema = yup.object().shape({
+const DepositFormValidationSchema = yup.object().shape({
   amount: yup.string().required("Required*"),
   stakeRate: yup.string().required("Required*"),
 });
@@ -47,7 +47,7 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-const Deposit = (props) => {
+const DepositForm = (props) => {
   const [selectedVal, setSelectedVal] = React.useState({
     key: "USDT",
     text: "USDT",
@@ -55,7 +55,7 @@ const Deposit = (props) => {
     image: { avatar: true, src: "/icon/usdt.png" },
   });
 
-  const handleDeposit = async (amount, stakeRate) => {
+  const handleDepositForm = async (amount, stakeRate) => {
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
       const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
@@ -92,9 +92,9 @@ const Deposit = (props) => {
   };
 
   const onSubmit = useCallback(async (values, { resetForm }) => {
-    await handleDeposit(values?.amount, values?.stakeRate);
+    await handleDepositForm(values?.amount, values?.stakeRate);
     resetForm();
-    props.getAllBalance();
+    props.props.getAllBalance();
   }, []);
 
   const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);
@@ -104,7 +104,7 @@ const Deposit = (props) => {
       initialValues={defaultValues}
       enableReinitialize={true}
       onSubmit={onSubmitHandler}
-      validationSchema={DepositValidationSchema}
+      validationSchema={DepositFormValidationSchema}
     >
       {({ errors }) => (
         <Form>
@@ -145,15 +145,17 @@ const Deposit = (props) => {
                 <FormikInput name="stakeRate" />
               </div>
             </div>
-            <Button loading={loading}>Deposit</Button>
+            <div className="mt-5 text-center">
+              <Button loading={loading}>Deposit</Button>
+            </div>
           </div>
         </Form>
       )}
     </Formik>
   );
 };
-Deposit.propTypes = {};
+DepositForm.propTypes = {};
 
-Deposit.defaultProps = {};
+DepositForm.defaultProps = {};
 
-export default connect(mapStateToProps)(Deposit);
+export default connect(mapStateToProps)(DepositForm);
