@@ -193,8 +193,7 @@ const Escrow = (props) => {
         ethAddressConfig.xy_token
       );
       const lockValueBN = web3.utils.toWei(lockValue.toString(), "Ether");
-
-      if (lockValueBN <= props.MCTBalance.unlockedMCT) {
+      if (Number(lockValueBN) <= Number(props.MCTBalance.unlockedMCT)) {
         try {
           await XYZTokenABIObject.methods
             .approve(ethAddressConfig.escrow_Address, lockValueBN)
@@ -225,6 +224,8 @@ const Escrow = (props) => {
         } catch (err) {
           toast.error(err.message);
         }
+      } else {
+        toast.error("Not Enough MCT Balance");
       }
     }
   };

@@ -221,19 +221,6 @@ export const depositABI = [
   },
   {
     inputs: [],
-    name: "lockedMCTStakingAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "owner",
     outputs: [
       {
@@ -298,19 +285,6 @@ export const depositABI = [
       },
     ],
     name: "setStakeContractAddress",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_lockedMCTStakingAddress",
-        type: "address",
-      },
-    ],
-    name: "setlockedMCTStakingAddress",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

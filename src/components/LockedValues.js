@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Web3 from "web3";
 
-import { nithinTokenABI } from "../abis/nithin_Token";
+import { daiTokenABI } from "../abis/dai_token";
 
 import ethAddressConfig from "../abis/ethAddressConfig";
 import { tokenBalance1ABI } from "../abis/XY_Token";
@@ -31,9 +31,9 @@ const LockedValues = () => {
   const getLockedBalance = useCallback(async () => {
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
-      const nithinTokenABIObject = new web3.eth.Contract(
-        nithinTokenABI,
-        ethAddressConfig.nithin_token
+      const daiTokenABIObject = new web3.eth.Contract(
+        daiTokenABI,
+        ethAddressConfig.dai_token
       );
       const XYZTokenABIObject = new web3.eth.Contract(
         tokenBalance1ABI,
@@ -44,21 +44,18 @@ const LockedValues = () => {
         depositABI,
         ethAddressConfig.deposit_Address
       );
-      let totalLockedBalance = await nithinTokenABIObject.methods
+      let totalLockedBalance = await daiTokenABIObject.methods
         .balanceOf(ethAddressConfig?.deposit_Address)
         .call();
 
-      let daiLockedBalance = await nithinTokenABIObject.methods
+      let daiLockedBalance = await daiTokenABIObject.methods
         .balanceOf(ethAddressConfig?.deposit_Address)
-        .call();
-
-      let lockedMCTStakingAddress = await depositABIObject.methods
-        .lockedMCTStakingAddress()
         .call();
 
       let FLPLockedBalance = await XYZTokenABIObject.methods
-        .balanceOf(lockedMCTStakingAddress)
+        .balanceOf(ethAddressConfig?.stake_address)
         .call();
+
       setData({
         totalLockedBalance: convertBigInt(totalLockedBalance),
         daiLockedBalance: convertBigInt(daiLockedBalance),

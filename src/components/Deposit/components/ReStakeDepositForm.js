@@ -25,55 +25,61 @@ const mapStateToProps = (state) => ({
 });
 
 const ReStakeDepositForm = (props) => {
-  const handleReStakeDepositForm = async (stakeRate) => {
-    const web3 = window.web3;
-    if (web3 !== undefined && web3.eth !== undefined) {
-      const unlockedMCTBalance = web3.utils.fromWei(
-        props?.MCTBalance?.unlockedMCT.toString(),
-        "Ether"
-      );
+  const handleReStakeDepositForm = useCallback(
+    async (stakeRate) => {
+      const web3 = window.web3;
+      if (web3 !== undefined && web3.eth !== undefined) {
+        const unlockedMCTBalance = web3.utils.fromWei(
+          props?.MCTBalance?.unlockedMCT.toString(),
+          "Ether"
+        );
 
-      console.log(unlockedMCTBalance, stakeRate);
-      const result = (Number(unlockedMCTBalance) * Number(stakeRate)) / 100;
+        console.log(unlockedMCTBalance, stakeRate);
+        const result = (Number(unlockedMCTBalance) * Number(stakeRate)) / 100;
 
-      const res = web3.utils.toWei(result.toString(), "Ether");
+        const res = web3.utils.toWei(result.toString(), "Ether");
 
-      const depositABIObject = new web3.eth.Contract(
-        depositABI,
-        ethAddressConfig.deposit_Address
-      );
-      const XYZTokenABIObject = new web3.eth.Contract(
-        tokenBalance1ABI,
-        ethAddressConfig.xy_token
-      );
-      try {
-        await XYZTokenABIObject.methods
-          .approve(ethAddressConfig.deposit_Address, res)
-          .send({ from: props.account })
-          .on("transactionHash", (hash) => {
-            depositABIObject.methods
-              .stakeMCT(res)
-              .send({ from: props.account })
-              .then((receipt) => {
-                if (receipt.status) {
-                  toast.success("Transaction Success");
-                }
-              })
-              .catch((err) => {
-                toast.error("Transaction Failed");
-              });
-          });
-      } catch (err) {
-        toast.error(err.message);
+        const depositABIObject = new web3.eth.Contract(
+          depositABI,
+          ethAddressConfig.deposit_Address
+        );
+        const XYZTokenABIObject = new web3.eth.Contract(
+          tokenBalance1ABI,
+          ethAddressConfig.xy_token
+        );
+        try {
+          await XYZTokenABIObject.methods
+            .approve(ethAddressConfig.deposit_Address, res)
+            .send({ from: props.account })
+            .on("transactionHash", (hash) => {
+              depositABIObject.methods
+                .stakeMCT(res)
+                .send({ from: props.account })
+                .then((receipt) => {
+                  if (receipt.status) {
+                    toast.success("Transaction Success");
+                  }
+                })
+                .catch((err) => {
+                  toast.error("Transaction Failed");
+                });
+            });
+        } catch (err) {
+          toast.error(err.message);
+        }
       }
-    }
-  };
-  console.log(props);
-  const onSubmit = useCallback(async (values, { resetForm }) => {
-    await handleReStakeDepositForm(values?.stakeRate);
-    resetForm();
-    props.props.getAllBalance();
-  }, []);
+    },
+    [props]
+  );
+
+  const onSubmit = useCallback(
+    async (values, { resetForm }) => {
+      await handleReStakeDepositForm(values?.stakeRate);
+      resetForm();
+      props.props.getAllBalance();
+    },
+    [handleReStakeDepositForm, props]
+  );
 
   const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);
 

@@ -10,7 +10,7 @@ import * as yup from "yup";
 import { useFormSubmitWithLoading } from "../../../hooks/useFormSubmitWithLoading";
 import FormikInput from "../../../atoms/FormikInput";
 import { Button } from "../../../atoms/Button/Button";
-import { nithinTokenABI } from "../../../abis/nithin_Token";
+import { daiTokenABI } from "../../../abis/dai_token";
 
 const DepositFormValidationSchema = yup.object().shape({
   amount: yup.string().required("Required*"),
@@ -55,7 +55,7 @@ const DepositForm = (props) => {
     image: { avatar: true, src: "/icon/usdt.png" },
   });
 
-  const handleDepositForm = async (amount, stakeRate) => {
+  const handleDepositForm = useCallback(async (amount, stakeRate) => {
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
       const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
@@ -64,12 +64,12 @@ const DepositForm = (props) => {
         depositABI,
         ethAddressConfig.deposit_Address
       );
-      const nithinTokenABIObject = new web3.eth.Contract(
-        nithinTokenABI,
-        ethAddressConfig.nithin_token
+      const daiTokenABIObject = new web3.eth.Contract(
+        daiTokenABI,
+        ethAddressConfig.dai_token
       );
       try {
-        await nithinTokenABIObject.methods
+        await daiTokenABIObject.methods
           .approve(ethAddressConfig.deposit_Address, lockValueBN)
           .send({ from: props.account })
           .on("transactionHash", (hash) => {
@@ -89,13 +89,16 @@ const DepositForm = (props) => {
         toast.error(err.message);
       }
     }
-  };
-
-  const onSubmit = useCallback(async (values, { resetForm }) => {
-    await handleDepositForm(values?.amount, values?.stakeRate);
-    resetForm();
-    props.props.getAllBalance();
   }, []);
+
+  const onSubmit = useCallback(
+    async (values, { resetForm }) => {
+      await handleDepositForm(values?.amount, values?.stakeRate);
+      resetForm();
+      props.props.getAllBalance();
+    },
+    [handleDepositForm, props]
+  );
 
   const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);
 

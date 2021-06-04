@@ -19,7 +19,7 @@ function App(store) {
           position: "fixed",
         }}
       ></div>
-      <ToastContainer hideProgressBar limit={1} autoClose={6000} />
+      <ToastContainer hideProgressBar limit={1} autoClose={4000} />
 
       <Landing store={store} />
     </div>
