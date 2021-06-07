@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../atoms/Button";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => ({
@@ -48,12 +49,13 @@ const MyRewards = ({ MCTBalance, MGTBalance, MYTBalance }) => {
           />
         </div>
         <div className="col-lg-11 col-sm-12 m-auto text-center">
-          <button
+          <Button
             type="button"
             className="btn button btn-button btn-circular col-sm-11 mt-3 "
+            disabled
           >
             Redeem
-          </button>
+          </Button>
         </div>
       </div>
       <div className="col-lg-1 col-sm-1"></div>
@@ -80,12 +82,13 @@ const MyRewards = ({ MCTBalance, MGTBalance, MYTBalance }) => {
           />
         </div>
         <div className="col-lg-11 col-sm-12 m-auto text-center">
-          <button
+          <Button
             type="button"
             className="btn button btn-button btn-circular col-sm-11 mt-3 "
+            disabled={Number(MGTBalance?.unClaimedMGTBalance) === 0}
           >
             Redeem
-          </button>
+          </Button>
         </div>
       </div>
       <div className="col-lg-1 col-sm-1"></div>
@@ -112,12 +115,13 @@ const MyRewards = ({ MCTBalance, MGTBalance, MYTBalance }) => {
           />
         </div>
         <div className="col-lg-11 col-sm-12 m-auto text-center">
-          <button
+          <Button
             type="button"
             className="btn button btn-button btn-circular col-sm-11 mt-3 "
+            disabled={Number(MYTBalance?.unClaimedMYTBalance) === 0}
           >
             Redeem
-          </button>
+          </Button>
         </div>
       </div>
       <div className="col-lg-1 "></div>

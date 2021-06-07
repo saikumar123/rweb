@@ -34,7 +34,6 @@ const ReStakeDepositForm = (props) => {
           "Ether"
         );
 
-        console.log(unlockedMCTBalance, stakeRate);
         const result = (Number(unlockedMCTBalance) * Number(stakeRate)) / 100;
 
         const res = web3.utils.toWei(result.toString(), "Ether");

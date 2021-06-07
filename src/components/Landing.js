@@ -38,7 +38,6 @@ import { stakeABI } from "../abis/Stake";
 import { toast } from "react-toastify";
 
 const mapDispatchToProps = (data) => {
-  console.log(data);
   return {
     user_login: (data) => {
       create_user(data);
@@ -46,6 +45,7 @@ const mapDispatchToProps = (data) => {
     signup: (data) => {
       signup_user(data);
     },
+
     set_account: (data) => {
       set_account(data);
     },
@@ -337,7 +337,6 @@ const Landing = ({
       const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
       try {
         setUnlockLoader(true);
-        console.log(escrowABIObject);
         await escrowABIObject.methods
           .unlockTokens(lockId, lockValueBN)
           .send({ from: account })

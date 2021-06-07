@@ -36,5 +36,5 @@ module.exports = {
 
   deposit_Address: "0x36a01aF8B15B9eD9cc67c8d757C2b2c1Ca698056",
   dai_token: "0x2d2619A3D55ADd8E08D37b077bDED77d5Bb81808",
-  escrow_Address: "0xEc484b0c6b091843F6009F9868fdDb23b345Ec99",
+  escrow_Address: "0x069f9Bc3989679Fa1D0709dD872C0f92340a5602",
 };

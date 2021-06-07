@@ -1,9 +1,9 @@
 import axios from "axios";
-import config from "../environmentConfig"
+import config from "../environmentConfig";
 
 const LoginService = {
   apiBaseUrl: {
-    url:config.url
+    url: config.url,
   },
   login: function async(payload) {
     return axios

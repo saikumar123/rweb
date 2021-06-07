@@ -389,6 +389,17 @@ button.btn.button.btn-link:focus {
   /* background-color: #02aa49; */
   background-color: #871a1d;
 }
+
+.btn-button:disabled {
+  /* background-color: #02aa49; */
+  background-color: #555050;
+  cursor: not-allowed;
+}
+.btn-button:disabled:hover {
+  /* background-color: #017833; */
+  background-color: #555050;
+}
+
 .btn-button:hover {
   /* background-color: #017833; */
   background-color: #871a1d;
