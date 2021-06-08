@@ -155,6 +155,7 @@ const Landing = ({
         stakeABI,
         ethAddressConfig.stake_address
       );
+
       let claimedMYTBalance = await gasTokenABIObject.methods
         .balanceOf(account)
         .call();
@@ -395,7 +396,13 @@ const Landing = ({
             className="col-lg-3 col-xs-12  p-b-30 pull-left"
             style={{ position: "fixed" }}
           >
-            <Sidebar handlePage={handlePage} page={page} />
+            <Sidebar
+              handlePage={handlePage}
+              page={page}
+              taskListCount={
+                txnRows?.filter((obj) => obj?.lockStatus === "UNLOCK").length
+              }
+            />
           </div>
           <div
             className="col-lg-9 col-xs-12 pd-top pull-left "
@@ -414,7 +421,9 @@ const Landing = ({
             <div>
               <div className="p-5">
                 {!isLogin && <LockedValues />}
-                {isLogin && page !== "transactions" && <MyRewards />}
+                {isLogin && page !== "transactions" && (
+                  <MyRewards account={account} getAllBalance={getAllBalance} />
+                )}
 
                 {isLogin && page === "deposit" && (
                   <>

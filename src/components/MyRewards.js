@@ -1,15 +1,86 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../atoms/Button";
 import { connect } from "react-redux";
+import ethAddressConfig from "../abis/ethAddressConfig";
 
-const mapStateToProps = (state) => ({
+import { stakeGovABI } from "../abis/Stake_Gov_ABI";
+import { toast } from "react-toastify";
+import { stakeABI } from "../abis/Stake";
+
+const mapStateToProps = (state, props) => ({
   MCTBalance: state.MCTBalance,
   MGTBalance: state.MGTBalance,
   MYTBalance: state.MYTBalance,
+  getAllBalance: props?.getAllBalance,
 });
 
-const MyRewards = ({ MCTBalance, MGTBalance, MYTBalance }) => {
+const MyRewards = ({
+  MCTBalance,
+  MGTBalance,
+  MYTBalance,
+  account,
+  getAllBalance,
+}) => {
   const web3 = window?.web3;
+  const [MGTRedeemLoading, setMGTRedeemLoading] = useState(false);
+  const [MYTRedeemLoading, setMYTRedeemLoading] = useState(false);
+
+  const redeemMGTTokensHandler = async () => {
+    const web3 = window.web3;
+    setMGTRedeemLoading(true);
+    if (web3 !== undefined && web3.eth !== undefined) {
+      const stakeGovABIObject = new web3.eth.Contract(
+        stakeGovABI,
+        ethAddressConfig.gov_address
+      );
+
+      await stakeGovABIObject.methods
+        .claimRewards(account)
+        .send({ from: account })
+        .then((receipt) => {
+          console.log(receipt);
+          if (receipt.status) {
+            toast.success("Transaction Success");
+            setMGTRedeemLoading(false);
+            getAllBalance();
+          } else {
+            setMGTRedeemLoading(false);
+            toast.error("Transaction Failed");
+          }
+        });
+    } else {
+      console.log("web3 is not defined");
+      setMGTRedeemLoading(false);
+    }
+  };
+
+  const redeemMYTTokensHandler = async () => {
+    const web3 = window.web3;
+    setMYTRedeemLoading(true);
+    if (web3 !== undefined && web3.eth !== undefined) {
+      const stakeABIObject = new web3.eth.Contract(
+        stakeABI,
+        ethAddressConfig.stake_address
+      );
+
+      await stakeABIObject.methods
+        .claimRewards(account)
+        .send({ from: account })
+        .then((receipt) => {
+          if (receipt.status) {
+            toast.success("Transaction Success");
+            setMYTRedeemLoading(false);
+            getAllBalance();
+          } else {
+            setMYTRedeemLoading(false);
+            toast.error("Transaction Failed");
+          }
+        });
+    } else {
+      setMYTRedeemLoading(false);
+    }
+  };
+
   return (
     <div className="row blueTxt text-white">
       <div className="col-lg-12 mb-4 ">
@@ -86,6 +157,8 @@ const MyRewards = ({ MCTBalance, MGTBalance, MYTBalance }) => {
             type="button"
             className="btn button btn-button btn-circular col-sm-11 mt-3 "
             disabled={Number(MGTBalance?.unClaimedMGTBalance) === 0}
+            onClick={redeemMGTTokensHandler}
+            loading={MGTRedeemLoading}
           >
             Redeem
           </Button>
@@ -119,6 +192,8 @@ const MyRewards = ({ MCTBalance, MGTBalance, MYTBalance }) => {
             type="button"
             className="btn button btn-button btn-circular col-sm-11 mt-3 "
             disabled={Number(MYTBalance?.unClaimedMYTBalance) === 0}
+            onClick={redeemMYTTokensHandler}
+            loading={MYTRedeemLoading}
           >
             Redeem
           </Button>

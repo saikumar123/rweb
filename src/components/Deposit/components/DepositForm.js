@@ -7,10 +7,10 @@ import { depositABI } from "../../../abis/deposit";
 import { toast } from "react-toastify";
 
 import * as yup from "yup";
-import { useFormSubmitWithLoading } from "../../../hooks/useFormSubmitWithLoading";
 import FormikInput from "../../../atoms/FormikInput";
 import { Button } from "../../../atoms/Button/Button";
 import { daiTokenABI } from "../../../abis/dai_token";
+import { USDTABI } from "../../../abis/USDTABI";
 
 const DepositFormValidationSchema = yup.object().shape({
   amount: yup.string().required("Required*"),
@@ -24,22 +24,22 @@ const defaultValues = {
 
 const options = [
   {
+    key: "DAI",
+    text: "DAI",
+    value: "0",
+    image: { avatar: true, src: "/icon/dai-logo.png" },
+  },
+  {
     key: "USDT",
     text: "USDT",
-    value: "USDT",
+    value: "1",
     image: { avatar: true, src: "/icon/usdt-logo-2.png" },
   },
   {
     key: "USDC",
     text: "USDC",
-    value: "USDC",
+    value: "2",
     image: { avatar: true, src: "/icon/usd-coin-usdc.png" },
-  },
-  {
-    key: "DAI",
-    text: "DAI",
-    value: "DAI",
-    image: { avatar: true, src: "/icon/dai-logo.png" },
   },
 ];
 const mapStateToProps = (state) => ({
@@ -48,37 +48,26 @@ const mapStateToProps = (state) => ({
 });
 
 const DepositForm = (props) => {
-  const [selectedVal, setSelectedVal] = React.useState({
-    key: "USDT",
-    text: "USDT",
-    value: "USDT",
-    image: { avatar: true, src: "/icon/usdt.png" },
-  });
+  console.log(props);
+  const [unitSelectedVal, setUnitSelectedVal] = React.useState("0");
+  const [loading, setLoading] = React.useState(false);
 
-  const handleDepositForm = useCallback(async (amount, stakeRate) => {
-    const web3 = window.web3;
-    if (web3 !== undefined && web3.eth !== undefined) {
-      const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
-
-      const depositABIObject = new web3.eth.Contract(
-        depositABI,
-        ethAddressConfig.deposit_Address
-      );
-      const daiTokenABIObject = new web3.eth.Contract(
-        daiTokenABI,
-        ethAddressConfig.dai_token
-      );
+  const depositHandler = useCallback(
+    async (ABIObject, lockValueBN, stakeRate, depositABIObject) => {
       try {
-        await daiTokenABIObject.methods
-          .approve(ethAddressConfig.deposit_Address, lockValueBN)
+        setLoading(true);
+        await ABIObject.methods
+          .approve(ethAddressConfig?.deposit_Address, lockValueBN)
           .send({ from: props.account })
           .on("transactionHash", (hash) => {
             depositABIObject.methods
-              .depositAndStake(0, lockValueBN, stakeRate)
+              .depositAndStake(Number(unitSelectedVal), lockValueBN, stakeRate)
               .send({ from: props.account })
               .then((receipt) => {
                 if (receipt.status) {
                   toast.success("Transaction Success");
+
+                  props.props.getAllBalance();
                 }
               })
               .catch((err) => {
@@ -88,25 +77,74 @@ const DepositForm = (props) => {
       } catch (err) {
         toast.error(err.message);
       }
-    }
-  }, []);
+      setLoading(false);
+    },
+    [props, unitSelectedVal]
+  );
+
+  const handleDepositForm = useCallback(
+    async (amount, stakeRate) => {
+      const web3 = window.web3;
+      if (web3 !== undefined && web3.eth !== undefined) {
+        const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
+
+        const depositABIObject = new web3.eth.Contract(
+          depositABI,
+          ethAddressConfig.deposit_Address
+        );
+        const daiTokenABIObject = new web3.eth.Contract(
+          daiTokenABI,
+          ethAddressConfig.dai_token
+        );
+        const USDTABIObject = new web3.eth.Contract(
+          USDTABI,
+          ethAddressConfig.USDT_Address
+        );
+
+        if (unitSelectedVal === "0") {
+          await depositHandler(
+            daiTokenABIObject,
+            lockValueBN,
+            stakeRate,
+            depositABIObject
+          );
+        } else if (unitSelectedVal === "1") {
+          await depositHandler(
+            USDTABIObject,
+            lockValueBN,
+            stakeRate,
+            depositABIObject
+          );
+        } else {
+          await depositHandler(
+            USDTABIObject,
+            lockValueBN,
+            stakeRate,
+            depositABIObject
+          );
+        }
+      }
+    },
+    [depositHandler, unitSelectedVal]
+  );
 
   const onSubmit = useCallback(
     async (values, { resetForm }) => {
       await handleDepositForm(values?.amount, values?.stakeRate);
       resetForm();
-      props.props.getAllBalance();
     },
     [handleDepositForm, props]
   );
 
-  const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);
+  const handleUnitDropdown = (e, data) => {
+    setUnitSelectedVal(data?.value);
+  };
 
   return (
     <Formik
       initialValues={defaultValues}
       enableReinitialize={true}
-      onSubmit={onSubmitHandler}
+      onSubmit={onSubmit}
       validationSchema={DepositFormValidationSchema}
     >
       {({ errors }) => (
@@ -134,11 +172,12 @@ const DepositForm = (props) => {
                 <div className="border border-white ">
                   <Dropdown
                     placeholder="Select Unit"
-                    defaultValue={"USDT"}
+                    defaultValue={"0"}
                     fluid
                     selection
                     options={options}
                     style={{ backgroundColor: "#fff !important" }}
+                    onChange={handleUnitDropdown}
                   />
                 </div>
               </div>

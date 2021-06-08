@@ -126,9 +126,6 @@ const Staking = (props) => {
             Staking
           </small>
         </div>
-        {props.txnRows.length === 0 && (
-          <small class="tag-line-error">{"No transaction item found"}</small>
-        )}
       </div>
       <div class="col-lg-12 p0 pull-left smlTxt text-center">
         <div class="col-lg-2 col-sm-2 m-t-5 pull-left">Pool</div>
@@ -192,6 +189,20 @@ const Staking = (props) => {
                       : "col-lg-12 pull-left contentformslide"
                   }
                 >
+                  <div
+                    className="position-absolute "
+                    style={{
+                      fontSize: "28px",
+                      right: "2rem",
+                      top: "1rem",
+                      zIndex: "9",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => showManageItem(row, index)}
+                  >
+                    <i class="fa fa-times text-white"></i>
+                  </div>
+
                   <div className="col-lg-12 pull-left text-center p-d-30">
                     {
                       "To stake, get MGT tokens by staking MGT Tokens into here."

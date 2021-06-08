@@ -80,7 +80,14 @@ const Sidebar = (props) => {
                   aria-expanded="true"
                   className={props.page === obj?.slug && "active"}
                 >
-                  <span className="nav-text">{obj?.label}</span>
+                  <div className="d-flex justify-content-center align-items-center">
+                    <div className="nav-text">{obj?.label}</div>
+                    {obj?.slug === "tasklist" && (
+                      <div className="nav-count d-flex justify-content-center align-items-center">
+                        {props?.taskListCount}
+                      </div>
+                    )}
+                  </div>{" "}
                 </a>
               </li>
             ))}

@@ -195,6 +195,7 @@ const Escrow = (props) => {
       const lockValueBN = web3.utils.toWei(lockValue.toString(), "Ether");
       if (Number(lockValueBN) <= Number(props.MCTBalance.unlockedMCT)) {
         try {
+          setLoading(true);
           await XYZTokenABIObject.methods
             .approve(ethAddressConfig.escrow_Address, lockValueBN)
             .send({ from: props.account })
@@ -209,6 +210,7 @@ const Escrow = (props) => {
                 .send({ from: props.account })
                 .then((receipt) => {
                   if (receipt.status) {
+                    setLoading(false);
                     toast.success("Transaction Success");
                     setUnlockedSelectUser([]);
                     setUnlockedUser("");
@@ -218,10 +220,12 @@ const Escrow = (props) => {
                 })
                 .catch((err) => {
                   toast.error("Transaction Failed");
+                  setLoading(false);
                 });
             })
             .on("error", (event) => {});
         } catch (err) {
+          setLoading(false);
           toast.error(err.message);
         }
       } else {
@@ -231,9 +235,7 @@ const Escrow = (props) => {
   };
 
   const onSubmit = async () => {
-    setLoading(true);
     await handleSubmit();
-    setLoading(false);
   };
 
   const search = () => {

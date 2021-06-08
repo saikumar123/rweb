@@ -78,6 +78,19 @@ body#modern
   padding: 0 20px 20px;
 }
 
+.nk-sidebar .metismenu a .nav-count {
+  color: #fff;
+  border: 1px solid #fff;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  color: red;
+  background: white;
+}
+
 .nk-sidebar .metismenu a {
   color: #fff;
   background: #871a1d;
