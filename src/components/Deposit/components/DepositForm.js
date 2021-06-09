@@ -11,6 +11,7 @@ import FormikInput from "../../../atoms/FormikInput";
 import { Button } from "../../../atoms/Button/Button";
 import { daiTokenABI } from "../../../abis/dai_token";
 import { USDTABI } from "../../../abis/USDTABI";
+import { USDCABI } from "../../../abis/USDCABI";
 
 const DepositFormValidationSchema = yup.object().shape({
   amount: yup.string().required("Required*"),
@@ -48,10 +49,8 @@ const mapStateToProps = (state) => ({
 });
 
 const DepositForm = (props) => {
-  console.log(props);
   const [unitSelectedVal, setUnitSelectedVal] = React.useState("0");
   const [loading, setLoading] = React.useState(false);
-
   const depositHandler = useCallback(
     async (ABIObject, lockValueBN, stakeRate, depositABIObject) => {
       try {
@@ -76,8 +75,9 @@ const DepositForm = (props) => {
           });
       } catch (err) {
         toast.error(err.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     },
     [props, unitSelectedVal]
   );
@@ -100,6 +100,10 @@ const DepositForm = (props) => {
           USDTABI,
           ethAddressConfig.USDT_Address
         );
+        const USDCABIObject = new web3.eth.Contract(
+          USDCABI,
+          ethAddressConfig.USDC_Address
+        );
 
         if (unitSelectedVal === "0") {
           await depositHandler(
@@ -117,7 +121,7 @@ const DepositForm = (props) => {
           );
         } else {
           await depositHandler(
-            USDTABIObject,
+            USDCABIObject,
             lockValueBN,
             stakeRate,
             depositABIObject

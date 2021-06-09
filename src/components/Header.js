@@ -11,7 +11,6 @@ const Header = (props) => {
   const handleLogout = () => {
     LoginService.logout();
   };
-  console.log(props);
   return (
     <div className="header pt-2">
       <div className="nav-header">
@@ -50,7 +49,7 @@ const Header = (props) => {
               </button>
 
               <div className="headerMenu" onClick={handleLogout}>
-                <div className="item">SignOut</div>
+                <div className="item">Disconnect</div>
               </div>
             </div>
           </span>

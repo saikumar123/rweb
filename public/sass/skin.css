@@ -360,3 +360,10 @@ a,
   cursor: pointer;
   border-radius: 25px;
 }
+
+.ui.buttons {
+  position: relative;
+}
+.ui.buttons .red {
+  background-color: #871a1d !important;
+}

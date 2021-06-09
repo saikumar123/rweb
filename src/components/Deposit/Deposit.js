@@ -1,14 +1,36 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { Button } from "semantic-ui-react";
 import DepositForm from "./components/DepositForm";
 import ReStakeDepositForm from "./components/ReStakeDepositForm";
 
 const Deposit = (props) => {
+  const [depositForm, showDepositForm] = useState(true);
   return (
-    <>
-      <ReStakeDepositForm props={props} />
-      <DepositForm props={props} />
-    </>
+    <div className="mt-5">
+      <Button.Group size="large">
+        <Button
+          color={depositForm && "red"}
+          content="Deposit"
+          active
+          onClick={() => showDepositForm(true)}
+        ></Button>
+        <Button.Or />
+        <Button
+          color={!depositForm && "red"}
+          onClick={() => showDepositForm(false)}
+        >
+          Re-Stake MCT
+        </Button>
+      </Button.Group>
+      <div className="mt-5">
+        {" "}
+        {!depositForm ? (
+          <ReStakeDepositForm props={props} />
+        ) : (
+          <DepositForm props={props} />
+        )}
+      </div>
+    </div>
   );
 };
 
