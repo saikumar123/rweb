@@ -99,7 +99,7 @@ const ReStakeDepositForm = (props) => {
                     className="tag-line font-weight-bold"
                     style={{ fontSize: "20px" }}
                   >
-                    Re-Stake MCT
+                    Increase your weightage in pool.
                   </small>
                 </div>
               </div>
@@ -109,7 +109,7 @@ const ReStakeDepositForm = (props) => {
                 <FormikInput name="stakeRate" />
               </div>
               <div className="ml-2  d-flex align-items-end mt-2">
-                <Button loading={loading}>Re-Stake</Button>
+                <Button loading={loading}>Submit</Button>
               </div>
             </div>
           </div>

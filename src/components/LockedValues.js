@@ -92,7 +92,7 @@ const LockedValues = () => {
       <div className="tables-section">
         <div className="container-fluid">
           <div className="row m-b-30 blueTxt">
-            <div className="col-lg-1 d-flex align-items-center">Total</div>
+            <div className="col-lg-1 d-flex align-items-center">TVL</div>
             <div className="col-lg-3">
               <input
                 type="text"

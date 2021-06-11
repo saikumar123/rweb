@@ -9,6 +9,10 @@ const Sidebar = (props) => {
       slug: "deposit",
     },
     {
+      label: "Staking",
+      slug: "staking",
+    },
+    {
       label: "Escrow",
       slug: "escrow",
     },
@@ -16,10 +20,7 @@ const Sidebar = (props) => {
       label: "Task List",
       slug: "tasklist",
     },
-    {
-      label: "Staking",
-      slug: "staking",
-    },
+
     {
       label: "Transactions",
       slug: "transactions",
@@ -73,7 +74,7 @@ const Sidebar = (props) => {
             </li> */}
 
             {data.map((obj) => (
-              <li>
+              <li className={`${obj?.slug === "escrow" && "mt-5"}`}>
                 <a
                   href="#"
                   onClick={() => props.handlePage(obj?.slug)}

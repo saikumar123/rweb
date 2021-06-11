@@ -19,7 +19,7 @@ const Deposit = (props) => {
           color={!depositForm && "red"}
           onClick={() => showDepositForm(false)}
         >
-          Re-Stake MCT
+          Increase your weightage in pool
         </Button>
       </Button.Group>
       <div className="mt-5">

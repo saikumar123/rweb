@@ -57,6 +57,14 @@ const Staking = (props) => {
     }
   };
 
+  const [unStakeValue, setUnStakeValue] = useState("");
+
+  const handleUnStakeChange = (e) => {
+    if (e.target.value) {
+      const value = window.web3.utils.toWei(e.target.value.toString(), "Ether");
+      setUnStakeValue(value);
+    }
+  };
   const [stakeMGTBalance, setStakeMGTBalance] = useState();
 
   const getStakeMGT = async () => {
@@ -113,6 +121,14 @@ const Staking = (props) => {
         toast.error(err.message);
       }
     }
+  };
+
+  const handleStakeMaxAmount = () => {
+    setStakeValue(props?.MGTBalance?.claimedMGTBalance);
+  };
+
+  const handleUnStakeMaxAmount = () => {
+    setUnStakeValue(stakeMGTBalance);
   };
 
   return (
@@ -213,12 +229,25 @@ const Staking = (props) => {
                     <i className="smlTxt">
                       Balance:{props?.MGTBalance?.claimedMGTBalance} MGT
                     </i>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="0.0"
-                      onChange={handleStakeChange}
-                    />
+                    <div className="d-flex align-items-end">
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="0.0"
+                        value={stakeValue}
+                        onChange={handleStakeChange}
+                      />
+                      <button
+                        style={{
+                          marginLeft: "5px",
+                          padding: "5px",
+                          color: "#000",
+                        }}
+                        onClick={handleStakeMaxAmount}
+                      >
+                        Max
+                      </button>
+                    </div>
                     <div className="col-lg-12 m-auto">
                       <button
                         type="button"
@@ -231,11 +260,25 @@ const Staking = (props) => {
                   </div>
                   <div className="col-lg-6 col-sm-6 m-b-10 pull-left">
                     <i className="smlTxt">Staked: {stakeMGTBalance} MGT</i>
-                    <input
-                      type="number"
-                      className="form-control"
-                      placeholder="0.0"
-                    />
+                    <div className="d-flex align-items-end">
+                      <input
+                        type="number"
+                        className="form-control"
+                        placeholder="0.0"
+                        value={unStakeValue}
+                        onChange={handleUnStakeChange}
+                      />
+                      <button
+                        style={{
+                          marginLeft: "5px",
+                          padding: "5px",
+                          color: "#000",
+                        }}
+                        onClick={handleUnStakeMaxAmount}
+                      >
+                        Max
+                      </button>
+                    </div>
                     <div className="col-lg-11 m-auto">
                       <button
                         type="button"
