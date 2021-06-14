@@ -22,22 +22,26 @@ const TransactionList = (props) => {
   return (
     <div class="row m-b-30 blueTxt">
       <div class="col-lg-12 m-b-15\">
-        <small class="tag-line">
-          {" "}
-          <i>Transaction List</i>
-        </small>
+        <div className=" my-4 ">
+          <small
+            className="tag-line font-weight-bold"
+            style={{ fontSize: "20px" }}
+          >
+            Transaction List
+          </small>
+        </div>
         {props.txnRows.length === 0 && (
           <small class="tag-line-error">{"No transaction item found"}</small>
         )}
       </div>
       <div class="col-lg-12 col-sm-12 p0 pull-left smlTxt">
-        <div class="col-lg-3 col-sm-3 m-t-5 pull-left">
+        <div class="col-lg-4 col-sm-3 m-t-5 pull-left">
           Transactions (Amount)
         </div>
-        <div class="col-lg-4 col-sm-4 pull-left">
+        <div class="col-lg-4 col-sm-4 m-t-5  pull-left">
           Timestamp (mm/dd/yyyy) UTC
         </div>
-        <div class="col-lg-3 col-sm-3 m-t-5 pull-left">Type</div>
+        <div class="col-lg-4  col-sm-3 m-t-5 pull-left">Type</div>
       </div>
 
       {props.txnRows
@@ -48,7 +52,7 @@ const TransactionList = (props) => {
           return (
             <>
               <div
-                class="col-lg-12 col-sm-12 p0 pull-left"
+                class="col-lg-12 mt-2 col-sm-12 p0 pull-left"
                 className={
                   row.lockStatus === "DONE" || row.lockStatus === "CLAIM"
                     ? "col-lg-12 p0 pull-left completed"
@@ -57,14 +61,14 @@ const TransactionList = (props) => {
                     : "col-lg-12 p0 pull-left locked"
                 }
               >
-                <div class="col-lg-3 col-sm-3 m-t-5 pull-left">
+                <div class="col-lg-4 col-sm-3 m-t-5 pull-left">
                   {row.amount}
                 </div>
                 <div class="col-lg-4 col-sm-4 pull-left">
                   {convertDateTime(row.timestamp)}
                 </div>
 
-                <div class="col-lg-3 col-sm-3 m-t-5 pull-left">
+                <div class="col-lg-4 col-sm-3 m-t-5 pull-left">
                   {row.lockStatus === "DONE"
                     ? "completed"
                     : row.lockStatus === "UNLOCK"

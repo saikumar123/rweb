@@ -83,7 +83,7 @@ const Sidebar = (props) => {
                 >
                   <div className="d-flex justify-content-center align-items-center">
                     <div className="nav-text">{obj?.label}</div>
-                    {obj?.slug === "tasklist" && (
+                    {obj?.slug === "tasklist" && props?.taskListCount !== 0 && (
                       <div className="nav-count d-flex justify-content-center align-items-center">
                         {props?.taskListCount}
                       </div>

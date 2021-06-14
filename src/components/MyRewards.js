@@ -7,12 +7,12 @@ import ethAddressConfig from "../abis/ethAddressConfig";
 import { stakeGovABI } from "../abis/Stake_Gov_ABI";
 import { toast } from "react-toastify";
 import { stakeABI } from "../abis/Stake";
+import { depositABI } from "../abis/deposit";
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = (state) => ({
   MCTBalance: state.MCTBalance,
   MGTBalance: state.MGTBalance,
   MYTBalance: state.MYTBalance,
-  getAllBalance: props?.getAllBalance,
 });
 
 const MyRewards = ({
@@ -20,11 +20,15 @@ const MyRewards = ({
   MGTBalance,
   MYTBalance,
   account,
+  totalPoolBalance,
+  user,
   getAllBalance,
 }) => {
   const web3 = window?.web3;
   const [MGTRedeemLoading, setMGTRedeemLoading] = useState(false);
   const [MYTRedeemLoading, setMYTRedeemLoading] = useState(false);
+  const [exitPoolLoading, SetexitPoolLoading] = useState(false);
+
   const [exitPoolModal, showExitPoolModal] = useState(false);
 
   const redeemMGTTokensHandler = async () => {
@@ -83,13 +87,41 @@ const MyRewards = ({
     }
   };
 
+  const exitPoolHandler = async () => {
+    const web3 = window.web3;
+    SetexitPoolLoading(true);
+    if (web3 !== undefined && web3.eth !== undefined) {
+      const depositABIObject = new web3.eth.Contract(
+        depositABI,
+        ethAddressConfig.deposit_Address
+      );
+
+      await depositABIObject.methods
+        .exitPool()
+        .send({ from: account })
+        .then((receipt) => {
+          if (receipt.status) {
+            toast.success("Pool Exit Successfully");
+            SetexitPoolLoading(false);
+            getAllBalance();
+          } else {
+            SetexitPoolLoading(false);
+            toast.error("Transaction Failed");
+          }
+        });
+    } else {
+      console.log("web3 is not defined");
+      SetexitPoolLoading(false);
+    }
+  };
+
   const handleConfirm = () => {
     showExitPoolModal(false);
+    exitPoolHandler();
   };
   const handleCancel = () => {
     showExitPoolModal(false);
   };
-
   return (
     <>
       <div className="row blueTxt text-white">
@@ -133,10 +165,11 @@ const MyRewards = ({
             <Button
               type="button"
               className="btn button btn-button btn-circular col-sm-11 mt-3 "
-              disabled={Number(MCTBalance?.unlockedMCT) === 0}
+              disabled={Number(totalPoolBalance) === 0 || exitPoolLoading}
               onClick={() => showExitPoolModal(true)}
+              loading={exitPoolLoading}
             >
-              Redeem
+              Exit Pool
             </Button>
           </div>
         </div>
@@ -215,7 +248,7 @@ const MyRewards = ({
       <div>
         <Confirm
           open={exitPoolModal}
-          content="Are you sure! You want to exit pool?  "
+          content={`Are you sure ${user?.avatar.toUpperCase()} ! You want to exit pool?`}
           onCancel={handleCancel}
           onConfirm={handleConfirm}
           size="small"

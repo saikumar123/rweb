@@ -65,18 +65,18 @@ const DepositForm = (props) => {
               .then((receipt) => {
                 if (receipt.status) {
                   toast.success("Transaction Success");
-
+                  setLoading(false);
                   props.props.getAllBalance();
                 }
               })
               .catch((err) => {
+                setLoading(false);
                 toast.error("Transaction Failed");
               });
           });
       } catch (err) {
-        toast.error(err.message);
-      } finally {
         setLoading(false);
+        toast.error(err.message);
       }
     },
     [props, unitSelectedVal]

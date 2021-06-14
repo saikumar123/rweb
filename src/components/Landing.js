@@ -77,6 +77,7 @@ const Landing = ({
   const [page, setPage] = React.useState("");
   const [txnRows, setTxnRows] = useState([]);
   const [taskUnlock, setTaskUnlock] = React.useState("");
+  const [totalPoolBalance, setTotalPoolBalance] = useState(0);
 
   const loadWeb3 = async () => {
     if (window.ethereum) {
@@ -117,6 +118,12 @@ const Landing = ({
         lockedMCT: lockMCTBalance?.lockedMCT,
         unlockedMCT: unlockedMCTBalance,
       });
+
+      // for total pool balance
+      let totalBalance = await depositABIObject.methods
+        .totalPoolBalance(account)
+        .call();
+      setTotalPoolBalance(totalBalance);
 
       // For MGT Balance
       const govTokenABIObject = new web3.eth.Contract(
@@ -422,7 +429,12 @@ const Landing = ({
               <div className="p-5">
                 {!isLogin && <LockedValues />}
                 {isLogin && page !== "transactions" && (
-                  <MyRewards account={account} getAllBalance={getAllBalance} />
+                  <MyRewards
+                    account={account}
+                    getAllBalance={getAllBalance}
+                    user={user}
+                    totalPoolBalance={totalPoolBalance}
+                  />
                 )}
 
                 {isLogin && page === "deposit" && (
