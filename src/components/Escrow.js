@@ -325,7 +325,7 @@ const Escrow = (props) => {
         </div>
       </div>
       <div className="col-lg-2 m-t-5 ">
-        MCT
+        FUSD
         <br />
       </div>
 

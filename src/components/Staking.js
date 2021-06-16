@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
 const Staking = (props) => {
   const [tableData, setTableData] = useState([
     {
-      name: "MGT-ETH-LP",
+      name: "DFL-ETH-LP",
       apy: "--%",
       total_pool: "10,00.47",
       stakable: "0 BPT",
@@ -32,7 +32,7 @@ const Staking = (props) => {
       isExpand: false,
     },
     {
-      name: "MGT-POOL",
+      name: "DFL-POOL",
       apy: "--%",
       total_pool: "8876.47",
       stakable: "0 BPT",
@@ -221,13 +221,13 @@ const Staking = (props) => {
 
                   <div className="col-lg-12 pull-left text-center p-d-30">
                     {
-                      "To stake, get MGT tokens by staking MGT Tokens into here."
+                      "To stake, get DFL tokens by staking DFL Tokens into here."
                     }
                   </div>
                   <div className="col-lg-6 col-sm-6 m-b-10 pull-left">
                     {/* <br/> */}
                     <i className="smlTxt">
-                      Balance:{props?.MGTBalance?.claimedMGTBalance} MGT
+                      Balance:{props?.MGTBalance?.claimedMGTBalance} DFL
                     </i>
                     <div className="d-flex align-items-end">
                       <input
@@ -259,7 +259,7 @@ const Staking = (props) => {
                     </div>
                   </div>
                   <div className="col-lg-6 col-sm-6 m-b-10 pull-left">
-                    <i className="smlTxt">Staked: {stakeMGTBalance} MGT</i>
+                    <i className="smlTxt">Staked: {stakeMGTBalance} DFL</i>
                     <div className="d-flex align-items-end">
                       <input
                         type="number"

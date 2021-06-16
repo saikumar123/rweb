@@ -134,7 +134,7 @@ const MyRewards = ({
           </small>
         </div>
         <div className="col-lg-3 col-sm-3 col-xs-12">
-          <div style={{ fontSize: "16px", fontWeight: "bold" }}> MCT</div>
+          <div style={{ fontSize: "16px", fontWeight: "bold" }}> FUSD</div>
           <div className="col-lg-12 p0 m-b-10 mt-3">
             <i className="smlTxt">Locked</i>
             <input
@@ -175,7 +175,7 @@ const MyRewards = ({
         </div>
         <div className="col-lg-1 col-sm-1"></div>
         <div className="col-lg-3 col-sm-3 col-xs-12">
-          <div style={{ fontSize: "16px", fontWeight: "bold" }}> MGT</div>
+          <div style={{ fontSize: "16px", fontWeight: "bold" }}> DFL</div>
           <div className="col-lg-12 p0 m-b-10 mt-3">
             <i className="smlTxt">Claimed</i>
             <input
@@ -210,7 +210,7 @@ const MyRewards = ({
         </div>
         <div className="col-lg-1 col-sm-1"></div>
         <div className="col-lg-3 col-sm-3 col-xs-12">
-          <div style={{ fontSize: "16px", fontWeight: "bold" }}> MYT</div>
+          <div style={{ fontSize: "16px", fontWeight: "bold" }}> FEES</div>
           <div className="col-lg-12 p0 m-b-10 mt-3">
             <i className="smlTxt">Claimed</i>
             <input

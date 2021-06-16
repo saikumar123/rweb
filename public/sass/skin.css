@@ -367,3 +367,32 @@ a,
 .ui.buttons .red {
   background-color: #871a1d !important;
 }
+.poolCard {
+  /* border: 1px solid white; */
+  padding: 10px 30px;
+  height: 150px;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 40px !important;
+  box-shadow: 0px 0px 20px #fff;
+  border-radius: 10px;
+}
+.poolCard .label {
+  font-size: 22px;
+  font-weight: bold;
+}
+.poolCard .amount {
+  color: #fff;
+  margin-top: 10px;
+}
+
+.poolCard .apr {
+  color: #fff;
+  margin-top: 5px;
+}
+.poolCard span {
+  color: #febe10;
+}
