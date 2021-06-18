@@ -78,6 +78,19 @@ body#modern
   padding: 0 20px 20px;
 }
 
+.nk-sidebar .metismenu a .nav-count {
+  color: #fff;
+  border: 1px solid #fff;
+  min-width: 20px;
+  min-height: 20px;
+  margin-left: 10px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  color: red;
+  background: white;
+}
+
 .nk-sidebar .metismenu a {
   color: #fff;
   background: #871a1d;
@@ -310,9 +323,9 @@ a,
 }
 .range {
   width: 100%;
-  height: 15px;
+  height: 10px;
   -webkit-appearance: none;
-  background: #111;
+  background: #867c7c;
   outline: none;
   border-radius: 15px;
   overflow: hidden;
@@ -323,8 +336,63 @@ a,
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: #00fd0a;
+  background: #fff;
   cursor: pointer;
-  border: 4px solid #333;
-  box-shadow: -407px 0 0 400px #00fd0a;
+  border: 4px solid rgb(182, 13, 13);
+  box-shadow: -407px 0 0 400px#fff;
+}
+
+.headerMenu {
+  display: none;
+}
+.headerDropdown:hover .headerMenu {
+  display: block;
+}
+
+.headerMenu .item {
+  padding: 10px 5px;
+  text-align: center;
+  color: #fff;
+  font-size: 12px;
+  box-shadow: 0px 0px 15px #fff;
+  /* border: 2px solid white; */
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 25px;
+}
+
+.ui.buttons {
+  position: relative;
+}
+.ui.buttons .red {
+  background-color: #871a1d !important;
+}
+.poolCard {
+  /* border: 1px solid white; */
+  padding: 10px 30px;
+  height: 150px;
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 40px !important;
+  box-shadow: 0px 0px 20px #fff;
+  border-radius: 10px;
+}
+.poolCard .label {
+  font-size: 22px;
+  font-weight: bold;
+}
+.poolCard .amount {
+  color: #fff;
+  margin-top: 10px;
+}
+
+.poolCard .apr {
+  color: #fff;
+  margin-top: 5px;
+}
+.poolCard span {
+  color: #febe10;
 }

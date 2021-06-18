@@ -6,6 +6,16 @@ export const depositABI = [
         name: "_token",
         type: "address",
       },
+      {
+        internalType: "contract GovernanceToken",
+        name: "_mgtToken",
+        type: "address",
+      },
+      {
+        internalType: "contract GasToken",
+        name: "_mytToken",
+        type: "address",
+      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -77,6 +87,25 @@ export const depositABI = [
       },
     ],
     name: "EmergencyWithdraw",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalPoolAmount",
+        type: "uint256",
+      },
+    ],
+    name: "Exitpool",
     type: "event",
   },
   {
@@ -221,10 +250,30 @@ export const depositABI = [
   },
   {
     inputs: [],
-    name: "lockedMCTStakingAddress",
+    name: "exitPool",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "mgtToken",
     outputs: [
       {
-        internalType: "address",
+        internalType: "contract GovernanceToken",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "mytToken",
+    outputs: [
+      {
+        internalType: "contract GasToken",
         name: "",
         type: "address",
       },
@@ -303,19 +352,6 @@ export const depositABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_lockedMCTStakingAddress",
-        type: "address",
-      },
-    ],
-    name: "setlockedMCTStakingAddress",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "stakeContract",
     outputs: [
@@ -370,6 +406,25 @@ export const depositABI = [
   {
     inputs: [],
     name: "totalAllocPoint",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "totalPoolBalance",
     outputs: [
       {
         internalType: "uint256",

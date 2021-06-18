@@ -15,22 +15,6 @@ function CustomizedLogin(props) {
   const [reg_btn_class, setRegBtnClass] = useState("register_btn");
   const [bottom_line_class, setBottomLineClass] = useState("login_bottom_line");
 
-  const handleWhiteList = async (amount, stakeRate) => {
-    setErrorMessage("");
-    const web3 = window.web3;
-    if (web3 !== undefined && web3.eth !== undefined) {
-      const XYZTokenABIObject = new web3.eth.Contract(
-        tokenBalance1ABI,
-        ethAddressConfig.xy_token
-      );
-      console.log(props?.account);
-      await XYZTokenABIObject.methods
-        .whiteListAddress(props?.accountId)
-        .send({ from: props?.accountId })
-        .on("transactionHash", (hash) => {});
-    }
-  };
-
   const handleLogin = async (e) => {
     e.preventDefault();
     var payload = {
@@ -78,7 +62,6 @@ function CustomizedLogin(props) {
               response.data &&
               response.data.msg === "User is successfully added"
             ) {
-              await handleWhiteList();
               props.loginSuccessFull(response.data.payload);
               setIsLogin(true);
 

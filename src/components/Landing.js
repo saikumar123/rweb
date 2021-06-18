@@ -3,7 +3,7 @@ import Web3 from "web3";
 import Header from "./Header";
 import NotificationBar from "./NotificationBar";
 import MyRewards from "./MyRewards";
-import Deposit from "./Deposit";
+import Deposit from "./Deposit/Deposit";
 import Escrow from "./Escrow";
 import TaskList from "./TaskList";
 import Sidebar from "./Sidebar";
@@ -38,7 +38,6 @@ import { stakeABI } from "../abis/Stake";
 import { toast } from "react-toastify";
 
 const mapDispatchToProps = (data) => {
-  console.log(data);
   return {
     user_login: (data) => {
       create_user(data);
@@ -46,6 +45,7 @@ const mapDispatchToProps = (data) => {
     signup: (data) => {
       signup_user(data);
     },
+
     set_account: (data) => {
       set_account(data);
     },
@@ -77,6 +77,7 @@ const Landing = ({
   const [page, setPage] = React.useState("");
   const [txnRows, setTxnRows] = useState([]);
   const [taskUnlock, setTaskUnlock] = React.useState("");
+  const [totalPoolBalance, setTotalPoolBalance] = useState(0);
 
   const loadWeb3 = async () => {
     if (window.ethereum) {
@@ -118,6 +119,12 @@ const Landing = ({
         unlockedMCT: unlockedMCTBalance,
       });
 
+      // for total pool balance
+      let totalBalance = await depositABIObject.methods
+        .totalPoolBalance(account)
+        .call();
+      setTotalPoolBalance(totalBalance);
+
       // For MGT Balance
       const govTokenABIObject = new web3.eth.Contract(
         govTokenABI,
@@ -137,8 +144,12 @@ const Landing = ({
         .call();
 
       set_MGT_balance({
-        claimedMGTBalance: web3.utils.fromWei(claimedMGTBalance, "Ether"),
-        unClaimedMGTBalance: web3.utils.fromWei(unClaimedMGTBalance, "Ether"),
+        claimedMGTBalance: claimedMGTBalance
+          ? web3.utils.fromWei(claimedMGTBalance, "Ether")
+          : 0,
+        unClaimedMGTBalance: unClaimedMGTBalance
+          ? web3.utils.fromWei(unClaimedMGTBalance, "Ether")
+          : 0,
       });
 
       // For MYT Balance
@@ -151,6 +162,7 @@ const Landing = ({
         stakeABI,
         ethAddressConfig.stake_address
       );
+
       let claimedMYTBalance = await gasTokenABIObject.methods
         .balanceOf(account)
         .call();
@@ -159,8 +171,12 @@ const Landing = ({
         .call();
 
       set_MYT_balance({
-        claimedMYTBalance: web3.utils.fromWei(claimedMYTBalance, "Ether"),
-        unClaimedMYTBalance: web3.utils.fromWei(unClaimedMYTBalance, "Ether"),
+        claimedMYTBalance: claimedMYTBalance
+          ? web3.utils.fromWei(claimedMYTBalance, "Ether")
+          : 0,
+        unClaimedMYTBalance: unClaimedMYTBalance
+          ? web3.utils.fromWei(unClaimedMYTBalance, "Ether")
+          : 0,
       });
     } else {
       console.log("web3 is not defined");
@@ -329,7 +345,6 @@ const Landing = ({
       const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
       try {
         setUnlockLoader(true);
-        console.log(escrowABIObject);
         await escrowABIObject.methods
           .unlockTokens(lockId, lockValueBN)
           .send({ from: account })
@@ -388,7 +403,13 @@ const Landing = ({
             className="col-lg-3 col-xs-12  p-b-30 pull-left"
             style={{ position: "fixed" }}
           >
-            <Sidebar handlePage={handlePage} page={page} />
+            <Sidebar
+              handlePage={handlePage}
+              page={page}
+              taskListCount={
+                txnRows?.filter((obj) => obj?.lockStatus === "UNLOCK").length
+              }
+            />
           </div>
           <div
             className="col-lg-9 col-xs-12 pd-top pull-left "
@@ -407,7 +428,14 @@ const Landing = ({
             <div>
               <div className="p-5">
                 {!isLogin && <LockedValues />}
-                {isLogin && page !== "transactions" && <MyRewards />}
+                {isLogin && page !== "transactions" && (
+                  <MyRewards
+                    account={account}
+                    getAllBalance={getAllBalance}
+                    user={user}
+                    totalPoolBalance={totalPoolBalance}
+                  />
+                )}
 
                 {isLogin && page === "deposit" && (
                   <>
@@ -439,7 +467,7 @@ const Landing = ({
                 {isLogin && page === "staking" && (
                   <>
                     <hr class="line"></hr>
-                    <Staking txnRows={txnRows} />
+                    <Staking txnRows={txnRows} account={account} />
                   </>
                 )}
                 {isLogin && page === "transactions" && (

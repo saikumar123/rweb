@@ -1,4 +1,4 @@
-export const nithinTokenABI = [
+export const USDCABI = [
   {
     inputs: [],
     stateMutability: "nonpayable",

@@ -193,9 +193,9 @@ const Escrow = (props) => {
         ethAddressConfig.xy_token
       );
       const lockValueBN = web3.utils.toWei(lockValue.toString(), "Ether");
-
-      if (lockValueBN <= props.MCTBalance.unlockedMCT) {
+      if (Number(lockValueBN) <= Number(props.MCTBalance.unlockedMCT)) {
         try {
+          setLoading(true);
           await XYZTokenABIObject.methods
             .approve(ethAddressConfig.escrow_Address, lockValueBN)
             .send({ from: props.account })
@@ -210,6 +210,7 @@ const Escrow = (props) => {
                 .send({ from: props.account })
                 .then((receipt) => {
                   if (receipt.status) {
+                    setLoading(false);
                     toast.success("Transaction Success");
                     setUnlockedSelectUser([]);
                     setUnlockedUser("");
@@ -219,20 +220,22 @@ const Escrow = (props) => {
                 })
                 .catch((err) => {
                   toast.error("Transaction Failed");
+                  setLoading(false);
                 });
             })
             .on("error", (event) => {});
         } catch (err) {
+          setLoading(false);
           toast.error(err.message);
         }
+      } else {
+        toast.error("Not Enough MCT Balance");
       }
     }
   };
 
   const onSubmit = async () => {
-    setLoading(true);
     await handleSubmit();
-    setLoading(false);
   };
 
   const search = () => {
@@ -322,7 +325,7 @@ const Escrow = (props) => {
         </div>
       </div>
       <div className="col-lg-2 m-t-5 ">
-        MCT
+        FUSD
         <br />
       </div>
 

@@ -389,6 +389,17 @@ button.btn.button.btn-link:focus {
   /* background-color: #02aa49; */
   background-color: #871a1d;
 }
+
+.btn-button:disabled {
+  /* background-color: #02aa49; */
+  background-color: #555050;
+  cursor: not-allowed;
+}
+.btn-button:disabled:hover {
+  /* background-color: #017833; */
+  background-color: #555050;
+}
+
 .btn-button:hover {
   /* background-color: #017833; */
   background-color: #871a1d;
@@ -1256,6 +1267,7 @@ form .custom-file-label::after {
     display: inline-block;
     padding-left: 42px;
   }
+
   .nav-mini .nk-sidebar .metismenu > li:hover > ul {
     display: block;
     height: auto !important;
@@ -2273,6 +2285,7 @@ form .custom-file-label::after {
 .navbar-custom-menu .nav-text {
   color: #eeeeee;
 }
+
 .nav-mini .nk-sidebar .metismenu li > ul {
   background: #394351;
 }

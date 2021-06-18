@@ -3,10 +3,14 @@ import { Button } from "../atoms/Button/Button";
 
 const TaskList = (props) => {
   const [selectedTransactionINdex, setSelectedTransactionIndex] = useState("");
-  console.log(props?.unLockLoader);
   const handleUnlockAction = (index, lockStatus) => {
     setSelectedTransactionIndex(index);
     props.handleUnlock(index, lockStatus);
+  };
+  const [range, setRange] = useState(100);
+
+  const rangeSlide = (e) => {
+    setRange(e.target?.value);
   };
   return (
     <div class="row m-b-30 text-yellow">
@@ -26,17 +30,7 @@ const TaskList = (props) => {
           <small class="tag-line-success">{props.taskUnlock}</small>
         )}
       </div>
-      <div class="col-lg-12 pull-left">
-        <div class="col-lg-7 pull-left"></div>
-        {props.txnRows.filter((obj) => obj?.lockStatus === "UNLOCK").length >
-          0 && (
-          <div class="col-lg-1.5 pull-left">
-            <span id="rangeValue" class="rangeColor">
-              Share %
-            </span>
-          </div>
-        )}
-      </div>
+
       {props.txnRows.map((row, index) => {
         return (
           <>
@@ -66,19 +60,22 @@ const TaskList = (props) => {
                   />
                 </div>
 
-                <div class="col-lg-3 p-top10 pull-left">
+                <div class="col-lg-3 p-top10 pull-left ">
+                  <div class="text-center w-100 pull-left mb-2">
+                    <span class="text-yellow">Share {range} %</span>
+                  </div>
                   <div>
                     <input
                       class="range"
                       type="range"
                       name=""
-                      value="0"
+                      value={range}
                       min="0"
                       max="100"
-                      // onChange="rangeSlide(this.value)"
-                      // onmousemove="rangeSlide(this.value)"
+                      onChange={rangeSlide}
+                      onMouseMove={rangeSlide}
                     />
-                    <span id="rangeValue">0</span>
+                    {/* <span id="rangeValue">{range}</span> */}
                   </div>
                 </div>
                 <div class="col-lg-2 p-top5 pull-left">

@@ -1,10 +1,15 @@
 import React from "react";
+import LoginService from "../services/LoginService";
 
 const Header = (props) => {
   const [btnvalue, setBtnvalue] = React.useState("Connect");
   const handleConnect = (type) => {
     props.handleLoginWallet(type);
     setBtnvalue("Connecting...");
+  };
+
+  const handleLogout = () => {
+    LoginService.logout();
   };
   return (
     <div className="header pt-2">
@@ -33,9 +38,21 @@ const Header = (props) => {
           </button>
         )}
         {props.isLogin && (
-          <button type="button" className="btn button btn-button btn-circular">
-            {props?.user?.avatar}
-          </button>
+          <span>
+            <div className="headerDropdown">
+              <button
+                type="button"
+                className="btn button btn-button btn-circular"
+              >
+                {props?.user?.avatar}{" "}
+                <i className="fa ml-2 fa-chevron-down "></i>
+              </button>
+
+              <div className="headerMenu" onClick={handleLogout}>
+                <div className="item">Disconnect</div>
+              </div>
+            </div>
+          </span>
         )}
       </div>
     </div>
