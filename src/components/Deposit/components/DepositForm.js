@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import ethAddressConfig from "../../../abis/ethAddressConfig";
 import { Form, Formik } from "formik";
 import { connect } from "react-redux";
@@ -12,11 +12,6 @@ import { Button } from "../../../atoms/Button/Button";
 import { daiTokenABI } from "../../../abis/dai_token";
 import { USDTABI } from "../../../abis/USDTABI";
 import { USDCABI } from "../../../abis/USDCABI";
-
-const DepositFormValidationSchema = yup.object().shape({
-  amount: yup.string().required("Required*"),
-  stakeRate: yup.string().required("Required*"),
-});
 
 const defaultValues = {
   amount: "",
@@ -50,7 +45,23 @@ const mapStateToProps = (state) => ({
 
 const DepositForm = (props) => {
   const [unitSelectedVal, setUnitSelectedVal] = React.useState("0");
+  const [stableCoinBalance, setStableCoinBalance] = useState({});
+  const [selectedCoinBalance, setSelectedCoinBalance] = useState(0);
+
   const [loading, setLoading] = React.useState(false);
+
+  const DepositFormValidationSchema = yup.object().shape({
+    amount: yup
+      .string()
+      .test(function (value) {
+        if (Number(value) > Number(selectedCoinBalance)) {
+          return this.createError({ message: "Insufficient Balance" });
+        } else return true;
+      })
+      .required("Required*"),
+    stakeRate: yup.string().required("Required*"),
+  });
+
   const depositHandler = useCallback(
     async (ABIObject, lockValueBN, stakeRate, depositABIObject) => {
       try {
@@ -140,9 +151,71 @@ const DepositForm = (props) => {
     [handleDepositForm, props]
   );
 
+  const getStableCoinBalances = async () => {
+    const web3 = window.web3;
+    if (web3 !== undefined && web3.eth !== undefined) {
+      const daiTokenABIObject = new web3.eth.Contract(
+        daiTokenABI,
+        ethAddressConfig.dai_token
+      );
+      const USDTABIObject = new web3.eth.Contract(
+        USDTABI,
+        ethAddressConfig.USDT_Address
+      );
+      const USDCABIObject = new web3.eth.Contract(
+        USDCABI,
+        ethAddressConfig.USDC_Address
+      );
+
+      const DAIBalance = await daiTokenABIObject.methods
+        .balanceOf(props.account)
+        .call();
+      const USDTBalance = await USDTABIObject.methods
+        .balanceOf(props.account)
+        .call();
+      const USDCBalance = await USDCABIObject.methods
+        .balanceOf(props.account)
+        .call();
+
+      setStableCoinBalance({
+        DAIBalance: web3.utils.fromWei(DAIBalance.toString(), "Ether"),
+        USDTBalance: web3.utils.fromWei(USDTBalance.toString(), "Ether"),
+        USDCBalance: web3.utils.fromWei(USDCBalance.toString(), "Ether"),
+      });
+    }
+  };
+
+  useEffect(() => {
+    getStableCoinBalances();
+  }, []);
+
+  useEffect(() => {
+    if (unitSelectedVal === "0") {
+      setSelectedCoinBalance(stableCoinBalance?.DAIBalance);
+    } else if (unitSelectedVal === "1") {
+      setSelectedCoinBalance(stableCoinBalance?.USDTBalance);
+    } else {
+      setSelectedCoinBalance(stableCoinBalance?.USDCBalance);
+    }
+  }, [stableCoinBalance, unitSelectedVal]);
+
   const handleUnitDropdown = (e, data) => {
     setUnitSelectedVal(data?.value);
   };
+
+  const formref = useRef();
+
+  const handleDepositMaxAmount = () => {
+    formref?.current?.setFieldValue("amount", selectedCoinBalance);
+  };
+
+  useEffect(() => {
+    if (
+      Number(formref?.current?.values?.amount) > Number(selectedCoinBalance)
+    ) {
+      formref?.current?.setErrors({ amount: "Insufficient Balance" });
+    }
+  }, [formref, selectedCoinBalance]);
 
   return (
     <Formik
@@ -150,6 +223,7 @@ const DepositForm = (props) => {
       enableReinitialize={true}
       onSubmit={onSubmit}
       validationSchema={DepositFormValidationSchema}
+      innerRef={formref}
     >
       {({ errors }) => (
         <Form>
@@ -167,8 +241,28 @@ const DepositForm = (props) => {
               </div>
 
               <div className="col-lg-4 ">
-                <div className="">Enter Amount</div>
-                <FormikInput name="amount" />
+                <div className="d-flex justify-content-between">
+                  <div className="">Enter Amount</div>
+                  <div className="">
+                    <span className="text-yellow"> Available Bal:</span>{" "}
+                    {Number(selectedCoinBalance).toFixed(2)}{" "}
+                  </div>
+                </div>
+                <div className="d-flex align-items-center">
+                  <FormikInput name="amount" />
+                  <button
+                    style={{
+                      marginLeft: "5px",
+                      padding: "5px",
+                      color: "#000",
+                      borderRadius: "5px",
+                      margin: "5px",
+                    }}
+                    onClick={handleDepositMaxAmount}
+                  >
+                    Max
+                  </button>
+                </div>
               </div>
 
               <div className="col-lg-3 mx-auto">

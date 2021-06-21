@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "semantic-ui-react";
 import DepositForm from "./components/DepositForm";
 import ReStakeDepositForm from "./components/ReStakeDepositForm";
+import { toast } from "react-toastify";
 
 const Deposit = (props) => {
   const [depositForm, showDepositForm] = useState(true);
