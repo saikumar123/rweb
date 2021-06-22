@@ -190,6 +190,8 @@ const DepositForm = (props) => {
   }, []);
 
   useEffect(() => {
+    formref?.current?.setFieldValue("amount", 0);
+
     if (unitSelectedVal === "0") {
       setSelectedCoinBalance(stableCoinBalance?.DAIBalance);
     } else if (unitSelectedVal === "1") {
@@ -206,6 +208,7 @@ const DepositForm = (props) => {
   const formref = useRef();
 
   const handleDepositMaxAmount = () => {
+    console.log(selectedCoinBalance);
     formref?.current?.setFieldValue("amount", selectedCoinBalance);
   };
 
@@ -245,18 +248,19 @@ const DepositForm = (props) => {
                   <div className="">Enter Amount</div>
                   <div className="">
                     <span className="text-yellow"> Available Bal:</span>{" "}
-                    {Number(selectedCoinBalance).toFixed(2)}{" "}
+                    {selectedCoinBalance}
                   </div>
                 </div>
                 <div className="d-flex align-items-center">
                   <FormikInput name="amount" />
                   <button
                     style={{
-                      marginLeft: "5px",
+                      position: "absolute",
+                      right: "20px",
+                      marginTop: "3px",
                       padding: "5px",
                       color: "#000",
                       borderRadius: "5px",
-                      margin: "5px",
                     }}
                     onClick={handleDepositMaxAmount}
                   >

@@ -74,24 +74,24 @@ const LockedValues = () => {
 
   const Pools = [
     {
-      label: "DAI",
+      label: "MYT-ETH LP ",
       amount: data?.totalLockedBalance,
-      apr: "10%",
+      apy: "20%",
     },
     {
-      label: "USDT",
+      label: "MGT-ETH LP",
       amount: data?.totalLockedBalance,
-      apr: "20%",
+      apy: "30%",
     },
     {
-      label: "USDC",
+      label: "MGT",
       amount: data?.totalLockedBalance,
-      apr: "30%",
+      apy: "10%",
     },
     {
-      label: "FLP",
+      label: "FPL",
       amount: data?.FLPLockedBalance,
-      apr: "30%",
+      apy: "30%",
     },
   ];
 
@@ -122,8 +122,8 @@ const LockedValues = () => {
                     <div className="amount ">
                       <span>Locked Amount:</span> {data?.totalLockedBalance}
                     </div>
-                    <div className="apr ">
-                      <span>APR:</span> 20%
+                    <div className="apy ">
+                      <span>APY:</span> 20%
                     </div>
                   </>
                 ) : (
@@ -145,8 +145,8 @@ const LockedValues = () => {
                       <div className="amount ">
                         <span>Locked Amount:</span> {obj?.amount}
                       </div>
-                      <div className="apr ">
-                        <span>APR:</span> {obj?.apr}
+                      <div className="apy ">
+                        <span>APY:</span> {obj?.apy}
                       </div>
                     </>
                   ) : (

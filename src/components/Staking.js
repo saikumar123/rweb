@@ -48,12 +48,11 @@ const Staking = (props) => {
     setTableData([...tableData]);
   };
 
-  const [stakeValue, setStakeValue] = useState("");
+  const [stakeValue, setStakeValue] = useState(0);
 
   const handleStakeChange = (e) => {
     if (e.target.value) {
-      const value = window.web3.utils.toWei(e.target.value.toString(), "Ether");
-      setStakeValue(value);
+      setStakeValue(e.target.value);
     }
   };
 
@@ -61,8 +60,7 @@ const Staking = (props) => {
 
   const handleUnStakeChange = (e) => {
     if (e.target.value) {
-      const value = window.web3.utils.toWei(e.target.value.toString(), "Ether");
-      setUnStakeValue(value);
+      setUnStakeValue(e.target.value);
     }
   };
   const [stakeMGTBalance, setStakeMGTBalance] = useState();
@@ -100,9 +98,14 @@ const Staking = (props) => {
         ethAddressConfig.gov_token_address
       );
 
+      const convertStakeValue = window.web3.utils.toWei(
+        stakeValue.toString(),
+        "Ether"
+      );
+
       try {
         await govTokenABIObject.methods
-          .approve(ethAddressConfig.gov_address, stakeValue)
+          .approve(ethAddressConfig.gov_address, convertStakeValue)
           .send({ from: props.account })
           .on("transactionHash", (hash) => {
             stakeGovABIObject.methods
@@ -232,16 +235,21 @@ const Staking = (props) => {
                     <div className="d-flex align-items-end">
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control text-dark font-weight-bold form-control-active"
                         placeholder="0.0"
-                        value={stakeValue}
+                        value={Number(stakeValue)}
                         onChange={handleStakeChange}
                       />
                       <button
                         style={{
-                          marginLeft: "5px",
+                          position: "absolute",
+                          right: "15px",
                           padding: "5px",
+                          alignSelf: "center",
                           color: "#000",
+                          marginTop: "4px",
+                          cursor: "pointer",
+                          borderRadius: "5px",
                         }}
                         onClick={handleStakeMaxAmount}
                       >
@@ -260,19 +268,26 @@ const Staking = (props) => {
                   </div>
                   <div className="col-lg-6 col-sm-6 m-b-10 pull-left">
                     <i className="smlTxt">Staked: {stakeMGTBalance} DFL</i>
-                    <div className="d-flex align-items-end">
+                    <div className="d-flex">
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control  font-weight-bold form-control-active"
                         placeholder="0.0"
                         value={unStakeValue}
                         onChange={handleUnStakeChange}
                       />
+
                       <button
                         style={{
-                          marginLeft: "5px",
+                          position: "absolute",
+                          right: "15px",
+                          cursor: "pointer",
+
                           padding: "5px",
+                          alignSelf: "center",
+                          marginTop: "4px",
                           color: "#000",
+                          borderRadius: "5px",
                         }}
                         onClick={handleUnStakeMaxAmount}
                       >
