@@ -208,7 +208,6 @@ const DepositForm = (props) => {
   const formref = useRef();
 
   const handleDepositMaxAmount = () => {
-    console.log(selectedCoinBalance);
     formref?.current?.setFieldValue("amount", selectedCoinBalance);
   };
 

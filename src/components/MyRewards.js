@@ -44,7 +44,6 @@ const MyRewards = ({
         .claimRewards(account)
         .send({ from: account })
         .then(async (receipt) => {
-          console.log(receipt);
           if (receipt.status) {
             toast.success("Transaction Success");
             setMGTRedeemLoading(false);
@@ -59,7 +58,6 @@ const MyRewards = ({
       setMGTRedeemLoading(false);
     }
   };
-  console.log(getAllBalance);
 
   const redeemMYTTokensHandler = async () => {
     const web3 = window.web3;
