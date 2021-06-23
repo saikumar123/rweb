@@ -43,12 +43,12 @@ const MyRewards = ({
       await stakeGovABIObject.methods
         .claimRewards(account)
         .send({ from: account })
-        .then((receipt) => {
+        .then(async (receipt) => {
           console.log(receipt);
           if (receipt.status) {
             toast.success("Transaction Success");
             setMGTRedeemLoading(false);
-            getAllBalance();
+            await getAllBalance();
           } else {
             setMGTRedeemLoading(false);
             toast.error("Transaction Failed");
@@ -59,6 +59,7 @@ const MyRewards = ({
       setMGTRedeemLoading(false);
     }
   };
+  console.log(getAllBalance);
 
   const redeemMYTTokensHandler = async () => {
     const web3 = window.web3;
@@ -72,11 +73,11 @@ const MyRewards = ({
       await stakeABIObject.methods
         .claimRewards(account)
         .send({ from: account })
-        .then((receipt) => {
+        .then(async (receipt) => {
           if (receipt.status) {
             toast.success("Transaction Success");
             setMYTRedeemLoading(false);
-            getAllBalance();
+            await getAllBalance();
           } else {
             setMYTRedeemLoading(false);
             toast.error("Transaction Failed");

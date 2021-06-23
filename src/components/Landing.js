@@ -96,6 +96,7 @@ const Landing = ({
   const getAllBalance = async () => {
     const web3 = window.web3;
     if (web3 !== undefined && web3.eth !== undefined) {
+      console.log("hello hit");
       //For MCT Balance
       const depositABIObject = new web3.eth.Contract(
         depositABI,

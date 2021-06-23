@@ -238,14 +238,13 @@ const DepositForm = (props) => {
                     className="tag-line font-weight-bold"
                     style={{ fontSize: "20px" }}
                   >
-                    Deposits
+                    Deposit
                   </small>
                 </div>
               </div>
 
               <div className="col-lg-4 ">
                 <div className="d-flex justify-content-between">
-                  <div className="">Enter Amount</div>
                   <div className="">
                     <span className="text-yellow"> Available Bal:</span>{" "}
                     {selectedCoinBalance}
