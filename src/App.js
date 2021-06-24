@@ -2,7 +2,7 @@ import "./App.scss";
 import { ToastContainer } from "react-toastify";
 
 import background from "./assets/image/bg-2.jpeg";
-import Landing from "./components/Landing";
+import Landing from "./components/Landing/Landing";
 import "react-toastify/dist/ReactToastify.css";
 
 function App(store) {

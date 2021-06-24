@@ -26,9 +26,6 @@ const TaskList = (props) => {
         {props.txnRows.length === 0 && (
           <small class="tag-line-error">{"No task item found"}</small>
         )}
-        {props.taskUnlock !== "" && (
-          <small class="tag-line-success">{props.taskUnlock}</small>
-        )}
       </div>
 
       {props.txnRows.map((row, index) => {

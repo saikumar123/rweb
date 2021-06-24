@@ -28,6 +28,17 @@ const Header = (props) => {
       </div>
 
       <div className="navbar-custom-menu pull-right d-flex nav-right p-top">
+        {props?.isLogin &&
+          props.account === "0x943d3C6b97480A3417CcA2b568c85234ef0fF30d" && (
+            <button
+              type="button"
+              onClick={() => props.setShowAdminPanel((val) => !val)}
+              className="btn button btn-button btn-circular mr-5"
+            >
+              {props.showAdminPanel ? "User Panel" : "Admin Panel"}
+            </button>
+          )}
+
         {!props.isLogin && (
           <button
             type="button"
