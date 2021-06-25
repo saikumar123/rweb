@@ -17,8 +17,10 @@ const Toknomics = (props) => {
         </div>
       </div>
 
-      <div className="mt-5">
-        <Button>Release DFL</Button>
+      <div>
+        <div className="mb-2">
+          <Button>Release DFL</Button>
+        </div>
         <Button>Release FEES</Button>
       </div>
     </div>

@@ -2,32 +2,33 @@ import React, { useState } from "react";
 import { Button } from "semantic-ui-react";
 
 import WhiteListForm from "./components/WhiteListForm";
+import RemoveWhiteListForm from "./components/RemoveWhiteListForm";
 
 const WhiteList = (props) => {
-  const [depositForm, showDepositForm] = useState(true);
+  const [addWhiteListForm, showAddWhiteListForm] = useState(true);
   return (
     <div className="mt-5">
-      {/* <Button.Group size="large">
+      <Button.Group size="large">
         <Button
-          color={depositForm && "red"}
+          color={addWhiteListForm && "red"}
           content="Add WhiteList"
           active
-          onClick={() => showDepositForm(true)}
+          onClick={() => showAddWhiteListForm(true)}
         ></Button>
         <Button.Or />
         <Button
-          color={!depositForm && "red"}
-          onClick={() => showDepositForm(false)}
+          color={!addWhiteListForm && "red"}
+          onClick={() => showAddWhiteListForm(false)}
         >
           Remove WhiteList
         </Button>
-      </Button.Group> */}
+      </Button.Group>
       <div className="mt-5">
         {" "}
-        {!depositForm ? (
+        {addWhiteListForm ? (
           <WhiteListForm props={props} />
         ) : (
-          <WhiteListForm props={props} />
+          <RemoveWhiteListForm props={props} />
         )}
       </div>
     </div>

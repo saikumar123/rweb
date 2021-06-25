@@ -3,9 +3,9 @@ import { Form, Formik } from "formik";
 import { connect } from "react-redux";
 
 import * as yup from "yup";
-import { useFormSubmitWithLoading } from "../../../../hooks/useFormSubmitWithLoading";
-import FormikInput from "../../../../atoms/FormikInput";
-import { Button } from "../../../../atoms/Button/Button";
+import { useFormSubmitWithLoading } from "../../../../../../hooks/useFormSubmitWithLoading";
+import FormikInput from "../../../../../../atoms/FormikInput";
+import { Button } from "../../../../../../atoms/Button";
 
 const validationSchema = yup.object().shape({
   stakeRate: yup.string().required("Required*"),
@@ -20,7 +20,7 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-const WhiteListForm = (props) => {
+const AddPool = (props) => {
   const onSubmit = useCallback(async (values, { resetForm }) => {
     resetForm();
   }, []);
@@ -39,12 +39,12 @@ const WhiteListForm = (props) => {
           <div className="d-flex flex-column ">
             <div className="row m-b-30 text-white  ">
               <div className="col-lg-12 m-b-10">
-                <div className=" my-4 ">
+                <div className=" my-2 ">
                   <small
                     className="tag-line font-weight-bold"
-                    style={{ fontSize: "20px" }}
+                    style={{ fontSize: "18px" }}
                   >
-                    Add WhiteList
+                    Add Pool
                   </small>
                 </div>
               </div>
@@ -63,8 +63,8 @@ const WhiteListForm = (props) => {
     </Formik>
   );
 };
-WhiteListForm.propTypes = {};
+AddPool.propTypes = {};
 
-WhiteListForm.defaultProps = {};
+AddPool.defaultProps = {};
 
-export default connect(mapStateToProps)(WhiteListForm);
+export default connect(mapStateToProps)(AddPool);

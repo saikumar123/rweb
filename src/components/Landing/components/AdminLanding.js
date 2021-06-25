@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 
 import WhiteList from "../../AdminSections/WhiteList/WhiteList";
 import Toknomics from "../../AdminSections/Toknomics/Toknomics";
+import TokensCirculating from "../../AdminSections/TokensCirculating/TokensCirculating";
+import AdminMethods from "../../AdminSections/AdminMethods/AdminMethods";
 
 const mapDispatchToProps = (data) => {
   return null;
@@ -22,6 +24,18 @@ const AdminLanding = ({ page }) => {
         <>
           <hr class="line"></hr>
           <Toknomics />
+        </>
+      )}
+      {page === "circulating" && (
+        <>
+          <hr class="line"></hr>
+          <TokensCirculating />
+        </>
+      )}
+      {page === "method" && (
+        <>
+          <hr class="line"></hr>
+          <AdminMethods />
         </>
       )}
     </>

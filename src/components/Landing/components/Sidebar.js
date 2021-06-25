@@ -44,6 +44,10 @@ const Sidebar = (props) => {
       label: "Tokens Circulating",
       slug: "circulating",
     },
+    {
+      label: "Admin Methods",
+      slug: "method",
+    },
   ];
 
   const data = useMemo(() => {

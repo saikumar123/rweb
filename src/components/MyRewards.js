@@ -161,6 +161,7 @@ const MyRewards = ({
             />
           </div>
           <div className="col-lg-11 col-sm-12 m-auto text-center">
+            {console.log(totalPoolBalance)}
             <Button
               type="button"
               className="btn button btn-button btn-circular col-sm-11 mt-3 "

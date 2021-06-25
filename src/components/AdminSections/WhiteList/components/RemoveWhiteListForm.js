@@ -20,7 +20,7 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-const WhiteListForm = (props) => {
+const RemoveWhiteListForm = (props) => {
   const onSubmit = useCallback(async (values, { resetForm }) => {
     resetForm();
   }, []);
@@ -44,7 +44,7 @@ const WhiteListForm = (props) => {
                     className="tag-line font-weight-bold"
                     style={{ fontSize: "20px" }}
                   >
-                    Add WhiteList
+                    Remove WhiteList
                   </small>
                 </div>
               </div>
@@ -63,8 +63,8 @@ const WhiteListForm = (props) => {
     </Formik>
   );
 };
-WhiteListForm.propTypes = {};
+RemoveWhiteListForm.propTypes = {};
 
-WhiteListForm.defaultProps = {};
+RemoveWhiteListForm.defaultProps = {};
 
-export default connect(mapStateToProps)(WhiteListForm);
+export default connect(mapStateToProps)(RemoveWhiteListForm);
