@@ -8,6 +8,7 @@ import { stakeGovABI } from "../abis/Stake_Gov_ABI";
 import { toast } from "react-toastify";
 import { stakeABI } from "../abis/Stake";
 import { depositABI } from "../abis/deposit";
+import { escrowABI } from "../abis/escrow_ABI";
 
 const mapStateToProps = (state) => ({
   MCTBalance: state.MCTBalance,
@@ -39,8 +40,24 @@ const MyRewards = ({
         stakeGovABI,
         ethAddressConfig.gov_address
       );
+      const escrowABIObject = new web3.eth.Contract(
+        escrowABI,
+        ethAddressConfig.escrow_Address
+      );
 
       await stakeGovABIObject.methods
+        .claimRewards(account)
+        .send({ from: account })
+        .then(async (receipt) => {
+          if (receipt.status) {
+            await getAllBalance();
+          } else {
+            setMGTRedeemLoading(false);
+            toast.error("Transaction Failed");
+          }
+        });
+
+      await escrowABIObject.methods
         .claimRewards(account)
         .send({ from: account })
         .then(async (receipt) => {
@@ -121,6 +138,7 @@ const MyRewards = ({
   const handleCancel = () => {
     showExitPoolModal(false);
   };
+
   return (
     <>
       <div className="row blueTxt text-white">
@@ -161,7 +179,6 @@ const MyRewards = ({
             />
           </div>
           <div className="col-lg-11 col-sm-12 m-auto text-center">
-            {console.log(totalPoolBalance)}
             <Button
               type="button"
               className="btn button btn-button btn-circular col-sm-11 mt-3 "

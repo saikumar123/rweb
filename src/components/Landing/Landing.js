@@ -30,6 +30,7 @@ import { stakeGovABI } from "../../abis/Stake_Gov_ABI";
 import { stakeABI } from "../../abis/Stake";
 import UserLanding from "./components/UserLanding";
 import AdminLanding from "./components/AdminLanding";
+import { escrowABI } from "../../abis/escrow_ABI";
 
 const mapDispatchToProps = (data) => {
   return {
@@ -129,20 +130,35 @@ const Landing = ({
         stakeGovABI,
         ethAddressConfig.gov_address
       );
+      const escrowABIObject = new web3.eth.Contract(
+        escrowABI,
+        ethAddressConfig.escrow_Address
+      );
 
       let claimedMGTBalance = await govTokenABIObject.methods
         .balanceOf(account)
         .call();
-      let unClaimedMGTBalance = await stakeGovABIObject.methods
+      let stakeGovPendingRewards = await stakeGovABIObject.methods
         .pendingRewards(account)
         .call();
+      let escowGovRewards = await escrowABIObject.methods
+        .govRewards(account)
+        .call();
+      let escowGovPendingRewards = await escrowABIObject.methods
+        .pendpendingGovRewards(account)
+        .call();
+
+      let unClaimedMGTBalance =
+        Number(stakeGovPendingRewards) +
+        Number(escowGovRewards) +
+        Number(escowGovPendingRewards);
 
       set_MGT_balance({
         claimedMGTBalance: claimedMGTBalance
           ? web3.utils.fromWei(claimedMGTBalance, "Ether")
           : 0,
         unClaimedMGTBalance: unClaimedMGTBalance
-          ? web3.utils.fromWei(unClaimedMGTBalance, "Ether")
+          ? web3.utils.fromWei(unClaimedMGTBalance.toString(), "Ether")
           : 0,
       });
 

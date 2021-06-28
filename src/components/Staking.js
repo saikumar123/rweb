@@ -109,7 +109,7 @@ const Staking = (props) => {
           .send({ from: props.account })
           .on("transactionHash", (hash) => {
             stakeGovABIObject.methods
-              .deposit(stakeValue)
+              .deposit(convertStakeValue)
               .send({ from: props.account })
               .then((receipt) => {
                 if (receipt.status) {
