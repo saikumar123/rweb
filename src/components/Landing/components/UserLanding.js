@@ -145,7 +145,7 @@ const UserLanding = ({
 
   return (
     <>
-      {page !== "transactions" && (
+      {page !== "transactions" && page !== "faucets" && (
         <MyRewards
           account={account}
           getAllBalance={getAllBalance}
@@ -153,7 +153,7 @@ const UserLanding = ({
           totalPoolBalance={totalPoolBalance}
         />
       )}
-      {page === "Faucets" && (
+      {page === "faucets" && (
         <>
           <hr class="line"></hr>
           <Faucets getAllBalance={getAllBalance} account={account} />

@@ -51,14 +51,7 @@ const FaucetsForm = (props) => {
   const [loading, setLoading] = React.useState(false);
 
   const DepositFormValidationSchema = yup.object().shape({
-    amount: yup
-      .string()
-      .test(function (value) {
-        if (Number(value) > Number(selectedCoinBalance)) {
-          return this.createError({ message: "Insufficient Balance" });
-        } else return true;
-      })
-      .required("Required*"),
+    amount: yup.string().required("Required*"),
   });
 
   const handleFaucetsForm = useCallback(
@@ -144,7 +137,7 @@ const FaucetsForm = (props) => {
   }, []);
 
   useEffect(() => {
-    formref?.current?.setFieldValue("amount", 0);
+    formref?.current?.setFieldValue("amount", "");
 
     if (unitSelectedVal === "0") {
       setSelectedCoinBalance(stableCoinBalance?.DAIBalance);
@@ -203,7 +196,7 @@ const FaucetsForm = (props) => {
                   </div>
                 </div>
                 <div className="d-flex align-items-center">
-                  <FormikInput name="amount" />
+                  <FormikInput name="amount" min="1" />
                 </div>
               </div>
 
