@@ -160,6 +160,17 @@ const Landing = ({
         unClaimedMGTBalance: unClaimedMGTBalance
           ? web3.utils.fromWei(unClaimedMGTBalance.toString(), "Ether")
           : 0,
+        stakeGovPendingRewards: stakeGovPendingRewards
+          ? web3.utils.fromWei(stakeGovPendingRewards.toString(), "Ether")
+          : 0,
+
+        escowGovRewards: escowGovRewards
+          ? web3.utils.fromWei(escowGovRewards.toString(), "Ether")
+          : 0,
+
+        escowGovPendingRewards: escowGovPendingRewards
+          ? web3.utils.fromWei(escowGovPendingRewards.toString(), "Ether")
+          : 0,
       });
 
       // For MYT Balance

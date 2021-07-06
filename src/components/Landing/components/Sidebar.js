@@ -5,6 +5,10 @@ const Sidebar = (props) => {
 
   const userData = [
     {
+      label: "Faucets",
+      slug: "Faucets",
+    },
+    {
       label: "Deposit",
       slug: "deposit",
     },

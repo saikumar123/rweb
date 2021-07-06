@@ -18,6 +18,7 @@ import TxnService from "../../../services/TxnService";
 import { escrowABI } from "../../../abis/escrow_ABI";
 
 import { toast } from "react-toastify";
+import Faucets from "../../Faucets/Faucets";
 
 const mapDispatchToProps = (data) => {
   return null;
@@ -151,6 +152,12 @@ const UserLanding = ({
           user={user}
           totalPoolBalance={totalPoolBalance}
         />
+      )}
+      {page === "Faucets" && (
+        <>
+          <hr class="line"></hr>
+          <Faucets getAllBalance={getAllBalance} account={account} />
+        </>
       )}
 
       {page === "deposit" && (
