@@ -12,10 +12,10 @@ import { Button } from "../../../atoms/Button/Button";
 import { daiTokenABI } from "../../../abis/dai_token";
 import { USDTABI } from "../../../abis/USDTABI";
 import { USDCABI } from "../../../abis/USDCABI";
+import { faucetsABI } from "../../../abis/faucets_ABI";
 
 const defaultValues = {
   amount: "",
-  stakeRate: "",
 };
 
 const options = [
@@ -43,7 +43,7 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-const DepositForm = (props) => {
+const FaucetsForm = (props) => {
   const [unitSelectedVal, setUnitSelectedVal] = React.useState("0");
   const [stableCoinBalance, setStableCoinBalance] = useState({});
   const [selectedCoinBalance, setSelectedCoinBalance] = useState(0);
@@ -51,104 +51,51 @@ const DepositForm = (props) => {
   const [loading, setLoading] = React.useState(false);
 
   const DepositFormValidationSchema = yup.object().shape({
-    amount: yup
-      .string()
-      .test(function (value) {
-        if (Number(value) > Number(selectedCoinBalance)) {
-          return this.createError({ message: "Insufficient Balance" });
-        } else return true;
-      })
-      .required("Required*"),
-    stakeRate: yup.string().required("Required*"),
+    amount: yup.string().required("Required*"),
   });
 
-  const depositHandler = useCallback(
-    async (ABIObject, lockValueBN, stakeRate, depositABIObject) => {
-      try {
-        setLoading(true);
-        await ABIObject.methods
-          .approve(ethAddressConfig?.deposit_Address, lockValueBN)
-          .send({ from: props.account })
-          .on("transactionHash", (hash) => {
-            depositABIObject.methods
-              .depositAndStake(Number(unitSelectedVal), lockValueBN, stakeRate)
-              .send({ from: props.account })
-              .then((receipt) => {
-                if (receipt.status) {
-                  toast.success("Transaction Success");
-                  setLoading(false);
-                  props.props.getAllBalance();
-                }
-              })
-              .catch((err) => {
-                setLoading(false);
-                toast.error("Transaction Failed");
-              });
-          });
-      } catch (err) {
-        setLoading(false);
-        toast.error(err.message);
-      }
-    },
-    [props, unitSelectedVal]
-  );
-
-  const handleDepositForm = useCallback(
-    async (amount, stakeRate) => {
+  const handleFaucetsForm = useCallback(
+    async (amount) => {
       const web3 = window.web3;
       if (web3 !== undefined && web3.eth !== undefined) {
         const lockValueBN = web3.utils.toWei(amount.toString(), "Ether");
 
-        const depositABIObject = new web3.eth.Contract(
-          depositABI,
-          ethAddressConfig.deposit_Address
-        );
-        const daiTokenABIObject = new web3.eth.Contract(
-          daiTokenABI,
-          ethAddressConfig.dai_token
-        );
-        const USDTABIObject = new web3.eth.Contract(
-          USDTABI,
-          ethAddressConfig.USDT_Address
-        );
-        const USDCABIObject = new web3.eth.Contract(
-          USDCABI,
-          ethAddressConfig.USDC_Address
+        const faucetsABIObject = new web3.eth.Contract(
+          faucetsABI,
+          ethAddressConfig.FAUCETS_ADDRESS
         );
 
-        if (unitSelectedVal === "0") {
-          await depositHandler(
-            daiTokenABIObject,
-            lockValueBN,
-            stakeRate,
-            depositABIObject
-          );
-        } else if (unitSelectedVal === "1") {
-          await depositHandler(
-            USDTABIObject,
-            lockValueBN,
-            stakeRate,
-            depositABIObject
-          );
-        } else {
-          await depositHandler(
-            USDCABIObject,
-            lockValueBN,
-            stakeRate,
-            depositABIObject
-          );
+        try {
+          setLoading(true);
+          await faucetsABIObject.methods
+            .mint(Number(unitSelectedVal), lockValueBN, props?.account)
+            .send({ from: props.account })
+            .then((receipt) => {
+              if (receipt.status) {
+                toast.success("Transaction Success");
+                setLoading(false);
+                getStableCoinBalances();
+              }
+            })
+            .catch((err) => {
+              setLoading(false);
+              toast.error("Transaction Failed");
+            });
+        } catch (err) {
+          setLoading(false);
+          toast.error(err.message);
         }
       }
     },
-    [depositHandler, unitSelectedVal]
+    [unitSelectedVal]
   );
 
   const onSubmit = useCallback(
     async (values, { resetForm }) => {
-      await handleDepositForm(values?.amount, values?.stakeRate);
+      await handleFaucetsForm(values?.amount);
       resetForm();
     },
-    [handleDepositForm, props]
+    [handleFaucetsForm, props]
   );
 
   const getStableCoinBalances = async () => {
@@ -190,7 +137,7 @@ const DepositForm = (props) => {
   }, []);
 
   useEffect(() => {
-    formref?.current?.setFieldValue("amount", 0);
+    formref?.current?.setFieldValue("amount", "");
 
     if (unitSelectedVal === "0") {
       setSelectedCoinBalance(stableCoinBalance?.DAIBalance);
@@ -206,10 +153,6 @@ const DepositForm = (props) => {
   };
 
   const formref = useRef();
-
-  const handleDepositMaxAmount = () => {
-    formref?.current?.setFieldValue("amount", selectedCoinBalance);
-  };
 
   useEffect(() => {
     if (
@@ -230,14 +173,17 @@ const DepositForm = (props) => {
       {({ errors }) => (
         <Form>
           <div className="d-flex flex-column ">
-            <div className="row m-b-30 text-white  ">
+            <div
+              className="row  text-white  "
+              style={{ marginBottom: "100px" }}
+            >
               <div className="col-lg-12 m-b-10">
                 <div className=" my-4 ">
                   <small
                     className="tag-line font-weight-bold"
                     style={{ fontSize: "20px" }}
                   >
-                    Deposit
+                    Request Faucets
                   </small>
                 </div>
               </div>
@@ -250,20 +196,7 @@ const DepositForm = (props) => {
                   </div>
                 </div>
                 <div className="d-flex align-items-center">
-                  <FormikInput name="amount" />
-                  <button
-                    style={{
-                      position: "absolute",
-                      right: "20px",
-                      marginTop: "3px",
-                      padding: "5px",
-                      color: "#000",
-                      borderRadius: "5px",
-                    }}
-                    onClick={handleDepositMaxAmount}
-                  >
-                    Max
-                  </button>
+                  <FormikInput name="amount" min="1" />
                 </div>
               </div>
 
@@ -281,14 +214,11 @@ const DepositForm = (props) => {
                   />
                 </div>
               </div>
-
-              <div className="col-lg-4 ">
-                <div className="">Enter % share allocation</div>
-                <FormikInput name="stakeRate" />
+              <div className="col-lg-3 mx-auto">
+                <div className="mt-3">
+                  <Button loading={loading}>Submit</Button>
+                </div>
               </div>
-            </div>
-            <div className="mt-5 text-center">
-              <Button loading={loading}>Deposit</Button>
             </div>
           </div>
         </Form>
@@ -296,8 +226,8 @@ const DepositForm = (props) => {
     </Formik>
   );
 };
-DepositForm.propTypes = {};
+FaucetsForm.propTypes = {};
 
-DepositForm.defaultProps = {};
+FaucetsForm.defaultProps = {};
 
-export default connect(mapStateToProps)(DepositForm);
+export default connect(mapStateToProps)(FaucetsForm);

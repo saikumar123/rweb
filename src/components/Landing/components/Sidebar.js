@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
 const Sidebar = (props) => {
   const [toggle, setToggle] = useState("collapse");
 
-  const data = [
+  const userData = [
+    {
+      label: "Faucets",
+      slug: "faucets",
+    },
     {
       label: "Deposit",
       slug: "deposit",
@@ -26,6 +30,33 @@ const Sidebar = (props) => {
       slug: "transactions",
     },
   ];
+
+  const adminData = [
+    {
+      label: "WhiteList",
+      slug: "whitelist",
+    },
+    {
+      label: "Tokonomics",
+      slug: "tokonomics",
+    },
+    {
+      label: "Users",
+      slug: "user",
+    },
+    {
+      label: "Tokens Circulating",
+      slug: "circulating",
+    },
+    {
+      label: "Admin Methods",
+      slug: "method",
+    },
+  ];
+
+  const data = useMemo(() => {
+    return props?.showAdminPanel ? adminData : userData;
+  }, [props?.showAdminPanel]);
 
   return (
     <div className="col-sm-10 nk-sidebar ">

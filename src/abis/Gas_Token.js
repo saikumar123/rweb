@@ -353,6 +353,19 @@ export const gasTokenABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_tokenomicsContract",
+        type: "address",
+      },
+    ],
+    name: "setTokenomicsContractAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "stakeContractAddress",
     outputs: [
@@ -381,6 +394,19 @@ export const gasTokenABI = [
   {
     inputs: [],
     name: "techOwner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "tokenomicsContractAddress",
     outputs: [
       {
         internalType: "address",

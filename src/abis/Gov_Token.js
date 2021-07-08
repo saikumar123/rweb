@@ -312,6 +312,19 @@ export const govTokenABI = [
     inputs: [
       {
         internalType: "address",
+        name: "_tokenomicsContract",
+        type: "address",
+      },
+    ],
+    name: "seTokenomicsAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "_govContract",
         type: "address",
       },

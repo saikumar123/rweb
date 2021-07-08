@@ -3,7 +3,7 @@ import { Field, ErrorMessage } from "formik";
 
 export const FormikInput = ({ name, ...props }) => {
   return (
-    <>
+    <div className="w-100">
       <Field
         type="number"
         className="form-control text-dark font-weight-bold form-control-active"
@@ -17,6 +17,6 @@ export const FormikInput = ({ name, ...props }) => {
           style={{ color: "#FFEE28" }}
         />
       </div>
-    </>
+    </div>
   );
 };

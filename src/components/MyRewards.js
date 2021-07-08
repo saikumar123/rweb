@@ -8,6 +8,7 @@ import { stakeGovABI } from "../abis/Stake_Gov_ABI";
 import { toast } from "react-toastify";
 import { stakeABI } from "../abis/Stake";
 import { depositABI } from "../abis/deposit";
+import { escrowABI } from "../abis/escrow_ABI";
 
 const mapStateToProps = (state) => ({
   MCTBalance: state.MCTBalance,
@@ -39,16 +40,31 @@ const MyRewards = ({
         stakeGovABI,
         ethAddressConfig.gov_address
       );
+      const escrowABIObject = new web3.eth.Contract(
+        escrowABI,
+        ethAddressConfig.escrow_Address
+      );
 
       await stakeGovABIObject.methods
         .claimRewards(account)
         .send({ from: account })
-        .then((receipt) => {
-          console.log(receipt);
+        .then(async (receipt) => {
+          if (receipt.status) {
+            await getAllBalance();
+          } else {
+            setMGTRedeemLoading(false);
+            toast.error("Transaction Failed");
+          }
+        });
+
+      await escrowABIObject.methods
+        .claimRewards(account)
+        .send({ from: account })
+        .then(async (receipt) => {
           if (receipt.status) {
             toast.success("Transaction Success");
             setMGTRedeemLoading(false);
-            getAllBalance();
+            await getAllBalance();
           } else {
             setMGTRedeemLoading(false);
             toast.error("Transaction Failed");
@@ -72,11 +88,11 @@ const MyRewards = ({
       await stakeABIObject.methods
         .claimRewards(account)
         .send({ from: account })
-        .then((receipt) => {
+        .then(async (receipt) => {
           if (receipt.status) {
             toast.success("Transaction Success");
             setMYTRedeemLoading(false);
-            getAllBalance();
+            await getAllBalance();
           } else {
             setMYTRedeemLoading(false);
             toast.error("Transaction Failed");
@@ -122,6 +138,7 @@ const MyRewards = ({
   const handleCancel = () => {
     showExitPoolModal(false);
   };
+
   return (
     <>
       <div className="row blueTxt text-white">
