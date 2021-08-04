@@ -1,4 +1,5 @@
 import React from "react";
+import dummyProfile from "../assets/image/dummy-profile-image.png";
 import LoginService from "../services/LoginService";
 
 const Header = (props) => {
@@ -28,7 +29,7 @@ const Header = (props) => {
       </div>
 
       <div className="navbar-custom-menu pull-right d-flex nav-right p-top">
-        {props?.isLogin &&
+        {/* {props?.isLogin &&
           props.account === "0x943d3C6b97480A3417CcA2b568c85234ef0fF30d" && (
             <button
               type="button"
@@ -37,7 +38,7 @@ const Header = (props) => {
             >
               {props.showAdminPanel ? "User Panel" : "Admin Panel"}
             </button>
-          )}
+          )} */}
 
         {!props.isLogin && (
           <button
@@ -53,9 +54,13 @@ const Header = (props) => {
             <div className="headerDropdown">
               <button
                 type="button"
-                className="btn button btn-button btn-circular"
+                className="btn button btn-button btn-circular avatarSectionButton"
               >
-                {props?.user?.avatar}{" "}
+                <div className="avatarSection">
+                  <img src={dummyProfile} width="20" height="20" />
+                  <div> {props?.user?.avatar}</div>
+                </div>
+
                 <i className="fa ml-2 fa-chevron-down "></i>
               </button>
 

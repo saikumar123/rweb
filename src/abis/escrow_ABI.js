@@ -1,36 +1,5 @@
 export const escrowABI = [
   {
-    inputs: [
-      {
-        internalType: "contract GovernanceToken",
-        name: "_govtoken",
-        type: "address",
-      },
-      {
-        internalType: "contract XYZToken",
-        name: "_xyzToken",
-        type: "address",
-      },
-      {
-        internalType: "contract GasToken",
-        name: "_gasToken",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_dailyRewards",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_lockPoolShare",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -156,23 +125,15 @@ export const escrowABI = [
         name: "_userAddres",
         type: "address",
       },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
     ],
     name: "claimRewards",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "counter",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {
@@ -207,6 +168,120 @@ export const escrowABI = [
       },
     ],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_lockID",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_tokenAmount",
+        type: "uint256",
+      },
+    ],
+    name: "unlockTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "day",
+        type: "uint256",
+      },
+    ],
+    name: "updateCurrentDayTokenShare",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract GovernanceToken",
+        name: "_govtoken",
+        type: "address",
+      },
+      {
+        internalType: "contract XYZToken",
+        name: "_xyzToken",
+        type: "address",
+      },
+      {
+        internalType: "contract GasToken",
+        name: "_gasToken",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_dailyRewards",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_lockPoolShare",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    inputs: [],
+    name: "contractDeployedTimestamp",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "counter",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -494,10 +569,22 @@ export const escrowABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "perTokenShareEachDay",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -519,6 +606,19 @@ export const escrowABI = [
         internalType: "uint8",
         name: "",
         type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "SCALING_FACTOR",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -553,51 +653,20 @@ export const escrowABI = [
   {
     inputs: [
       {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
-    name: "transferOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
-        name: "_lockID",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_tokenAmount",
+        name: "",
         type: "uint256",
       },
     ],
-    name: "unlockTokens",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "day",
-        type: "uint256",
-      },
-    ],
-    name: "updateCurrentDayTokenShare",
+    name: "totalTokensEachDay",
     outputs: [
       {
-        internalType: "bool",
+        internalType: "uint256",
         name: "",
-        type: "bool",
+        type: "uint256",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -628,6 +697,30 @@ export const escrowABI = [
       {
         internalType: "uint256",
         name: "lastRewardDay",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "userTransactedTokensEachDay",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
         type: "uint256",
       },
     ],

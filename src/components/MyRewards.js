@@ -44,6 +44,14 @@ const MyRewards = ({
         escrowABI,
         ethAddressConfig.escrow_Address
       );
+      const reward = await escrowABIObject.methods
+        .pendpendingGovRewards(account)
+        .call();
+      const SCALING_FACTOR = await escrowABIObject.methods
+        .SCALING_FACTOR(account)
+        .call();
+
+      const amount = web3.utils.toWei(reward / SCALING_FACTOR, "Ether");
 
       await stakeGovABIObject.methods
         .claimRewards(account)
@@ -58,7 +66,7 @@ const MyRewards = ({
         });
 
       await escrowABIObject.methods
-        .claimRewards(account)
+        .claimRewards(account, amount)
         .send({ from: account })
         .then(async (receipt) => {
           if (receipt.status) {
