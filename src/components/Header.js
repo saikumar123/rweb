@@ -57,9 +57,9 @@ const Header = (props) => {
                 className="btn button btn-button btn-circular avatarSectionButton"
               >
                 <div className="avatarSection">
-                  <img src={dummyProfile} width="20" height="20" />
-                  <div> {props?.user?.avatar}</div>
+                  <img src={dummyProfile} width="30" height="30" />
                 </div>
+                <div> {props?.user?.avatar}</div>
 
                 <i className="fa ml-2 fa-chevron-down "></i>
               </button>
