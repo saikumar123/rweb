@@ -426,3 +426,39 @@ a,
   border-radius: 50%;
   margin-right: 15px;
 }
+
+.ImageUploader {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+
+  border-radius: 50%;
+  border: 1px solid black;
+  background-color: white;
+}
+.ImageUploader img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.ImageUploader input {
+  position: absolute;
+  opacity: 0;
+  z-index: 90;
+  cursor: pointer;
+  bottom: 10px;
+  width: 100%;
+}
+.ImageUploader i {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  color: #871a1d;
+  font-size: 28px;
+  background-color: white;
+  border-radius: 50%;
+}

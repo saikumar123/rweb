@@ -5,6 +5,7 @@ import ethAddressConfig from "../abis/ethAddressConfig";
 import LoginService from "../services/LoginService";
 import { tokenBalance1ABI } from "../abis/XY_Token";
 import "../assets/css/login.css";
+import { ImageUploadButton } from "../atoms/ImageUploadButton";
 
 function CustomizedLogin(props) {
   const [isLogin, setIsLogin] = useState(false);
@@ -113,18 +114,31 @@ function CustomizedLogin(props) {
         - No special characters allowed
         <br />
       </div>
-      <div class="text-center p-top p30">
-        <input
-          type="text"
-          value={username}
-          required=""
-          placeholder="Enter your name"
-          onChange={usernameChange}
-          class="form-control form-control-active"
-        />
-        {errorMessage !== "" && (
-          <span class="text-danger text-left">{errorMessage}</span>
-        )}
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "20px 0",
+        }}
+      >
+        <ImageUploadButton />
+
+        <div class="text-center p-top p30">
+          <input
+            type="text"
+            value={username}
+            required=""
+            placeholder="Enter your name"
+            onChange={usernameChange}
+            class="form-control form-control-active"
+          />
+
+          {errorMessage !== "" && (
+            <span class="text-danger text-left">{errorMessage}</span>
+          )}
+        </div>
       </div>
       <div class="text-center mt-10">
         <button
@@ -135,7 +149,7 @@ function CustomizedLogin(props) {
           Done
         </button>
 
-        <div class="clrwhite mt-2">
+        <div class="clrwhite mt-5">
           * note: You will not be allowed to change the avatar name later.
         </div>
       </div>
