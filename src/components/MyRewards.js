@@ -265,7 +265,7 @@ const MyRewards = ({
       <div>
         <Confirm
           open={exitPoolModal}
-          content={`Are you sure ${user?.avatar.toUpperCase()} ! You want to exit pool?`}
+          content={`Are you sure ${user?.avatar?.toUpperCase()} ! You want to exit pool?`}
           onCancel={handleCancel}
           onConfirm={handleConfirm}
           size="small"

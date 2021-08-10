@@ -48,7 +48,7 @@ body,
   position: relative;
   width: 33%;
   margin: 0 auto;
-  height:330px;
+  height: auto;
   margin-top: calc(100vh - 85vh - 20px);
   background: #000000;
   border-radius: 4px;
@@ -56,6 +56,8 @@ body,
   border: 1px solid #e9b321;
   overflow: auto;
   z-index: 9999;
+  display: flex;
+  align-items: center;
 }
 
 .close-icon {
@@ -74,7 +76,7 @@ body,
   font-size: 20px;
 }
 
-.disable-popup-during-approval   {
+.disable-popup-during-approval {
   pointer-events: none;
   opacity: 0.4;
 }
