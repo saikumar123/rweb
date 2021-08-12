@@ -462,3 +462,11 @@ a,
   background-color: white;
   border-radius: 50%;
 }
+
+.closeIcon {
+  position: absolute;
+  font-size: 18px;
+  color: #fff;
+  right: 0px;
+  cursor: pointer;
+}
