@@ -68,3 +68,10 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+## How to push azure ACR:
+    az login
+    az acr login --name jsprod
+    docker build --tag jsprod.azurecr.io/frontend:<version> .
+    docker push jsprod.azurecr.io/frontend:<version>
