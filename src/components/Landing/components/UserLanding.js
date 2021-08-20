@@ -3,11 +3,12 @@ import MyRewards from "../../MyRewards";
 import Deposit from "../../Deposit/Deposit";
 import Escrow from "../../Escrow";
 import TaskList from "../../TaskList";
-import Staking from "../../Staking";
+import Staking from "../../Staking/Staking";
 import TransactionList from "../../TransactionList";
 import TransactionListTable from "../../TransactionListTable";
 
 import ethAddressConfig from "../../../abis/ethAddressConfig";
+import { set_Transaction_Loader } from "../../../redux/action";
 
 import { govABI } from "../../../abis/Gov";
 import { connect } from "react-redux";
@@ -21,7 +22,11 @@ import { toast } from "react-toastify";
 import Faucets from "../../Faucets/Faucets";
 
 const mapDispatchToProps = (data) => {
-  return null;
+  return {
+    set_Transaction_Loader: (data) => {
+      set_Transaction_Loader(data);
+    },
+  };
 };
 
 const UserLanding = ({
@@ -33,6 +38,7 @@ const UserLanding = ({
   totalPoolBalance,
   txnRows,
   getTxn,
+  set_Transaction_Loader,
 }) => {
   const [unLockLoader, setUnlockLoader] = useState(false);
 
@@ -131,13 +137,18 @@ const UserLanding = ({
         await escrowABIObject.methods
           .unlockTokens(lockId, lockValueBN)
           .send({ from: account })
+          .on("transactionHash", (hash) => {
+            set_Transaction_Loader(true);
+          })
           .on("receipt", (receipt) => {
             toast.success("Transaction Success");
             setUnlockLoader(false);
+            set_Transaction_Loader(false);
             updateTransaction(hash, senderId, receiverId, lockStatus);
           });
       } catch (err) {
         setUnlockLoader(false);
+        set_Transaction_Loader(false);
         toast.error(err?.message);
       }
     }

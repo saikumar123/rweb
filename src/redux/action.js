@@ -61,6 +61,12 @@ export const SETMYTBALANCE = (data) => {
     data: data,
   };
 };
+export const setTransactionLoader = (data) => {
+  return {
+    type: "TransactionLoader",
+    data: data,
+  };
+};
 
 export const FETCHTRANSACTION = (data) => {
   return {
@@ -103,4 +109,9 @@ export const set_MGT_balance = (data) => {
 
 export const set_MYT_balance = (data) => {
   return store.dispatch(SETMYTBALANCE(data));
+};
+
+export const set_Transaction_Loader = (data) => {
+  console.log(data);
+  return store.dispatch(setTransactionLoader(data));
 };

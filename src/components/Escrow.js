@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { govABI } from "../abis/Gov";
+import { set_Transaction_Loader } from "../redux/action";
 import ethAddressConfig from "../abis/ethAddressConfig";
 import { tokenBalance1ABI } from "../abis/XY_Token";
 import TxnService from "../services/TxnService";
@@ -16,6 +17,13 @@ const mapStateToProps = (state) => ({
   MCTBalance: state.MCTBalance,
   account: state.account,
 });
+const mapDispatchToProps = (data) => {
+  return {
+    set_Transaction_Loader: (data) => {
+      set_Transaction_Loader(data);
+    },
+  };
+};
 
 const Escrow = (props) => {
   const [lockValue, setLockValue] = React.useState(0.0);
@@ -199,33 +207,45 @@ const Escrow = (props) => {
           await XYZTokenABIObject.methods
             .approve(ethAddressConfig.escrow_Address, lockValueBN)
             .send({ from: props.account })
-            .on("transactionHash", async (lockApprovedHash) => {
-              await escrowABIObject.methods
-                .createFunctionLock(
-                  lockValueBN,
-                  0,
-                  unlockedSelectUser[0]?.accountId,
-                  creditedUser[0]?.accountId
-                )
-                .send({ from: props.account })
-                .then((receipt) => {
-                  if (receipt.status) {
+            .on("transactionHash", (hash) => {
+              props.set_Transaction_Loader(true);
+            })
+            .on("receipt", async (receipt) => {
+              if (receipt.status) {
+                props.set_Transaction_Loader(false);
+                await escrowABIObject.methods
+                  .createFunctionLock(
+                    lockValueBN,
+                    0,
+                    unlockedSelectUser[0]?.accountId,
+                    creditedUser[0]?.accountId
+                  )
+                  .send({ from: props.account })
+                  .on("transactionHash", (hash) => {
+                    props.set_Transaction_Loader(true);
+                  })
+                  .then((receipt) => {
+                    if (receipt.status) {
+                      setLoading(false);
+                      props.set_Transaction_Loader(false);
+                      toast.success("Transaction Success");
+                      setUnlockedSelectUser([]);
+                      setUnlockedUser("");
+                      setUseWalletValue("");
+                      setCreditWalletValue("");
+                    }
+                  })
+                  .catch((err) => {
+                    toast.error("Transaction Failed");
+                    props.set_Transaction_Loader(false);
                     setLoading(false);
-                    toast.success("Transaction Success");
-                    setUnlockedSelectUser([]);
-                    setUnlockedUser("");
-                    setUseWalletValue("");
-                    setCreditWalletValue("");
-                  }
-                })
-                .catch((err) => {
-                  toast.error("Transaction Failed");
-                  setLoading(false);
-                });
+                  });
+              }
             })
             .on("error", (event) => {});
         } catch (err) {
           setLoading(false);
+          props.set_Transaction_Loader(false);
           toast.error(err.message);
         }
       } else {
@@ -474,4 +494,4 @@ Escrow.propTypes = {};
 
 Escrow.defaultProps = {};
 
-export default connect(mapStateToProps)(Escrow);
+export default connect(mapStateToProps, mapDispatchToProps)(Escrow);
