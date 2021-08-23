@@ -8,9 +8,11 @@ const initialState = {
   avatar: "",
   jsonObj: {},
   txn: [],
+  transactionLoader: false,
 };
 
 const reducer = (state = initialState, action) => {
+  console.log("hit");
   switch (action.type) {
     case "Login":
       return Object.assign({}, state, { page: "Login", isLogin: action.data });
@@ -39,6 +41,9 @@ const reducer = (state = initialState, action) => {
       return Object.assign({}, state, { MYTBalance: action.data });
     case "transactions":
       return Object.assign({}, state, { txn: state.txn.push(action.data) });
+    case "TransactionLoader":
+      console.log(action);
+      return Object.assign({}, state, { transactionLoader: action.data });
     default:
       return state;
   }

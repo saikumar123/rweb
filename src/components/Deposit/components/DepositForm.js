@@ -5,13 +5,21 @@ import { connect } from "react-redux";
 import { Dropdown } from "semantic-ui-react";
 import { depositABI } from "../../../abis/deposit";
 import { toast } from "react-toastify";
-
+import { set_Transaction_Loader } from "../../../redux/action";
 import * as yup from "yup";
 import FormikInput from "../../../atoms/FormikInput";
 import { Button } from "../../../atoms/Button/Button";
 import { daiTokenABI } from "../../../abis/dai_token";
 import { USDTABI } from "../../../abis/USDTABI";
 import { USDCABI } from "../../../abis/USDCABI";
+
+const mapDispatchToProps = (data) => {
+  return {
+    set_Transaction_Loader: (data) => {
+      set_Transaction_Loader(data);
+    },
+  };
+};
 
 const defaultValues = {
   amount: "",
@@ -70,23 +78,40 @@ const DepositForm = (props) => {
           .approve(ethAddressConfig?.deposit_Address, lockValueBN)
           .send({ from: props.account })
           .on("transactionHash", (hash) => {
-            depositABIObject.methods
-              .depositAndStake(Number(unitSelectedVal), lockValueBN, stakeRate)
-              .send({ from: props.account })
-              .then((receipt) => {
-                if (receipt.status) {
-                  toast.success("Transaction Success");
+            props.set_Transaction_Loader(true);
+          })
+          .on("receipt", (receipt) => {
+            if (receipt.status) {
+              props.set_Transaction_Loader(false);
+              depositABIObject.methods
+                .depositAndStake(
+                  Number(unitSelectedVal),
+                  lockValueBN,
+                  stakeRate
+                )
+                .send({ from: props.account })
+                .on("transactionHash", (hash) => {
+                  props.set_Transaction_Loader(true);
+                })
+                .then((receipt) => {
+                  if (receipt.status) {
+                    props.set_Transaction_Loader(false);
+
+                    toast.success("Transaction Success");
+                    setLoading(false);
+                    props.props.getAllBalance();
+                  }
+                })
+                .catch((err) => {
                   setLoading(false);
-                  props.props.getAllBalance();
-                }
-              })
-              .catch((err) => {
-                setLoading(false);
-                toast.error("Transaction Failed");
-              });
+                  props.set_Transaction_Loader(false);
+                  toast.error("Transaction Failed");
+                });
+            }
           });
       } catch (err) {
         setLoading(false);
+        props.set_Transaction_Loader(false);
         toast.error(err.message);
       }
     },
@@ -300,4 +325,4 @@ DepositForm.propTypes = {};
 
 DepositForm.defaultProps = {};
 
-export default connect(mapStateToProps)(DepositForm);
+export default connect(mapStateToProps, mapDispatchToProps)(DepositForm);

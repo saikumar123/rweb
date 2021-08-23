@@ -115,13 +115,13 @@ const FaucetsForm = (props) => {
       );
 
       const DAIBalance = await daiTokenABIObject.methods
-        .balanceOf(props.account)
+        .balanceOf(ethAddressConfig.FAUCETS_ADDRESS)
         .call();
       const USDTBalance = await USDTABIObject.methods
-        .balanceOf(props.account)
+        .balanceOf(ethAddressConfig.FAUCETS_ADDRESS)
         .call();
       const USDCBalance = await USDCABIObject.methods
-        .balanceOf(props.account)
+        .balanceOf(ethAddressConfig.FAUCETS_ADDRESS)
         .call();
 
       setStableCoinBalance({
@@ -135,7 +135,6 @@ const FaucetsForm = (props) => {
   useEffect(() => {
     getStableCoinBalances();
   }, []);
-
   useEffect(() => {
     formref?.current?.setFieldValue("amount", "");
 

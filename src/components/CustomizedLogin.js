@@ -104,6 +104,10 @@ function CustomizedLogin(props) {
 
   return (
     <div className="main">
+      {/* <div className="closeIcon" onClick={props.handleLoginClose}>
+        &times;
+      </div> */}
+
       <div class="list">
         Choose an avtar name for yourself.
         <br />

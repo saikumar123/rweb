@@ -424,7 +424,7 @@ a,
 }
 .avatarSection img {
   border-radius: 50%;
-  margin-right: 15px;
+  /* margin-right: 15px; */
 }
 
 .ImageUploader {
@@ -461,4 +461,17 @@ a,
   font-size: 28px;
   background-color: white;
   border-radius: 50%;
+}
+
+.closeIcon {
+  position: absolute;
+  font-size: 18px;
+  color: #fff;
+  right: 0px;
+  cursor: pointer;
+}
+
+.transactionLoader {
+  background-color: #87ceeb;
+  color: black;
 }

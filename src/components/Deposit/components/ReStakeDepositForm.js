@@ -1,12 +1,13 @@
 import React, { useCallback } from "react";
 import ethAddressConfig from "../../../abis/ethAddressConfig";
 import { Form, Formik } from "formik";
+import { set_Transaction_Loader } from "../../../redux/action";
+
 import { connect } from "react-redux";
 import { depositABI } from "../../../abis/deposit";
 import { toast } from "react-toastify";
 
 import * as yup from "yup";
-import { useFormSubmitWithLoading } from "../../../hooks/useFormSubmitWithLoading";
 import FormikInput from "../../../atoms/FormikInput";
 import { Button } from "../../../atoms/Button/Button";
 import { tokenBalance1ABI } from "../../../abis/XY_Token";
@@ -14,6 +15,13 @@ import { tokenBalance1ABI } from "../../../abis/XY_Token";
 const ReStakeDepositFormValidationSchema = yup.object().shape({
   stakeRate: yup.string().required("Required*"),
 });
+const mapDispatchToProps = (data) => {
+  return {
+    set_Transaction_Loader: (data) => {
+      set_Transaction_Loader(data);
+    },
+  };
+};
 
 const defaultValues = {
   stakeRate: "",
@@ -25,6 +33,7 @@ const mapStateToProps = (state) => ({
 });
 
 const ReStakeDepositForm = (props) => {
+  const [loading, setLoading] = React.useState(false);
   const handleReStakeDepositForm = useCallback(
     async (stakeRate) => {
       const web3 = window.web3;
@@ -47,23 +56,42 @@ const ReStakeDepositForm = (props) => {
           ethAddressConfig.xy_token
         );
         try {
+          setLoading(true);
+
           await XYZTokenABIObject.methods
             .approve(ethAddressConfig.deposit_Address, res)
             .send({ from: props.account })
             .on("transactionHash", (hash) => {
-              depositABIObject.methods
-                .stakeMCT(res)
-                .send({ from: props.account })
-                .then((receipt) => {
-                  if (receipt.status) {
-                    toast.success("Transaction Success");
-                  }
-                })
-                .catch((err) => {
-                  toast.error("Transaction Failed");
-                });
+              props.set_Transaction_Loader(true);
+            })
+            .on("receipt", (receipt) => {
+              if (receipt.status) {
+                props.set_Transaction_Loader(false);
+
+                depositABIObject.methods
+                  .stakeMCT(res)
+                  .send({ from: props.account })
+                  .on("transactionHash", (hash) => {
+                    props.set_Transaction_Loader(true);
+                  })
+                  .then((receipt) => {
+                    if (receipt.status) {
+                      props.set_Transaction_Loader(false);
+                      setLoading(false);
+                      toast.success("Transaction Success");
+                      props.props.getAllBalance();
+                    }
+                  })
+                  .catch((err) => {
+                    props.set_Transaction_Loader(false);
+                    setLoading(false);
+                    toast.error("Transaction Failed");
+                  });
+              }
             });
         } catch (err) {
+          props.set_Transaction_Loader(false);
+          setLoading(false);
           toast.error(err.message);
         }
       }
@@ -80,13 +108,11 @@ const ReStakeDepositForm = (props) => {
     [handleReStakeDepositForm, props]
   );
 
-  const { onSubmitHandler, loading } = useFormSubmitWithLoading(onSubmit);
-
   return (
     <Formik
       initialValues={defaultValues}
       enableReinitialize={true}
-      onSubmit={onSubmitHandler}
+      onSubmit={onSubmit}
       validationSchema={ReStakeDepositFormValidationSchema}
     >
       {({ errors }) => (
@@ -122,4 +148,4 @@ ReStakeDepositForm.propTypes = {};
 
 ReStakeDepositForm.defaultProps = {};
 
-export default connect(mapStateToProps)(ReStakeDepositForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ReStakeDepositForm);
