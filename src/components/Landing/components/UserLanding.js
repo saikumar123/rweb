@@ -82,10 +82,7 @@ const UserLanding = ({
     let isClaimed = claimRewards();
     if (isClaimed) {
       UserService.fetchAccount(account).then((resolve) => {
-        console.log(resolve.data.payload.user);
-
         if (resolve.data.payload.user.length === 0) {
-          console.log(resolve.data.payload.user);
         } else {
           signup(resolve.data.payload.user);
         }
@@ -109,8 +106,6 @@ const UserLanding = ({
         amount,
         lockStatus
       );
-
-      console.log("completeHandle" + completeHandle);
     } catch (err) {
       console.log(err);
     }
