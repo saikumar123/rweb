@@ -112,6 +112,5 @@ export const set_MYT_balance = (data) => {
 };
 
 export const set_Transaction_Loader = (data) => {
-  console.log(data);
   return store.dispatch(setTransactionLoader(data));
 };

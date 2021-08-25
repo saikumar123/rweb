@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => ({
+  transactionLoader: state.transactionLoader,
+});
 
 const StakingForm = (props) => {
   const [showForm, setShowForm] = useState(false);
@@ -28,6 +33,13 @@ const StakingForm = (props) => {
     setStakeValue(0);
     setUnStakeValue(0);
   }, [showForm]);
+
+  useEffect(() => {
+    if (props.transactionLoader) {
+      setStakeValue(0);
+      setUnStakeValue(0);
+    }
+  }, [props.transactionLoader]);
 
   return (
     <>
@@ -169,6 +181,9 @@ const StakingForm = (props) => {
               <div className="col-lg-11 m-auto">
                 <button
                   type="button"
+                  onClick={() =>
+                    props.handleUnStakeForm(unStakeValue, props.data.poolId)
+                  }
                   className="btn col-lg-12 m-t-15 btn-button btn-circular"
                 >
                   Unstake
@@ -186,4 +201,4 @@ StakingForm.propTypes = {};
 
 StakingForm.defaultProps = {};
 
-export default StakingForm;
+export default connect(mapStateToProps)(StakingForm);

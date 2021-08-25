@@ -263,9 +263,7 @@ const Landing = ({
     if (user.avatar !== "" && user.avatar !== undefined) {
       TxnService.fetchTransaction(user.avatar).then((resolve) => {
         if (resolve.data.payload.transactions.length === 0) {
-          console.log(resolve.data.payload.transactions);
         } else {
-          console.log(resolve.data.payload.transactions);
           setTxnRows(resolve.data.payload.transactions);
         }
       });

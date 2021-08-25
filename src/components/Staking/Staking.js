@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { stakeGovABI } from "../../abis/Stake_Gov_ABI";
 import ethAddressConfig from "../../abis/ethAddressConfig";
 import { govTokenABI } from "../../abis/Gov_Token";
+import { set_Transaction_Loader } from "../../redux/action";
+
 import { toast } from "react-toastify";
 import StakingForm from "./components/StakingForm";
 import { StakeLPContractABI } from "../../abis/Stake_LP_Contract";
@@ -13,6 +15,14 @@ const mapStateToProps = (state) => ({
   MGTBalance: state.MGTBalance,
   MYTBalance: state.MYTBalance,
 });
+
+const mapDispatchToProps = (data) => {
+  return {
+    set_Transaction_Loader: (data) => {
+      set_Transaction_Loader(data);
+    },
+  };
+};
 
 const Staking = (props) => {
   const [balance, setBalance] = useState({});
@@ -107,16 +117,23 @@ const Staking = (props) => {
                 .deposit(convertStakeValue, Number(poolId))
 
                 .send({ from: props.account })
+                .on("transactionHash", (hash) => {
+                  props.set_Transaction_Loader(true);
+                })
                 .then((receipt) => {
                   if (receipt.status) {
+                    getAllBalances();
+                    props.set_Transaction_Loader(false);
                     toast.success("Transaction Success");
                   }
                 })
                 .catch((err) => {
+                  props.set_Transaction_Loader(false);
                   toast.error("Transaction Failed");
                 });
             });
         } catch (err) {
+          props.set_Transaction_Loader(false);
           toast.error(err.message);
         }
       } else {
@@ -129,16 +146,99 @@ const Staking = (props) => {
                 .deposit(convertStakeValue)
 
                 .send({ from: props.account })
+                .on("transactionHash", (hash) => {
+                  props.set_Transaction_Loader(true);
+                })
                 .then((receipt) => {
                   if (receipt.status) {
+                    getAllBalances();
+                    props.set_Transaction_Loader(false);
+
                     toast.success("Transaction Success");
                   }
                 })
                 .catch((err) => {
+                  props.set_Transaction_Loader(false);
+
                   toast.error("Transaction Failed");
                 });
             });
         } catch (err) {
+          props.set_Transaction_Loader(false);
+
+          toast.error(err.message);
+        }
+      }
+    }
+  };
+
+  const handleUnStakeForm = async (unStakeValue, poolId) => {
+    const web3 = window.web3;
+    if (web3 !== undefined && web3.eth !== undefined) {
+      const stakeGovABIObject = new web3.eth.Contract(
+        stakeGovABI,
+        ethAddressConfig.gov_address
+      );
+
+      const convertUnStakeValue = window.web3.utils.toWei(
+        unStakeValue.toString(),
+        "Ether"
+      );
+      const stakeLPContractObject = new web3.eth.Contract(
+        StakeLPContractABI,
+        ethAddressConfig.STAKE_LP_CONTRACT_ADDRESS
+      );
+
+      if (poolId) {
+        try {
+          await stakeLPContractObject.methods
+            .withdraw(convertUnStakeValue, Number(poolId))
+            .send({ from: props.account })
+            .on("transactionHash", (hash) => {
+              props.set_Transaction_Loader(true);
+            })
+            .then((receipt) => {
+              if (receipt.status) {
+                getAllBalances();
+                props.set_Transaction_Loader(false);
+
+                toast.success("Transaction Success");
+              }
+            })
+            .catch((err) => {
+              props.set_Transaction_Loader(false);
+
+              toast.error("Transaction Failed");
+            });
+        } catch (err) {
+          props.set_Transaction_Loader(false);
+
+          toast.error(err.message);
+        }
+      } else {
+        try {
+          stakeGovABIObject.methods
+            .withdraw(convertUnStakeValue)
+            .send({ from: props.account })
+            .on("transactionHash", (hash) => {
+              props.set_Transaction_Loader(true);
+            })
+            .then((receipt) => {
+              if (receipt.status) {
+                getAllBalances();
+                props.set_Transaction_Loader(false);
+
+                toast.success("Transaction Success");
+              }
+            })
+            .catch((err) => {
+              props.set_Transaction_Loader(false);
+
+              toast.error("Transaction Failed");
+            });
+        } catch (err) {
+          props.set_Transaction_Loader(false);
+
           toast.error(err.message);
         }
       }
@@ -180,6 +280,7 @@ const Staking = (props) => {
         stakeBalance={balance?.stakeETHDFLBalance}
         handleStakeForm={handleStakeForm}
         MGTBalance={balance.LPBalance}
+        handleUnStakeForm={handleUnStakeForm}
       />
 
       <StakingForm
@@ -196,6 +297,7 @@ const Staking = (props) => {
         stakeBalance={balance?.stakeETHFEESBalance}
         handleStakeForm={handleStakeForm}
         MGTBalance={balance.LPBalance}
+        handleUnStakeForm={handleUnStakeForm}
       />
 
       <StakingForm
@@ -210,6 +312,7 @@ const Staking = (props) => {
         }}
         stakeBalance={balance?.stakeDFLalance}
         handleStakeForm={handleStakeForm}
+        handleUnStakeForm={handleUnStakeForm}
         MGTBalance={props?.MGTBalance?.claimedMGTBalance}
       />
     </div>
@@ -220,4 +323,4 @@ Staking.propTypes = {};
 
 Staking.defaultProps = {};
 
-export default connect(mapStateToProps)(Staking);
+export default connect(mapStateToProps, mapDispatchToProps)(Staking);

@@ -80,7 +80,6 @@ const Header = (props) => {
             </span>
           )}
         </div>
-        {console.log("p", props.transactionLoader)}
         {props.transactionLoader && (
           <button
             className={`btn button btn-button btn-circular mt-3 transactionLoader ${

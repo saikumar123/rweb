@@ -10,7 +10,6 @@ export const ImageUploadButton = ({ name, ImageUplaoder, ...props }) => {
     },
     [setFile]
   );
-  console.log(file);
   return (
     <div className="ImageUploader ">
       <div>

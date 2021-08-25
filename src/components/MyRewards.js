@@ -3,18 +3,28 @@ import { Button } from "../atoms/Button";
 import { connect } from "react-redux";
 import { Confirm } from "semantic-ui-react";
 import ethAddressConfig from "../abis/ethAddressConfig";
+import { set_Transaction_Loader } from "../redux/action";
 
 import { stakeGovABI } from "../abis/Stake_Gov_ABI";
 import { toast } from "react-toastify";
 import { stakeABI } from "../abis/Stake";
 import { depositABI } from "../abis/deposit";
 import { escrowABI } from "../abis/escrow_ABI";
+import { StakeLPContractABI } from "../abis/Stake_LP_Contract";
 
 const mapStateToProps = (state) => ({
   MCTBalance: state.MCTBalance,
   MGTBalance: state.MGTBalance,
   MYTBalance: state.MYTBalance,
 });
+
+const mapDispatchToProps = (data) => {
+  return {
+    set_Transaction_Loader: (data) => {
+      set_Transaction_Loader(data);
+    },
+  };
+};
 
 const MyRewards = ({
   MCTBalance,
@@ -24,6 +34,7 @@ const MyRewards = ({
   totalPoolBalance,
   user,
   getAllBalance,
+  set_Transaction_Loader,
 }) => {
   const web3 = window?.web3;
   const [MGTRedeemLoading, setMGTRedeemLoading] = useState(false);
@@ -44,34 +55,90 @@ const MyRewards = ({
         escrowABI,
         ethAddressConfig.escrow_Address
       );
+      const stakeLPContractObject = new web3.eth.Contract(
+        StakeLPContractABI,
+        ethAddressConfig.STAKE_LP_CONTRACT_ADDRESS
+      );
+      try {
+        await stakeLPContractObject.methods
+          .claimRewards(account, 0)
+          .send({ from: account })
+          .on("transactionHash", (hash) => {
+            set_Transaction_Loader(true);
+            console.log("1");
+          })
+          .then(async (receipt) => {
+            if (receipt.status) {
+              await getAllBalance();
+              set_Transaction_Loader(false);
+            } else {
+              set_Transaction_Loader(false);
+              toast.error("Transaction Failed");
+            }
+          });
+        await stakeLPContractObject.methods
+          .claimRewards(account, 1)
+          .send({ from: account })
+          .on("transactionHash", (hash) => {
+            set_Transaction_Loader(true);
+            console.log("2");
+          })
+          .then(async (receipt) => {
+            if (receipt.status) {
+              await getAllBalance();
+              set_Transaction_Loader(false);
+            } else {
+              set_Transaction_Loader(false);
+              toast.error("Transaction Failed");
+            }
+          });
 
-      await stakeGovABIObject.methods
-        .claimRewards(account)
-        .send({ from: account })
-        .then(async (receipt) => {
-          if (receipt.status) {
-            await getAllBalance();
-          } else {
-            setMGTRedeemLoading(false);
-            toast.error("Transaction Failed");
-          }
-        });
+        await stakeGovABIObject.methods
+          .claimRewards(account)
+          .send({ from: account })
+          .on("transactionHash", (hash) => {
+            console.log("3");
+            set_Transaction_Loader(true);
+          })
+          .then(async (receipt) => {
+            if (receipt.status) {
+              await getAllBalance();
+              set_Transaction_Loader(false);
+            } else {
+              set_Transaction_Loader(false);
+              toast.error("Transaction Failed");
+            }
+          });
 
-      await escrowABIObject.methods
-        .claimRewards(account)
-        .send({ from: account })
-        .then(async (receipt) => {
-          if (receipt.status) {
-            toast.success("Transaction Success");
-            setMGTRedeemLoading(false);
-            await getAllBalance();
-          } else {
-            setMGTRedeemLoading(false);
-            toast.error("Transaction Failed");
-          }
-        });
+        await escrowABIObject.methods
+          .claimRewards(account)
+          .send({ from: account })
+          .on("transactionHash", (hash) => {
+            console.log("4");
+
+            set_Transaction_Loader(true);
+          })
+          .then(async (receipt) => {
+            if (receipt.status) {
+              toast.success("Transaction Success");
+              setMGTRedeemLoading(false);
+              set_Transaction_Loader(false);
+              await getAllBalance();
+            } else {
+              setMGTRedeemLoading(false);
+              set_Transaction_Loader(false);
+              toast.error("Transaction Failed");
+            }
+          });
+      } catch (err) {
+        setMGTRedeemLoading(false);
+        set_Transaction_Loader(false);
+        toast.error("Transaction Failed");
+        toast.error(err.message);
+      }
     } else {
       console.log("web3 is not defined");
+      set_Transaction_Loader(false);
       setMGTRedeemLoading(false);
     }
   };
@@ -285,4 +352,4 @@ MyRewards.propTypes = {};
 
 MyRewards.defaultProps = {};
 
-export default connect(mapStateToProps)(MyRewards);
+export default connect(mapStateToProps, mapDispatchToProps)(MyRewards);
