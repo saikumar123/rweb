@@ -32,7 +32,7 @@ body#modern
 }
 
 .nav-header {
-  width: 290px;
+  width: 100%;
 }
 
 .nav-search-box input[type="search"]:focus {

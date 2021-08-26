@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 const Deposit = (props) => {
   const [depositForm, showDepositForm] = useState(true);
   return (
-    <div className="mt-5">
+    <div className="mt-4">
       <Button.Group size="large">
         <Button
           color={depositForm && "red"}
@@ -23,7 +23,7 @@ const Deposit = (props) => {
           Increase your weightage in pool
         </Button>
       </Button.Group>
-      <div className="mt-5">
+      <div className="mt-3">
         {" "}
         {!depositForm ? (
           <ReStakeDepositForm props={props} />

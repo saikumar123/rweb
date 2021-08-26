@@ -293,7 +293,7 @@ const Landing = ({
           width: "100%",
           background: "#000",
           zIndex: "9",
-          padding: "10px 0",
+          padding: "20px 0",
         }}
       >
         <Header
@@ -304,7 +304,7 @@ const Landing = ({
           showAdminPanel={showAdminPanel}
           account={account}
         />
-        <NotificationBar />
+        {/* <NotificationBar /> */}
       </div>
       <div style={{ paddingTop: "80px" }}>
         {isOpen && isLogin && (
@@ -332,7 +332,7 @@ const Landing = ({
             />
           </div>
           <div
-            className="col-lg-9 col-xs-12 pd-top pull-left "
+            className="col-lg-9 col-xs-12 pull-left "
             style={{ overflow: "hidden", marginLeft: "25%" }}
           >
             <div

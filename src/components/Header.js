@@ -23,13 +23,10 @@ const Header = (props) => {
       <div className="nav-header">
         <div className="brand-logo">
           <a href="index2.html" className="align-items-center">
-            <img
-              src="../assets/images/football.png"
-              alt=""
-              width="25"
-              height="25"
-            ></img>
-            <span className="brand-title text-white">Football Protocol</span>
+            <img src="../assets/images/logo.jpeg" alt="" height="40"></img>
+            <span className="brand-title text-white">
+              Decentralized Football Protocol
+            </span>
           </a>
         </div>
       </div>
@@ -73,9 +70,9 @@ const Header = (props) => {
                   <i className="fa ml-2 fa-chevron-down "></i>
                 </button>
 
-                <div className="headerMenu" onClick={handleLogout}>
+                {/* <div className="headerMenu" onClick={handleLogout}>
                   <div className="item">Disconnect</div>
-                </div>
+                </div> */}
               </div>
             </span>
           )}

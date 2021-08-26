@@ -257,7 +257,7 @@ const DepositForm = (props) => {
           <div className="d-flex flex-column ">
             <div className="row m-b-30 text-white  ">
               <div className="col-lg-12 m-b-10">
-                <div className=" my-4 ">
+                <div className=" my-2 ">
                   <small
                     className="tag-line font-weight-bold"
                     style={{ fontSize: "20px" }}
@@ -312,7 +312,7 @@ const DepositForm = (props) => {
                 <FormikInput name="stakeRate" />
               </div>
             </div>
-            <div className="mt-5 text-center">
+            <div className="mt-2 text-center">
               <Button loading={loading}>Deposit</Button>
             </div>
           </div>

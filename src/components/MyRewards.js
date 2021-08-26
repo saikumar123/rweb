@@ -209,14 +209,6 @@ const MyRewards = ({
   return (
     <>
       <div className="row blueTxt text-white">
-        <div className="col-lg-12 mb-4 ">
-          <small
-            className="tag-line font-weight-bold"
-            style={{ fontSize: "20px" }}
-          >
-            My Rewards
-          </small>
-        </div>
         <div className="col-lg-3 col-sm-3 col-xs-12">
           <div style={{ fontSize: "16px", fontWeight: "bold" }}> FUSD</div>
           <div className="col-lg-12 p0 m-b-10 mt-3">

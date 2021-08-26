@@ -402,7 +402,7 @@ const Escrow = (props) => {
       <div className="col-lg-12 p0 ">
         {creditedUser.map((useroption, index) => {
           return (
-            <div className="col-lg-12 h100 pull-left p0">
+            <div className="col-lg-12 pull-left p0">
               <div className="col-lg-2 m-t-5 pull-left ">Credited To</div>
               <div className="col-lg-3 pull-left">
                 <input
@@ -472,7 +472,7 @@ const Escrow = (props) => {
         })}
       </div>
 
-      <div className="col-lg-12 p0">
+      <div className="col-lg-12 p0 mt-3">
         <div className="col-lg-3 m-auto">
           {showButton === "false" || creditedUser.length !== 1 ? (
             <Button type="button" onClick={checkValidation}>

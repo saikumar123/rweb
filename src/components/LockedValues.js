@@ -74,22 +74,22 @@ const LockedValues = () => {
 
   const Pools = [
     {
-      label: "MYT-ETH LP ",
+      label: "FEES-ETH LP ",
       amount: data?.totalLockedBalance,
       apy: "20%",
     },
     {
-      label: "MGT-ETH LP",
+      label: "DFL-ETH LP",
       amount: data?.totalLockedBalance,
       apy: "30%",
     },
     {
-      label: "MGT",
+      label: "DFL",
       amount: data?.totalLockedBalance,
       apy: "10%",
     },
     {
-      label: "FPL",
+      label: "FLP",
       amount: data?.FLPLockedBalance,
       apy: "30%",
     },
