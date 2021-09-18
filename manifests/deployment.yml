@@ -1,19 +1,44 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: reactapp 
+  name: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: reactapp
+      app: frontend
   template:
     metadata:
       labels:
-        app: reactapp 
+        app: frontend 
     spec:
       containers:
-        - name: reactapp 
+        - name: frontend 
           image: shopifywebk8registry.azurecr.io/reactapp
           ports:
           - containerPort: 3000
+          resources:
+             limits:
+               cpu: 1000m
+               memory: 1024Mi
+             requests:
+               cpu: 1000m
+               memory: 1024Mi
+
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 70
