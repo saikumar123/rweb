@@ -19,11 +19,11 @@ spec:
           - containerPort: 3000
           resources:
              limits:
-               cpu: 1000m
-               memory: 1024Mi
+               cpu: 500m
+               memory: 512Mi
              requests:
-               cpu: 1000m
-               memory: 1024Mi
+               cpu: 500m
+               memory: 512Mi
 
 ---
 apiVersion: autoscaling/v2beta1
